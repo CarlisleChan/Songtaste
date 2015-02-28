@@ -1,6 +1,5 @@
-package com.carlisle.songtaste.drawer;
+package com.carlisle.songtaste.ui.drawer;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -9,15 +8,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.makeramen.RoundedImageView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
  * Created by chengxin on 2/13/15.
@@ -25,32 +25,13 @@ import butterknife.InjectView;
 public class NavigationDrawerFragment extends BaseFragment {
 
     @InjectView(R.id.user_avatar)
-    RoundedImageView userAvatar;
+    ImageView userAvatar;
     @InjectView(R.id.user_name)
     TextView userName;
-    @InjectView(R.id.btn_found)
-    Button foundButton;
-    @InjectView(R.id.btn_down_load)
-    Button gownLoadButton;
-    @InjectView(R.id.btn_favorite)
-    Button favoriteButton;
-    @InjectView(R.id.btn_local)
-    Button localButton;
 
-    private NavigationDrawerCallbacks callbacks;
     private View fragmentContainerView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            callbacks = (NavigationDrawerCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -110,11 +91,26 @@ public class NavigationDrawerFragment extends BaseFragment {
         actionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        callbacks = null;
+    @OnClick(R.id.btn_discover)
+    public void onDiscoverClick(View view) {
+        Toast.makeText(getActivity(), "discover", Toast.LENGTH_SHORT).show();
+        closeDrawer();
     }
 
+    @OnClick(R.id.btn_off_line)
+    public void onOffLineClick(View view) {
+        Toast.makeText(getActivity(), "offline", Toast.LENGTH_SHORT).show();
+        closeDrawer();
+    }
+
+    @OnClick(R.id.btn_collect)
+    public void onFavoriteClick(View view) {
+        closeDrawer();
+    }
+
+    @OnClick(R.id.btn_local)
+    public void onLocalClick(View view) {
+        closeDrawer();
+    }
 
 }

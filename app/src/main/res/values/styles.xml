@@ -1,21 +1,17 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/myPrimaryColor</item>
-        <item name="colorPrimaryDark">@color/myPrimaryDarkColor</item>
-        <item name="colorAccent">@color/myAccentColor</item>
-        <item name="android:textColorPrimary">@color/myTextPrimaryColor</item>
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
-        <!-- 避免 APP 启动黑屏-->
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/background_window</item>
+        <!-- ...and here we setting appcompat’s color theming attrs -->
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorPrimaryDark">@color/greenDark</item>
+        <item name="colorAccent">@color/banana</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
     </style>
 
-    <style name="ToolBarStyle" parent="">
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    <style name="AppTheme" parent="AppBaseTheme">
+
     </style>
 
 </resources>

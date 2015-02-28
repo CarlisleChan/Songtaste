@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.main;
+package com.carlisle.songtaste.ui;
 
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -6,12 +6,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
-import com.carlisle.songtaste.drawer.NavigationDrawerCallbacks;
-import com.carlisle.songtaste.drawer.NavigationDrawerFragment;
+import com.carlisle.songtaste.ui.drawer.NavigationDrawerFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -19,7 +17,7 @@ import butterknife.InjectView;
 /**
  * Created by chengxin on 2/13/15.
  */
-public class MainActivity extends BaseActivity implements NavigationDrawerCallbacks{
+public class MainActivity extends BaseActivity {
 
     @InjectView(R.id.container)
     FrameLayout container;
@@ -70,13 +68,4 @@ public class MainActivity extends BaseActivity implements NavigationDrawerCallba
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
-    }
 }
