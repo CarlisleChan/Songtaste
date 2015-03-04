@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.carlisle.songtaste">
 
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -21,6 +28,57 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Widget/Notification Now Playing Activity Broadcast Receiver -->
+
+        <receiver android:name=".broadcastReceivers.LaunchNowPlayingReceiver" >
+            <intent-filter>
+                <action android:name="com.carlisle.songtaste.LAUNCH_NOW_PLAYING_ACTION" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Widget/Notification Play/Pause Broadcast Receiver -->
+
+        <receiver android:name=".broadcastReceivers.PlayPauseBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.carlisle.songtaste.PLAY_PAUSE_ACTION" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Widget/Notification Previous Broadcast Receiver -->
+
+        <receiver android:name=".broadcastReceivers.PreviousBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.carlisle.songtaste.PREVIOUS_ACTION" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Widget/Notification Next Broadcast Receiver -->
+
+        <receiver android:name=".broadcastReceivers.NextBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.carlisle.songtaste.NEXT_ACTION" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Stop Service Broadcast Receiver -->
+
+        <receiver android:name=".broadcastReceivers.StopServiceBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.carlisle.songtaste.STOP_SERVICE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Receiver that gets called when the user changes songs from the Large Widget -->
+
+        <receiver android:name=".broadcastReceivers.ChangeTrackBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.carlisle.songtaste.WIDGET_CHANGE_TRACK" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".adapter.RecycleViewActivity"/>
+
     </application>
 
 </manifest>
