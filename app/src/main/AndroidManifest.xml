@@ -77,7 +77,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".adapter.RecycleViewActivity"/>
+        <activity android:name=".ui.recyclerView.RecycleViewActivity"/>
 
     </application>
 
