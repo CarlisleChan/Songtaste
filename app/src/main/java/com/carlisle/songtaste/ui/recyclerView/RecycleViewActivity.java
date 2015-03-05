@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.base.BaseAdapter;
+import com.carlisle.songtaste.adapter.LoadMoreAdapter;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class RecycleViewActivity extends ActionBarActivity implements BaseAdapter.OnLoadMoreClickListener{
+public class RecycleViewActivity extends ActionBarActivity implements LoadMoreAdapter.OnLoadMoreClickListener{
     private static final String TAG = RecycleViewActivity.class.getSimpleName();
 
     @InjectView(R.id.recyclerView)
@@ -28,7 +28,7 @@ public class RecycleViewActivity extends ActionBarActivity implements BaseAdapte
     SwipeRefreshLayout swipeRefreshLayout;
 
     private LinearLayoutManager layoutManager;
-    public BaseAdapter adapter;
+    public LoadMoreAdapter adapter;
     public ArrayList arrayList;
 
 
@@ -47,7 +47,7 @@ public class RecycleViewActivity extends ActionBarActivity implements BaseAdapte
             arrayList.add(i, "item" + i);
         }
 
-        adapter = new BaseAdapter(arrayList);
+        adapter = new LoadMoreAdapter(arrayList);
 
         initRecycleView(recyclerView);
         initSwipeRefreshLayout(swipeRefreshLayout);
@@ -92,10 +92,10 @@ public class RecycleViewActivity extends ActionBarActivity implements BaseAdapte
 
     private void loadMoreData() {
 
-        adapter.resetProgressBarStatus(BaseAdapter.LoadStatus.LOADING);
+        adapter.resetProgressBarStatus(LoadMoreAdapter.LoadStatus.LOADING);
 
         if (true) { // request success
-            adapter.resetProgressBarStatus(BaseAdapter.LoadStatus.LOAD_CIMPLETE);
+            adapter.resetProgressBarStatus(LoadMoreAdapter.LoadStatus.LOAD_CIMPLETE);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -105,7 +105,7 @@ public class RecycleViewActivity extends ActionBarActivity implements BaseAdapte
             }, 1000);
 
         } else {    // request fail
-            adapter.resetProgressBarStatus(BaseAdapter.LoadStatus.LOAD_FAILED);
+            adapter.resetProgressBarStatus(LoadMoreAdapter.LoadStatus.LOAD_FAILED);
         }
 
     }
