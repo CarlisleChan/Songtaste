@@ -10,6 +10,7 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        app:pstsIndicatorColor="@color/accent"
         app:pstsIndicatorHeight="2dp"
         app:pstsShouldExpand="true"
         app:pstsUnderlineHeight="0dp" />

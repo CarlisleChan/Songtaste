@@ -29,6 +29,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.setting.SettingActivity"/>
+
         <!-- Widget/Notification Now Playing Activity Broadcast Receiver -->
 
         <receiver android:name=".broadcastReceivers.LaunchNowPlayingReceiver" >

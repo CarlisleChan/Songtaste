@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.carlisle.songtaste.R;
+import com.carlisle.songtaste.base.BaseFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -20,7 +21,7 @@ import butterknife.InjectView;
 /**
  * Created by chengxin on 3/5/15.
  */
-public class DiscoverFragment extends Fragment {
+public class DiscoverFragment extends BaseFragment {
 
     @InjectView(R.id.tabs)
     PagerSlidingTabStrip tabs;
@@ -34,7 +35,7 @@ public class DiscoverFragment extends Fragment {
 
         pager.setAdapter(new DiscoverAdapter(getChildFragmentManager()));
         tabs.setViewPager(pager);
-        tabs.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+        tabs.setBackgroundColor(getResources().getColor(R.color.primary));
         tabs.setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
             @Override
             public void onTabReselected(int i) {

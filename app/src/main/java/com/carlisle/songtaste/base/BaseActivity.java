@@ -2,29 +2,25 @@ package com.carlisle.songtaste.base;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.github.stephanenicolas.loglifecycle.LogLifeCycle;
+import com.carlisle.songtaste.R;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 /**
  * Created by chengxin on 2/13/15.
  */
-@LogLifeCycle
 public class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initStatusBar();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+//        initStatusBar();
     }
 
     protected void initStatusBar() {
@@ -49,6 +45,18 @@ public class BaseActivity extends ActionBarActivity {
             tintManager.setTintColor(setStatusBarColor());
 
         }
+    }
+
+    protected void replaceFragment(BaseFragment fragment, String tag) {
+        FragmentManager fm = getSupportFragmentManager();
+
+        FragmentTransaction ft = fm.beginTransaction();
+//        ft.setCustomAnimations(R.anim.right_to_left_enter, R.anim.left_to_right_exit, R.anim.pop_left_to_right_enter, R.anim.pop_left_to_right_exit);
+//        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.replace(R.id.fragment_content, fragment, tag);
+//        ft.addToBackStack(fragment.getClass().getSimpleName());
+        ft.commit();
+//        ft.commitAllowingStateLoss();
     }
 
     protected int setStatusBarColor() {

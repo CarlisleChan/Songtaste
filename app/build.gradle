@@ -81,5 +81,11 @@ dependencies {
     compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     compile 'com.jpardogo.materialtabstrip:library:1.0.9'
     compile 'com.github.qiujuer:genius:2.3.1'
+    compile('com.mikepenz.materialdrawer:library:2.0.0@aar') {
+        transitive = true
+    }
     // UI IOS Style
+
+    // icon
+    compile 'com.mikepenz.iconics:meteocons-typeface:1.1.1@aar'
 }

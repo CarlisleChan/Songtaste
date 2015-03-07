@@ -35,7 +35,7 @@ public class RecycleViewActivity extends ActionBarActivity implements LoadMoreAd
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drawer);
+        setContentView(R.layout.activity_recyclerview);
         ButterKnife.inject(this);
         layoutManager = new LinearLayoutManager(this);
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
