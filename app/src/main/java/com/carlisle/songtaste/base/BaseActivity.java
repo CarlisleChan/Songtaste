@@ -49,14 +49,10 @@ public class BaseActivity extends ActionBarActivity {
 
     protected void replaceFragment(BaseFragment fragment, String tag) {
         FragmentManager fm = getSupportFragmentManager();
-
         FragmentTransaction ft = fm.beginTransaction();
-//        ft.setCustomAnimations(R.anim.right_to_left_enter, R.anim.left_to_right_exit, R.anim.pop_left_to_right_enter, R.anim.pop_left_to_right_exit);
-//        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.fragment_content, fragment, tag);
-//        ft.addToBackStack(fragment.getClass().getSimpleName());
-        ft.commit();
-//        ft.commitAllowingStateLoss();
+        ft.commitAllowingStateLoss();
     }
 
     protected int setStatusBarColor() {

@@ -3,12 +3,14 @@ package com.carlisle.songtaste.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
+import com.carlisle.songtaste.base.BaseAdapter;
 
 import java.util.ArrayList;
 
@@ -18,7 +20,7 @@ import butterknife.InjectView;
 /**
  * Created by chengxin on 12/25/14.
  */
-public class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class LoadMoreAdapter<T> extends BaseAdapter {
 
     public static final int TYPE_ITEM = 1;
     public static final int TYPE_FOOTER = 2;
@@ -28,16 +30,15 @@ public class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private RecyclerView.ViewHolder viewHolder;
-
     private ArrayList<T> dataList = new ArrayList<>();
-    private OnLoadMoreClickListener loadMoreClickListener;
+    private OnLoadMoreListener loadMoreListener;
 
-    public void setOnLoadMoreClickListener(OnLoadMoreClickListener loadMoreClickListener) {
-        this.loadMoreClickListener = loadMoreClickListener;
+    public void setOnLoadMoreClickListener(OnLoadMoreListener loadMoreListener) {
+        this.loadMoreListener = loadMoreListener;
     }
 
     public LoadMoreAdapter(ArrayList<T> data) {
-        dataList = data;
+        this.dataList = data;
     }
 
     public void resetProgressBarStatus(LoadStatus loadStatus) {
@@ -67,7 +68,7 @@ public class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         switch (viewType) {
             case TYPE_ITEM:
-                View itemView = View.inflate(parent.getContext(), R.layout.recyclerview_item, null);
+                View itemView = View.inflate(parent.getContext(), R.layout.song_item, null);
                 return new VHItem(itemView);
             case TYPE_FOOTER:
                 View footerView = View.inflate(parent.getContext(), R.layout.recyclerview_footer, null);
@@ -84,7 +85,6 @@ public class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
         viewHolder = holder;
 
         if (viewHolder instanceof VHItem) {
-            ((VHItem) viewHolder).mTextView.setText(getItem(position).toString());
             ((VHItem) viewHolder).rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -96,8 +96,8 @@ public class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((VHFooter) viewHolder).progressLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (loadMoreClickListener != null) {
-                        loadMoreClickListener.onLoadMoreClick(v);
+                    if (loadMoreListener != null) {
+                        loadMoreListener.onLoadMoreClick(v);
                     }
                 }
             });
@@ -118,48 +118,29 @@ public class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHo
         return TYPE_ITEM;
     }
 
-    @Override
-    public int getItemCount() {
-        return dataList.size();
-    }
-
-    private Object getItem(int position) {
-        return dataList.get(position);
-    }
-
-    public void insert2Top(ArrayList<T> data) {
-        int itemCount = data.size();
-
-        dataList.addAll(0, data);
-        notifyItemRangeChanged(0, itemCount);
-    }
-
-    public void insert2Bottom(ArrayList<T> data) {
-        int itemCount = data.size();
-        dataList.addAll(data);
-        notifyItemRangeChanged(dataList.size() - itemCount, itemCount);
-    }
-
-    public void removeItem() {
-        dataList.remove(getItemCount() - 1);
-        notifyItemRemoved(getItemCount() - 1);
-    }
-
-    public interface OnLoadMoreClickListener {
-        public void onLoadMoreClick(View view);
-    }
-
-
     class VHItem<T> extends RecyclerView.ViewHolder {
 
         public View rootView;
-        public TextView mTextView;
 
+        @InjectView(R.id.iv_up_user_avatar)
+        ImageView upUserAvatar;
+        @InjectView(R.id.tv_up_user_name)
+        TextView upUserName;
+        @InjectView(R.id.tv_song_name)
+        TextView songName;
+        @InjectView(R.id.tv_singer_name)
+        TextView singerName;
+        @InjectView(R.id.tv_rate_date_time)
+        TextView rateDateTime;
+        @InjectView(R.id.tv_grade_num)
+        TextView gradeNum;
+        @InjectView(R.id.tv_fav_num)
+        TextView favNum;
 
         public VHItem(View view) {
             super(view);
             rootView = view;
-            mTextView = (TextView) view;
+            ButterKnife.inject(this, view);
 
         }
     }

@@ -9,11 +9,13 @@ import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
+import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
 import com.carlisle.songtaste.ui.favorite.FavoriteFragment;
 import com.carlisle.songtaste.ui.local.LocalFragment;
 import com.carlisle.songtaste.ui.offline.OffLineFragment;
 import com.carlisle.songtaste.ui.setting.SettingActivity;
+import com.carlisle.songtaste.utils.FragmentSwitcher;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.FontAwesome;
@@ -31,6 +33,8 @@ public class MainActivity extends BaseActivity {
 
     private static final int PROFILE_SETTING = 1;
 
+    private FragmentSwitcher switcher;
+
     private AccountHeader.Result headerResult = null;
     private Drawer.Result result = null;
 
@@ -40,6 +44,8 @@ public class MainActivity extends BaseActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initFragment();
 
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -83,31 +89,25 @@ public class MainActivity extends BaseActivity {
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_discover).withIcon(FontAwesome.Icon.faw_compass).withIdentifier(1),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_favorite).withIcon(FontAwesome.Icon.faw_heart).withIdentifier(2),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_offline).withIcon(FontAwesome.Icon.faw_cloud_download).withIdentifier(3),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_local).withIcon(FontAwesome.Icon.faw_folder).withIdentifier(4),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_discover).withIcon(FontAwesome.Icon.faw_compass).withIdentifier(0),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_favorite).withIcon(FontAwesome.Icon.faw_heart).withIdentifier(1),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_offline).withIcon(FontAwesome.Icon.faw_cloud_download).withIdentifier(2),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_local).withIcon(FontAwesome.Icon.faw_folder).withIdentifier(3),
                         new SectionDrawerItem().withName(R.string.drawer_section_name),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(5),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_about).withIcon(FontAwesome.Icon.faw_info_circle).withIdentifier(6)
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(4),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_about).withIcon(FontAwesome.Icon.faw_info_circle).withIdentifier(5)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
 
                         if (drawerItem != null) {
-                            if (drawerItem.getIdentifier() == 100) {
-
-                            } else if (drawerItem.getIdentifier() == 1) {
-                                replaceFragment(new DiscoverFragment(), DiscoverFragment.class.getSimpleName());
-                            } else if (drawerItem.getIdentifier() == 2) {
-                                replaceFragment(new FavoriteFragment(), FavoriteFragment.class.getSimpleName());
-                            } else if (drawerItem.getIdentifier() == 3) {
-                                replaceFragment(new OffLineFragment(), OffLineFragment.class.getSimpleName());
-                            } else if (drawerItem.getIdentifier() == 4) {
-                                replaceFragment(new LocalFragment(), LocalFragment.class.getSimpleName());
-                            } else if (drawerItem.getIdentifier() == 5) {
+                            if (drawerItem.getIdentifier() == 4) {
                                 startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                            } else if (drawerItem.getIdentifier() == 5) {
+                                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                            } else {
+                                switcher.switchToFragment(drawerItem.getIdentifier());
                             }
                         }
                     }
@@ -123,6 +123,14 @@ public class MainActivity extends BaseActivity {
                 })
                 .build();
 
+    }
+
+    private void initFragment() {
+        switcher = new FragmentSwitcher(getSupportFragmentManager(), R.id.fragment_content);
+        switcher.addFragment(new DiscoverFragment());
+        switcher.addFragment(new FavoriteFragment());
+        switcher.addFragment(new OffLineFragment());
+        switcher.addFragment(new LocalFragment());
     }
 
     @Override

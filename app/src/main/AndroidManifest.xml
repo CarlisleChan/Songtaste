@@ -30,6 +30,7 @@
         </activity>
 
         <activity android:name=".ui.setting.SettingActivity"/>
+        <activity android:name=".ui.about.AboutActivity"/>
 
         <!-- Widget/Notification Now Playing Activity Broadcast Receiver -->
 
@@ -79,7 +80,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.recyclerView.RecycleViewActivity"/>
+        <!--<activity android:name=".ui.recyclerView.RecycleViewActivity"/>-->
 
     </application>
 

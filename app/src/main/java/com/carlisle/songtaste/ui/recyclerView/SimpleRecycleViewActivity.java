@@ -1,46 +1,42 @@
-package com.carlisle.songtaste.ui.local;
+package com.carlisle.songtaste.ui.recyclerView;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.adapter.SimpleAdapter;
-import com.carlisle.songtaste.base.BaseFragment;
 
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-/**
- * Created by chengxin on 2/25/15.
- */
-public class LocalFragment extends BaseFragment {
+
+public class SimpleRecycleViewActivity extends ActionBarActivity{
+    private static final String TAG = SimpleRecycleViewActivity.class.getSimpleName();
 
     @InjectView(R.id.recyclerView)
     RecyclerView recyclerView;
     @InjectView(R.id.swipe_layout)
-    SwipeRefreshLayout swipeLayout;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private LinearLayoutManager layoutManager;
     public SimpleAdapter adapter;
     public ArrayList arrayList;
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_recyclerview, container, false);
-        ButterKnife.inject(this, view);
-
-        layoutManager = new LinearLayoutManager(getActivity());
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_recyclerview);
+        ButterKnife.inject(this);
+        layoutManager = new LinearLayoutManager(this);
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
 
@@ -53,9 +49,8 @@ public class LocalFragment extends BaseFragment {
         adapter = new SimpleAdapter(arrayList);
 
         initRecycleView(recyclerView);
-        initSwipeRefreshLayout(swipeLayout);
+        initSwipeRefreshLayout(swipeRefreshLayout);
 
-        return view;
     }
 
     private void initRecycleView(RecyclerView recyclerView) {
@@ -93,4 +88,11 @@ public class LocalFragment extends BaseFragment {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
 }

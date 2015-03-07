@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.adapter.LoadMoreAdapter;
+import com.carlisle.songtaste.adapter.OnLoadMoreListener;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class RecycleViewActivity extends ActionBarActivity implements LoadMoreAdapter.OnLoadMoreClickListener{
+public class RecycleViewActivity extends ActionBarActivity implements OnLoadMoreListener{
     private static final String TAG = RecycleViewActivity.class.getSimpleName();
 
     @InjectView(R.id.recyclerView)
@@ -35,7 +36,7 @@ public class RecycleViewActivity extends ActionBarActivity implements LoadMoreAd
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recyclerview);
+        setContentView(R.layout.fragment_recyclerview);
         ButterKnife.inject(this);
         layoutManager = new LinearLayoutManager(this);
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
