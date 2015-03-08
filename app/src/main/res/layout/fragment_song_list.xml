@@ -11,8 +11,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:padding="5dp"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</LinearLayout>  
+</LinearLayout>

@@ -18,10 +18,10 @@ import butterknife.InjectView;
 /**
  * Created by carlisle on 3/7/15.
  */
-public class SimpleAdapter extends BaseAdapter {
+public class SongAdapter extends BaseAdapter {
     private ArrayList<SongInfo> dataList = new ArrayList<>();
 
-    public SimpleAdapter(ArrayList<SongInfo> dataList) {
+    public SongAdapter(ArrayList<SongInfo> dataList) {
         this.dataList = dataList;
     }
 

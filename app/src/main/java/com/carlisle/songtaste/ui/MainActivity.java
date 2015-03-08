@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.ui.about.AboutActivity;
+import com.carlisle.songtaste.ui.discover.AlbumFragment;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
 import com.carlisle.songtaste.ui.favorite.FavoriteFragment;
 import com.carlisle.songtaste.ui.local.LocalFragment;
@@ -131,6 +132,10 @@ public class MainActivity extends BaseActivity {
         switcher.addFragment(new FavoriteFragment());
         switcher.addFragment(new OffLineFragment());
         switcher.addFragment(new LocalFragment());
+        switcher.addFragment(new AlbumFragment());
+
+        switcher.switchToFragment(4);
+
     }
 
     @Override
