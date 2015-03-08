@@ -31,7 +31,7 @@ import rx.android.observables.AndroidObservable;
 /**
  * Created by chengxin on 2/25/15.
  */
-public class AlbumFragment extends BaseFragment {
+public class TagFragment extends BaseFragment {
 
     @InjectView(R.id.gridView)
     GridView gridView;

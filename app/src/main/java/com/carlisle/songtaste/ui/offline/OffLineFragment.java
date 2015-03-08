@@ -50,7 +50,7 @@ public class OffLineFragment extends BaseFragment {
             arrayList.add(i, "item" + i);
         }
 
-        adapter = new SongAdapter(arrayList);
+        adapter = new SongAdapter(getActivity());
 
         initRecycleView(recyclerView);
         initSwipeRefreshLayout(swipeLayout);

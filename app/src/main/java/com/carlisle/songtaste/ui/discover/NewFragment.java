@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.ui.favorite;
+package com.carlisle.songtaste.ui.discover;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,15 +7,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.adapter.SongAdapter;
+import com.carlisle.songtaste.adapter.LoadMoreAdapter;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.carlisle.songtaste.modle.CollectionResult;
-import com.carlisle.songtaste.modle.Song;
+import com.carlisle.songtaste.modle.FMNewResult;
+import com.carlisle.songtaste.modle.SongInfo;
 import com.carlisle.songtaste.provider.ApiFactory;
 import com.carlisle.songtaste.provider.converter.GsonConverter;
 
@@ -26,11 +25,12 @@ import butterknife.InjectView;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.observables.AndroidObservable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by chengxin on 2/25/15.
  */
-public class FavoriteFragment extends BaseFragment {
+public class NewFragment extends BaseFragment {
 
     @InjectView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -38,15 +38,14 @@ public class FavoriteFragment extends BaseFragment {
     SwipeRefreshLayout swipeLayout;
 
     private LinearLayoutManager layoutManager;
-    private SongAdapter adapter;
-    private ArrayList arrayList;
+    private LoadMoreAdapter adapter;
+    private ArrayList<SongInfo> arrayList;
     private Subscription subscription;
 
     private int currentPage = 1;
     private String songsNumber = "20";
     private String temp = "0";
-    private String callback = "";
-    private String code = "utf-8";
+    private String callback = "dm.st.fmNew";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,11 +56,9 @@ public class FavoriteFragment extends BaseFragment {
         layoutManager = new LinearLayoutManager(getActivity());
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
+        adapter = new LoadMoreAdapter(getActivity());
+        refreshData();
 
-        adapter = new SongAdapter(getActivity());
-//        adapter = new SongAdapter(getData("6973651", "1", "20", "0", "dm.st.getDetailBackUser", "utf-8"));
-
-        fetchData("6973651", 1);
         initRecycleView(recyclerView);
         initSwipeRefreshLayout(swipeLayout);
 
@@ -72,17 +69,20 @@ public class FavoriteFragment extends BaseFragment {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                return false;
-            }
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int lastVisibleItem = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+                int totalItemCount = layoutManager.getItemCount();
 
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
+                // dy > 0 表示下滑
+                if (lastVisibleItem >= totalItemCount - 1 && dy > 0) {
+                    loadMoreData(++currentPage);
+                }
             }
         });
+
 
     }
 
@@ -98,34 +98,58 @@ public class FavoriteFragment extends BaseFragment {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(false);
-                        adapter.insert2Top(arrayList);
+                        refreshData();
                     }
                 }, 3000);
             }
         });
     }
 
-    private void fetchData(String uid, int page) {
-
-        final ArrayList<Song> data = new ArrayList<>();
-
-        subscription = AndroidObservable.bindFragment(this, ApiFactory.getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.COLLECTION_RESULT))
-                .collectionSong(uid, String.valueOf(page), songsNumber, temp, callback, code))
-                .subscribe(new Observer<CollectionResult>() {
+    private void loadMoreData(int page) {
+        subscription = AndroidObservable.bindFragment(this, ApiFactory.getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_NEW_RESULT))
+                .recList(String.valueOf(page), songsNumber, temp, callback))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<FMNewResult>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
                     }
 
                     @Override
-                    public void onNext(CollectionResult collectionResult) {
-                        adapter.refresh(collectionResult.getData());
+                    public void onNext(FMNewResult songListResult) {
+                        adapter.insert2Bottom(songListResult.getData());
                     }
                 });
+    }
+
+    private void refreshData() {
+        subscription = AndroidObservable.bindFragment(this, ApiFactory.getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_NEW_RESULT))
+                .recList("1", songsNumber, temp, callback))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<FMNewResult>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(FMNewResult songListResult) {
+                        adapter.refresh(songListResult.getData());
+                    }
+                });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        subscription.unsubscribe();
     }
 }

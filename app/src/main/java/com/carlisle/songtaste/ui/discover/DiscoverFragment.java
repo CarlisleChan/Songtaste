@@ -61,12 +61,58 @@ public class DiscoverFragment extends BaseFragment {
 
         @Override
         public Fragment getItem(int position) {
-            return SuperAwesomeCardFragment.newInstance(position);
+            switch (position) {
+                case 0:
+                    return getNewFragment();
+                case 1:
+                    return getHotFragment();
+                case 2:
+                    return getAlbumFragment();
+                case 3:
+                    return getTagFragment();
+                default:
+                    break;
+            }
+            return null;
         }
 
         @Override
         public int getCount() {
             return TITLES.length;
         }
+
     }
+
+    private NewFragment getNewFragment() {
+        NewFragment fragment = (NewFragment) getChildFragmentManager().findFragmentByTag(NewFragment.class.getName());
+        if (fragment == null) {
+            fragment = new NewFragment();
+        }
+        return fragment;
+    }
+
+    private HotFragment getHotFragment() {
+        HotFragment fragment = (HotFragment) getChildFragmentManager().findFragmentByTag(HotFragment.class.getName());
+        if (fragment == null) {
+            fragment = new HotFragment();
+        }
+        return fragment;
+    }
+
+    private AlbumFragment getAlbumFragment() {
+        AlbumFragment fragment = (AlbumFragment) getChildFragmentManager().findFragmentByTag(AlbumFragment.class.getName());
+        if (fragment == null) {
+            fragment = new AlbumFragment();
+        }
+        return fragment;
+    }
+
+    private TagFragment getTagFragment() {
+        TagFragment fragment = (TagFragment) getChildFragmentManager().findFragmentByTag(TagFragment.class.getName());
+        if (fragment == null) {
+            fragment = new TagFragment();
+        }
+        return fragment;
+    }
+
 }

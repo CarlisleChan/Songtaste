@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.adapter.SongAdapter;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.modle.SongInfo;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,7 @@ public class LocalFragment extends BaseFragment {
 
     private LinearLayoutManager layoutManager;
     public SongAdapter adapter;
-    public ArrayList arrayList;
+    public ArrayList<SongInfo> arrayList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,10 +48,10 @@ public class LocalFragment extends BaseFragment {
         arrayList = new ArrayList();
 
         for (int i = 0; i < 7; i++) {
-            arrayList.add(i, "item" + i);
+//            arrayList.add(i, "item" + i);
         }
 
-        adapter = new SongAdapter(arrayList);
+        adapter = new SongAdapter(getActivity());
 
         initRecycleView(recyclerView);
         initSwipeRefreshLayout(swipeLayout);

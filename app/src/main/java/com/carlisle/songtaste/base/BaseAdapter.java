@@ -1,6 +1,7 @@
 package com.carlisle.songtaste.base;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void insert2Top(ArrayList<T> data) {
+        Log.i("insert==>","" + data.size());
         int itemCount = data.size();
         this.dataList.addAll(0, data);
         notifyItemRangeChanged(0, itemCount);
@@ -51,7 +53,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         int itemCount = dataList.size();
         this.dataList.clear();
         this.dataList.addAll(dataList);
-        notifyItemRangeChanged(0, itemCount);
+        notifyDataSetChanged();
     }
 
 }

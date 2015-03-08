@@ -20,4 +20,124 @@ public class SongInfo {
     public String UserName;
     public String UserIcon;
     public String UpDT;
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getSinger() {
+        return Singer;
+    }
+
+    public void setSinger(String singer) {
+        Singer = singer;
+    }
+
+    public String getUserID() {
+        return UserID;
+    }
+
+    public void setUserID(String userID) {
+        UserID = userID;
+    }
+
+    public String getUpUName() {
+        return UpUName;
+    }
+
+    public void setUpUName(String upUName) {
+        UpUName = upUName;
+    }
+
+    public String getUpUIcon() {
+        return UpUIcon;
+    }
+
+    public void setUpUIcon(String upUIcon) {
+        UpUIcon = upUIcon;
+    }
+
+    public String getGradeNum() {
+        return GradeNum;
+    }
+
+    public void setGradeNum(String gradeNum) {
+        GradeNum = gradeNum;
+    }
+
+    public String getFavNum() {
+        return FavNum;
+    }
+
+    public void setFavNum(String favNum) {
+        FavNum = favNum;
+    }
+
+    public String getRateDT() {
+        return RateDT;
+    }
+
+    public void setRateDT(String rateDT) {
+        RateDT = rateDT;
+    }
+
+    public String getRateUID() {
+        return RateUID;
+    }
+
+    public void setRateUID(String rateUID) {
+        RateUID = rateUID;
+    }
+
+    public String getRateName() {
+        return RateName;
+    }
+
+    public void setRateName(String rateName) {
+        RateName = rateName;
+    }
+
+    public String getDevType() {
+        return DevType;
+    }
+
+    public void setDevType(String devType) {
+        DevType = devType;
+    }
+
+    public String getUserName() {
+        return UserName;
+    }
+
+    public void setUserName(String userName) {
+        UserName = userName;
+    }
+
+    public String getUserIcon() {
+        return UserIcon;
+    }
+
+    public void setUserIcon(String userIcon) {
+        UserIcon = userIcon;
+    }
+
+    public String getUpDT() {
+        return UpDT;
+    }
+
+    public void setUpDT(String upDT) {
+        UpDT = upDT;
+    }
 }

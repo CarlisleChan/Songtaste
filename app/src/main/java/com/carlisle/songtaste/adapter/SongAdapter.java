@@ -1,6 +1,8 @@
 package com.carlisle.songtaste.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseAdapter;
 import com.carlisle.songtaste.modle.SongInfo;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -18,16 +21,33 @@ import butterknife.InjectView;
 /**
  * Created by carlisle on 3/7/15.
  */
-public class SongAdapter extends BaseAdapter {
-    private ArrayList<SongInfo> dataList = new ArrayList<>();
+public class SongAdapter<T> extends BaseAdapter {
+    private ArrayList<T> dataList = new ArrayList<>();
+    private Context context;
 
-    public SongAdapter(ArrayList<SongInfo> dataList) {
-        this.dataList = dataList;
+    public SongAdapter(Context context) {
+        this.context = context;
+//        this.dataList.addAll(dataList);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
+
+        ((SimpleHolder) holder).upUserName.setText(((SongInfo) getItem(position)).getUpUName());
+        Picasso.with(context)
+                .load(((SongInfo) getItem(position)).getUpUIcon())
+                .placeholder(R.drawable.ic_account_circle_grey600_24dp)
+                .into(((SimpleHolder) holder).upUserAvatar);
+
+        Log.i("++",""+ ((SongInfo) getItem(position)).getUpUIcon());
+
+        ((SimpleHolder) holder).songName.setText(((SongInfo) getItem(position)).getName());
+        ((SimpleHolder) holder).singerName.setText(((SongInfo) getItem(position)).getSinger());
+        ((SimpleHolder) holder).rateDateTime.setText(((SongInfo) getItem(position)).getRateDT());
+        ((SimpleHolder) holder).favNum.setText(((SongInfo) getItem(position)).getFavNum());
+        ((SimpleHolder) holder).gradeNum.setText(((SongInfo) getItem(position)).getGradeNum());
+
     }
 
     @Override

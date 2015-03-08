@@ -1,5 +1,6 @@
 package com.carlisle.songtaste.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,10 +8,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseAdapter;
+import com.carlisle.songtaste.modle.SongInfo;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -29,6 +31,7 @@ public class LoadMoreAdapter<T> extends BaseAdapter {
         LOADING, LOAD_CIMPLETE, LOAD_FAILED
     }
 
+    private Context context;
     private RecyclerView.ViewHolder viewHolder;
     private ArrayList<T> dataList = new ArrayList<>();
     private OnLoadMoreListener loadMoreListener;
@@ -37,8 +40,8 @@ public class LoadMoreAdapter<T> extends BaseAdapter {
         this.loadMoreListener = loadMoreListener;
     }
 
-    public LoadMoreAdapter(ArrayList<T> data) {
-        this.dataList = data;
+    public LoadMoreAdapter(Context context) {
+        this.context = context;
     }
 
     public void resetProgressBarStatus(LoadStatus loadStatus) {
@@ -85,12 +88,16 @@ public class LoadMoreAdapter<T> extends BaseAdapter {
         viewHolder = holder;
 
         if (viewHolder instanceof VHItem) {
-            ((VHItem) viewHolder).rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(), getItem(position).toString(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            ((VHItem) holder).upUserName.setText(((SongInfo)getItem(position)).getUpUName());
+            ((VHItem) holder).songName.setText(((SongInfo)getItem(position)).getName());
+            ((VHItem) holder).singerName.setText(((SongInfo)getItem(position)).getSinger());
+            ((VHItem) holder).rateDateTime.setText(((SongInfo)getItem(position)).getRateDT());
+            ((VHItem) holder).favNum.setText(((SongInfo)getItem(position)).getFavNum());
+            ((VHItem) holder).gradeNum.setText(((SongInfo) getItem(position)).getGradeNum());
+            Picasso.with(context)
+                    .load(((SongInfo) getItem(position)).getUserIcon())
+                    .placeholder(R.drawable.ic_account_circle_grey600_24dp)
+                    .into(((VHItem) holder).upUserAvatar);
 
         } else if (viewHolder instanceof VHFooter) {
             ((VHFooter) viewHolder).progressLayout.setOnClickListener(new View.OnClickListener() {
