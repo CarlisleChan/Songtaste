@@ -2,7 +2,6 @@ package com.carlisle.songtaste.ui.discover.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -68,22 +67,18 @@ public class HotAdapter extends LoadMoreAdapter {
 
         @Override
         void bindView(int position) {
-            upUserName.setText(((SongInfo) getItem(position)).getUpUName());
+            upUserName.setText(((SongInfo) getItem(position)).getUserName());
             songName.setText(((SongInfo) getItem(position)).getName());
             singerName.setText(((SongInfo) getItem(position)).getSinger());
-            rateDateTime.setText(((SongInfo) getItem(position)).getRateDT());
+            rateDateTime.setText(((SongInfo) getItem(position)).getUpDT());
             favNum.setText(((SongInfo) getItem(position)).getFavNum());
             gradeNum.setText(((SongInfo) getItem(position)).getGradeNum());
 
-            Log.i("icon====>",""+((SongInfo) getItem(position)).getUpUIcon());
-
             Picasso.with(context)
-                    .load(((SongInfo) getItem(position)).getUpUIcon())
+                    .load(((SongInfo) getItem(position)).getUserIcon())
                     .placeholder(R.drawable.ic_account_circle_grey600_24dp)
                     .into(upUserAvatar);
         }
     }
-
-
 
 }

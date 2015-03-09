@@ -75,8 +75,6 @@ public class NewAdapter extends LoadMoreAdapter {
             favNum.setText(((SongInfo) getItem(position)).getFavNum());
             gradeNum.setText(((SongInfo) getItem(position)).getGradeNum());
 
-            Log.i("icon====>",""+((SongInfo) getItem(position)).getUpUIcon());
-
             Picasso.with(context)
                     .load(((SongInfo) getItem(position)).getUpUIcon())
                     .placeholder(R.drawable.ic_account_circle_grey600_24dp)

@@ -12,12 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.ui.discover.adapter.NewAdapter;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.modle.FMHotResult;
 import com.carlisle.songtaste.modle.SongInfo;
 import com.carlisle.songtaste.provider.ApiFactory;
 import com.carlisle.songtaste.provider.converter.GsonConverter;
+import com.carlisle.songtaste.ui.discover.adapter.HotAdapter;
 
 import java.util.ArrayList;
 
@@ -39,7 +39,7 @@ public class HotFragment extends BaseFragment {
     SwipeRefreshLayout swipeLayout;
 
     private LinearLayoutManager layoutManager;
-    private NewAdapter adapter;
+    private HotAdapter adapter;
     private ArrayList<SongInfo> arrayList;
     private Subscription subscription;
 
@@ -51,13 +51,13 @@ public class HotFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_song_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_discover_new, container, false);
         ButterKnife.inject(this, view);
 
         layoutManager = new LinearLayoutManager(getActivity());
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
-        adapter = new NewAdapter(getActivity());
+        adapter = new HotAdapter(getActivity());
         refreshData();
 
         initRecycleView(recyclerView);
@@ -83,7 +83,6 @@ public class HotFragment extends BaseFragment {
                 }
             }
         });
-
 
     }
 
@@ -129,7 +128,7 @@ public class HotFragment extends BaseFragment {
     }
 
     private void refreshData() {
-        subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_NEW_RESULT))
+        subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_HOT_RESULT))
                 .hotSong("1", songsNumber, temp, callback))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<FMHotResult>() {
@@ -146,7 +145,8 @@ public class HotFragment extends BaseFragment {
                     @Override
                     public void onNext(FMHotResult fmHotResult) {
                         for (SongInfo songInfo : fmHotResult.getData()) {
-                            Log.i("song name ====>",""+ songInfo.getName());
+                            Log.i("song name ====>",""+ songInfo.getUpDT());
+                            Log.i("song icon ====>",""+ songInfo.getUserIcon());
                         }
 
                         adapter.refresh(fmHotResult.getData());

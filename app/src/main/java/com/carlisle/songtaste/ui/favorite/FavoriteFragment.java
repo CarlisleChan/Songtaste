@@ -51,7 +51,7 @@ public class FavoriteFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_song_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_discover_new, container, false);
         ButterKnife.inject(this, view);
 
         layoutManager = new LinearLayoutManager(getActivity());
