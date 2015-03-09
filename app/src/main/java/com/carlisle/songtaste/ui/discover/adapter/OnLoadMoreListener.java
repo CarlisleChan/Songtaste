@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.adapter;
+package com.carlisle.songtaste.ui.discover.adapter;
 
 import android.view.View;
 

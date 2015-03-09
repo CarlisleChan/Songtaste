@@ -7,7 +7,6 @@ import com.carlisle.songtaste.modle.FMAlbumResult;
 import com.carlisle.songtaste.modle.FMHotResult;
 import com.carlisle.songtaste.modle.FMNewResult;
 import com.carlisle.songtaste.modle.FMTagResult;
-import com.carlisle.songtaste.modle.Song;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 import retrofit.converter.ConversionException;
 import retrofit.converter.Converter;
@@ -57,17 +55,6 @@ public class GsonConverter implements Converter {
 
         Log.i("strResult--->    ",strResult);
         Log.i("converterType--->    ","" + converterType);
-
-        CollectionResult test = new CollectionResult();
-        ArrayList<Song> data = new ArrayList<>();
-        Song song = new Song();
-        song.setSong_name("123");
-        song.setSinger_name("ewqewq");
-        data.add(song);
-        test.setData(data);
-        test.setSupport_total("11");
-        String testStr = new Gson().toJson(test);
-        Log.i("Gson--->    ", testStr);
 
         switch (converterType) {
             case COLLECTION_RESULT:

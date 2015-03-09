@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.ui.discover;
+package com.carlisle.songtaste.ui.discover.discoverFragments;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,7 +12,7 @@ import android.widget.GridView;
 import android.widget.SimpleAdapter;
 
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.adapter.AlbumAdapter;
+import com.carlisle.songtaste.ui.discover.adapter.AlbumAdapter;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.modle.AlbumInfo;
 import com.carlisle.songtaste.modle.FMAlbumResult;
@@ -31,7 +31,7 @@ import rx.android.observables.AndroidObservable;
 /**
  * Created by chengxin on 2/25/15.
  */
-public class TagFragment extends BaseFragment {
+public class AlbumFragment extends BaseFragment {
 
     @InjectView(R.id.gridView)
     GridView gridView;
@@ -99,7 +99,7 @@ public class TagFragment extends BaseFragment {
 
         Log.i("=====809", "");
 
-        subscription = AndroidObservable.bindFragment(this, ApiFactory.getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_ALBUM_RESULT))
+        subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_ALBUM_RESULT))
                 .hotAlbums(temp, callback))
                 .subscribe(new Observer<FMAlbumResult>() {
                     @Override

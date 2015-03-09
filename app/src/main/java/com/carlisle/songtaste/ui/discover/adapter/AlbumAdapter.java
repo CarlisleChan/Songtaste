@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.adapter;
+package com.carlisle.songtaste.ui.discover.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

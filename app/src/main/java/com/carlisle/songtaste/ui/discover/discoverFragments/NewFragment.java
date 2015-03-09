@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.ui.discover;
+package com.carlisle.songtaste.ui.discover.discoverFragments;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.adapter.LoadMoreAdapter;
+import com.carlisle.songtaste.ui.discover.adapter.NewAdapter;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.modle.FMNewResult;
 import com.carlisle.songtaste.modle.SongInfo;
@@ -38,7 +38,7 @@ public class NewFragment extends BaseFragment {
     SwipeRefreshLayout swipeLayout;
 
     private LinearLayoutManager layoutManager;
-    private LoadMoreAdapter adapter;
+    private NewAdapter adapter;
     private ArrayList<SongInfo> arrayList;
     private Subscription subscription;
 
@@ -56,7 +56,7 @@ public class NewFragment extends BaseFragment {
         layoutManager = new LinearLayoutManager(getActivity());
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
-        adapter = new LoadMoreAdapter(getActivity());
+        adapter = new NewAdapter(getActivity());
         refreshData();
 
         initRecycleView(recyclerView);
@@ -106,7 +106,7 @@ public class NewFragment extends BaseFragment {
     }
 
     private void loadMoreData(int page) {
-        subscription = AndroidObservable.bindFragment(this, ApiFactory.getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_NEW_RESULT))
+        subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_NEW_RESULT))
                 .recList(String.valueOf(page), songsNumber, temp, callback))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<FMNewResult>() {
@@ -127,7 +127,7 @@ public class NewFragment extends BaseFragment {
     }
 
     private void refreshData() {
-        subscription = AndroidObservable.bindFragment(this, ApiFactory.getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_NEW_RESULT))
+        subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_NEW_RESULT))
                 .recList("1", songsNumber, temp, callback))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<FMNewResult>() {

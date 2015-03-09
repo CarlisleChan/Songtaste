@@ -12,10 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.adapter.SongAdapter;
+import com.carlisle.songtaste.ui.local.SongAdapter;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.modle.CollectionResult;
-import com.carlisle.songtaste.modle.Song;
+import com.carlisle.songtaste.modle.SongDetailInfo;
 import com.carlisle.songtaste.provider.ApiFactory;
 import com.carlisle.songtaste.provider.converter.GsonConverter;
 
@@ -107,9 +107,9 @@ public class FavoriteFragment extends BaseFragment {
 
     private void fetchData(String uid, int page) {
 
-        final ArrayList<Song> data = new ArrayList<>();
+        final ArrayList<SongDetailInfo> data = new ArrayList<>();
 
-        subscription = AndroidObservable.bindFragment(this, ApiFactory.getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.COLLECTION_RESULT))
+        subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.COLLECTION_RESULT))
                 .collectionSong(uid, String.valueOf(page), songsNumber, temp, callback, code))
                 .subscribe(new Observer<CollectionResult>() {
                     @Override

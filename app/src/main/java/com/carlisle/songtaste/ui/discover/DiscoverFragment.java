@@ -14,6 +14,10 @@ import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.ui.discover.discoverFragments.AlbumFragment;
+import com.carlisle.songtaste.ui.discover.discoverFragments.HotFragment;
+import com.carlisle.songtaste.ui.discover.discoverFragments.NewFragment;
+import com.carlisle.songtaste.ui.discover.discoverFragments.TagFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

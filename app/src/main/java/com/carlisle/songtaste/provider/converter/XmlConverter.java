@@ -3,7 +3,7 @@ package com.carlisle.songtaste.provider.converter;
 import android.util.Log;
 
 import com.carlisle.songtaste.modle.Result;
-import com.carlisle.songtaste.modle.Song;
+import com.carlisle.songtaste.modle.SongDetailInfo;
 import com.carlisle.songtaste.modle.User;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -87,8 +87,8 @@ public class XmlConverter implements Converter {
         return out.toString();
     }
 
-    private Song parseSongXml(String xml) {
-        Song song = new Song();
+    private SongDetailInfo parseSongXml(String xml) {
+        SongDetailInfo songDetailInfo = new SongDetailInfo();
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser parser = factory.newPullParser();
@@ -106,21 +106,21 @@ public class XmlConverter implements Converter {
                         String tagName = parser.getName();
 
                         if (tagName.equals("code")) {
-                            song.setCode(Integer.valueOf(parser.nextText()));
+                            songDetailInfo.setCode(Integer.valueOf(parser.nextText()));
                         } else if (tagName.equals("singer_name")) {
-                            song.setSinger_name(parser.nextText());
+                            songDetailInfo.setSinger_name(parser.nextText());
                         } else if (tagName.equals("song_name")) {
-                            song.setSong_name(parser.nextText());
+                            songDetailInfo.setSong_name(parser.nextText());
                         } else if (tagName.equals("url")) {
-                            song.setUrl(parser.nextText());
+                            songDetailInfo.setUrl(parser.nextText());
                         } else if (tagName.equals("Mlength")) {
-                            song.setMlength(parser.nextText());
+                            songDetailInfo.setMlength(parser.nextText());
                         } else if (tagName.equals("Msize")) {
-                            song.setMsize(parser.nextText());
+                            songDetailInfo.setMsize(parser.nextText());
                         } else if (tagName.equals("Mbitrate")) {
-                            song.setMbitrate(parser.nextText());
+                            songDetailInfo.setMbitrate(parser.nextText());
                         } else if (tagName.equals("iscollection")) {
-                            song.setCollection(parser.nextText());
+                            songDetailInfo.setCollection(parser.nextText());
                         }
 
                         break;
@@ -140,7 +140,7 @@ public class XmlConverter implements Converter {
             e.printStackTrace();
         }
 
-        return song;
+        return songDetailInfo;
     }
 
     private User parseUserXml(String xml) {
