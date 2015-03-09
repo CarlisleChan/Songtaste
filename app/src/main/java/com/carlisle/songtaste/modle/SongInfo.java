@@ -8,6 +8,7 @@ public class SongInfo {
     public String Name;
     public String Singer;
     public String UserID;
+    public String Click;
     public String UpUName;
     public String UpUIcon;
     public String GradeNum;
@@ -51,6 +52,14 @@ public class SongInfo {
 
     public void setUserID(String userID) {
         UserID = userID;
+    }
+
+    public String getClick() {
+        return Click;
+    }
+
+    public void setClick(String click) {
+        Click = click;
     }
 
     public String getUpUName() {

@@ -1,12 +1,13 @@
 package com.carlisle.songtaste.provider;
 
+import com.carlisle.songtaste.modle.AlbumDetailInfo;
 import com.carlisle.songtaste.modle.CollectionResult;
 import com.carlisle.songtaste.modle.FMAlbumResult;
 import com.carlisle.songtaste.modle.FMHotResult;
 import com.carlisle.songtaste.modle.FMNewResult;
 import com.carlisle.songtaste.modle.FMTagResult;
 import com.carlisle.songtaste.modle.Result;
-import com.carlisle.songtaste.modle.Song;
+import com.carlisle.songtaste.modle.SongDetailInfo;
 import com.carlisle.songtaste.modle.User;
 
 import retrofit.http.GET;
@@ -32,6 +33,10 @@ public interface SongtasteApi {
     @GET("/hot_albums.php")
     public Observable<FMAlbumResult> hotAlbums(@Query("tmp") String tmp, @Query("callback") String callback);
 
+    @GET("/album_song.php")
+    public Observable<AlbumDetailInfo> albumSong(@Query("aid") String aid, @Query("p") String p, @Query("n") String n,
+                                                 @Query("tmp") String tmp, @Query("callback") String callback, @Query("code") String code);
+
     @GET("/collection_song.php")
     public Observable<CollectionResult> collectionSong(@Query("uid") String uid, @Query("p") String page, @Query("n") String number,
                                                        @Query("tmp") String tmp, @Query("callback") String callback, @Query("code") String code);
@@ -40,7 +45,7 @@ public interface SongtasteApi {
     public Observable<User> isDMBind(@Query("id") String id, @Query("format") String format);
 
     @GET("/songurl.php")
-    public Observable<Song> songUrl(@Query("songid") String songid, @Query("version") String version);
+    public Observable<SongDetailInfo> songUrl(@Query("songid") String songid, @Query("version") String version);
 
     @GET("/collection.php")
     public Observable<Result> collection(@Query("uid") String uid, @Query("songid") String songid, @Query("format") String format);

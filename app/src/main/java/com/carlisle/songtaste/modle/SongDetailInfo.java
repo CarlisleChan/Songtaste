@@ -3,7 +3,7 @@ package com.carlisle.songtaste.modle;
 /**
  * Created by chengxin on 2/26/15.
  */
-public class Song {
+public class SongDetailInfo {
     public int code;
     public String singer_name;
     public String song_name;

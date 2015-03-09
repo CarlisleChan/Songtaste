@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class FMTagResult {
     public int total;
     public int code;
-    public int n;
     public ArrayList<TagInfo> data;
 
     public int getTotal() {
@@ -25,14 +24,6 @@ public class FMTagResult {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public int getN() {
-        return n;
-    }
-
-    public void setN(int n) {
-        this.n = n;
     }
 
     public ArrayList<TagInfo> getData() {
