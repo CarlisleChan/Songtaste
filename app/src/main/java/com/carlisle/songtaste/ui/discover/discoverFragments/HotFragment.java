@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,11 +143,6 @@ public class HotFragment extends BaseFragment {
 
                     @Override
                     public void onNext(FMHotResult fmHotResult) {
-                        for (SongInfo songInfo : fmHotResult.getData()) {
-                            Log.i("song name ====>",""+ songInfo.getUpDT());
-                            Log.i("song icon ====>",""+ songInfo.getUserIcon());
-                        }
-
                         adapter.refresh(fmHotResult.getData());
                     }
                 });
