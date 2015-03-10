@@ -1,7 +1,5 @@
 package com.carlisle.songtaste.provider.converter;
 
-import android.util.Log;
-
 import com.carlisle.songtaste.modle.CollectionResult;
 import com.carlisle.songtaste.modle.FMAlbumResult;
 import com.carlisle.songtaste.modle.FMHotResult;
@@ -53,13 +51,9 @@ public class GsonConverter implements Converter {
 
         strResult = strResult.substring(strResult.indexOf("(") + 1, strResult.lastIndexOf(")"));
 
-        Log.i("strResult--->    ",strResult);
-        Log.i("converterType--->    ","" + converterType);
-
         switch (converterType) {
             case COLLECTION_RESULT:
                 CollectionResult collectionResult = new Gson().fromJson(strResult, CollectionResult.class);
-//                Log.i("collection------>",collectionResult.getCollection_total());
                 return collectionResult;
             case FM_ALBUM_RESULT:
                 FMAlbumResult fmAlbumResult = new Gson().fromJson(strResult, FMAlbumResult.class);

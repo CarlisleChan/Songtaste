@@ -4,13 +4,11 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseAdapter;
-import com.carlisle.songtaste.modle.AlbumInfo;
-import com.squareup.picasso.Picasso;
+import com.carlisle.songtaste.modle.TagInfo;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -18,17 +16,17 @@ import butterknife.InjectView;
 /**
  * Created by chengxin on 12/25/14.
  */
-public class AlbumAdapter extends BaseAdapter {
+public class TagAdapter extends BaseAdapter {
 
     private Context context;
 
-    public AlbumAdapter(Context context) {
+    public TagAdapter(Context context) {
         this.context = context;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = View.inflate(parent.getContext(), R.layout.album_item, null);
+        View itemView = View.inflate(parent.getContext(), R.layout.tag_item, null);
         return new VHItem(itemView);
     }
 
@@ -40,10 +38,8 @@ public class AlbumAdapter extends BaseAdapter {
     class VHItem extends BaseViewHolder {
         public View rootView;
 
-        @InjectView(R.id.album_icon)
-        ImageView albumIcon;
-        @InjectView(R.id.album_name)
-        TextView albumName;
+        @InjectView(R.id.tag_name)
+        TextView tagName;
 
         public VHItem(View view) {
             super(view);
@@ -53,12 +49,7 @@ public class AlbumAdapter extends BaseAdapter {
 
         @Override
         void bindView(int position) {
-            albumName.setText(((AlbumInfo) getItem(position)).getAlbum_name());
-
-            Picasso.with(context)
-                    .load(((AlbumInfo) getItem(position)).getAlbum_icon())
-                    .placeholder(R.drawable.ic_account_circle_grey600_24dp)
-                    .into(albumIcon);
+            tagName.setText(((TagInfo) getItem(position)).getKey());
         }
     }
 
