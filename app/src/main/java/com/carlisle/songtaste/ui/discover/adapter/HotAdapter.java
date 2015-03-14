@@ -28,7 +28,7 @@ public class HotAdapter extends LoadMoreAdapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            View itemView = View.inflate(parent.getContext(), R.layout.song_item, null);
+            View itemView = View.inflate(parent.getContext(), R.layout.item_songtaste_song, null);
             return new VHItem(itemView);
         }
 
@@ -66,7 +66,7 @@ public class HotAdapter extends LoadMoreAdapter {
         }
 
         @Override
-        void bindView(int position) {
+        public void bindView(int position) {
             upUserName.setText(((SongInfo) getItem(position)).getUserName());
             songName.setText(((SongInfo) getItem(position)).getName());
             singerName.setText(((SongInfo) getItem(position)).getSinger());

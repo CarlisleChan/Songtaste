@@ -26,7 +26,7 @@ public class TagAdapter extends BaseAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = View.inflate(parent.getContext(), R.layout.tag_item, null);
+        View itemView = View.inflate(parent.getContext(), R.layout.item_tag, null);
         return new VHItem(itemView);
     }
 
@@ -48,7 +48,7 @@ public class TagAdapter extends BaseAdapter {
         }
 
         @Override
-        void bindView(int position) {
+        public void bindView(int position) {
             tagName.setText(((TagInfo) getItem(position)).getKey());
         }
     }

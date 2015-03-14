@@ -28,7 +28,7 @@ public class AlbumAdapter extends BaseAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = View.inflate(parent.getContext(), R.layout.album_item, null);
+        View itemView = View.inflate(parent.getContext(), R.layout.item_album, null);
         return new VHItem(itemView);
     }
 
@@ -52,7 +52,7 @@ public class AlbumAdapter extends BaseAdapter {
         }
 
         @Override
-        void bindView(int position) {
+        public void bindView(int position) {
             albumName.setText(((AlbumInfo) getItem(position)).getAlbum_name());
 
             Picasso.with(context)

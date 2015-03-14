@@ -2,7 +2,6 @@ package com.carlisle.songtaste.ui.discover.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,7 +28,7 @@ public class NewAdapter extends LoadMoreAdapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            View itemView = View.inflate(parent.getContext(), R.layout.song_item, null);
+            View itemView = View.inflate(parent.getContext(), R.layout.item_songtaste_song, null);
             return new VHItem(itemView);
         }
 
@@ -67,7 +66,7 @@ public class NewAdapter extends LoadMoreAdapter {
         }
 
         @Override
-        void bindView(int position) {
+        public void bindView(int position) {
             upUserName.setText(((SongInfo) getItem(position)).getUpUName());
             songName.setText(((SongInfo) getItem(position)).getName());
             singerName.setText(((SongInfo) getItem(position)).getSinger());

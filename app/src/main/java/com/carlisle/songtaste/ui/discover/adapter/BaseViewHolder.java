@@ -13,7 +13,7 @@ class BaseViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
     }
 
-    void bindView(int position) {
+    public void bindView(int position) {
 
     }
 }

@@ -78,7 +78,7 @@ public class LoadMoreAdapter extends BaseAdapter {
         }
 
         @Override
-        void bindView(int position) {
+        public void bindView(int position) {
             progressLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
