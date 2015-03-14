@@ -3,6 +3,8 @@ package com.carlisle.songtaste.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -32,6 +34,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 public class MainActivity extends BaseActivity {
 
     private static final int PROFILE_SETTING = 1;
+    private static int MENU_TYPE = R.menu.menu_discover;
 
     private FragmentSwitcher switcher;
 
@@ -46,6 +49,8 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         initFragment();
+
+        MENU_TYPE = R.menu.menu_local;
 
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -142,5 +147,40 @@ public class MainActivity extends BaseActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected boolean onPrepareOptionsPanel(View view, Menu menu) {
+        menu.clear();
+        creatMenu(menu, MENU_TYPE);
+        return super.onPrepareOptionsPanel(view, menu);
+    }
+
+    private void creatMenu(Menu menu, int menuType) {
+        getMenuInflater().inflate(menuType, menu);
+    }
+
+    public void setMenuType(int menuType) {
+        MENU_TYPE = menuType;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_exit:
+                finish();
+                return true;
+            case R.id.action_scan_again:
+                MENU_TYPE = R.menu.menu_offline;
+                return true;
+            case R.id.action_manager:
+                return true;
+            case R.id.action_start_download:
+                return true;
+            case R.id.action_stop_download:
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

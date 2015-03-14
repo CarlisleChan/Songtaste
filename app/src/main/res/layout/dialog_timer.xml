@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:text="设置关闭时间"
+        android:textColor="@android:color/darker_gray"/>
+
+    <com.carlisle.songtaste.ui.view.PickerView
+        android:id="@+id/picker"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp" />
+
+</LinearLayout>
