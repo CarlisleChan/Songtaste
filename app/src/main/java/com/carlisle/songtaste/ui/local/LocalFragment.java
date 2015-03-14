@@ -7,7 +7,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -40,40 +39,28 @@ public class LocalFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
 
-        layoutManager = new LinearLayoutManager(getActivity());
-//      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        // 设置布局管理器
-
         arrayList = new ArrayList();
-
         SongInfo songInfo = new SongInfo();
         for (int i = 0; i < 7; i++) {
             arrayList.add(songInfo);
         }
 
-        adapter = new SongAdapter(getActivity());
-        adapter.refresh(arrayList);
-
         initRecycleView(recyclerView);
         initSwipeRefreshLayout(swipeLayout);
+        refreshData();
 
         return view;
     }
 
     private void initRecycleView(RecyclerView recyclerView) {
+
+        layoutManager = new LinearLayoutManager(getActivity());
+//      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        // 设置布局管理器
+        adapter = new SongAdapter(getActivity());
+
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            }
-        });
 
     }
 
@@ -89,10 +76,14 @@ public class LocalFragment extends BaseFragment {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(false);
-                        adapter.refresh(arrayList);
+                        refreshData();
                     }
                 }, 3000);
             }
         });
+    }
+
+    private void refreshData() {
+        adapter.refresh(arrayList);
     }
 }

@@ -31,10 +31,16 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 public class MainActivity extends BaseActivity {
 
     private static final int PROFILE_SETTING = 1;
     private static int MENU_TYPE = R.menu.menu_discover;
+
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
 
     private FragmentSwitcher switcher;
 
@@ -47,13 +53,13 @@ public class MainActivity extends BaseActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
 
         initFragment();
 
         MENU_TYPE = R.menu.menu_local;
 
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Create a few sample profile

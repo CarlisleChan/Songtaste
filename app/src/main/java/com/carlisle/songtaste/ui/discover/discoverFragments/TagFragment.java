@@ -55,19 +55,18 @@ public class TagFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_tag, container, false);
         ButterKnife.inject(this, view);
 
+        initTagGroup();
+        initSwipeRefreshLayout();
+        refreshData();
+        return view;
+    }
+
+    private void initTagGroup() {
         layoutManager = new LinearLayoutManager(getActivity());
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
         adapter = new TagAdapter(getActivity());
 
-        refreshData();
-        initTagGroup(tagGroup);
-        initSwipeRefreshLayout(swipeLayout);
-
-        return view;
-    }
-
-    private void initTagGroup(final TagGroup tagGroup) {
         tagGroup.setOnTagGroupListener(new OnTagGroupCLickListener() {
             @Override
             public void onClick(View view) {
@@ -87,18 +86,18 @@ public class TagFragment extends BaseFragment {
         startActivity(intent);
     }
 
-    private void initSwipeRefreshLayout(final SwipeRefreshLayout swipeRefreshLayout) {
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light,
+    private void initSwipeRefreshLayout() {
+        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_light,
                 android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
+                        swipeLayout.setRefreshing(false);
                         refreshData();
                     }
                 }, 3000);

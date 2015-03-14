@@ -19,6 +19,8 @@ public class AboutActivity extends BaseActivity {
     TextView about;
     @InjectView(R.id.tv_app_version)
     TextView appVersion;
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,6 @@ public class AboutActivity extends BaseActivity {
         setContentView(R.layout.activity_about);
         ButterKnife.inject(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

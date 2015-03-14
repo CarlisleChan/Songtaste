@@ -53,19 +53,18 @@ public class HotFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
 
+        initRecycleView();
+        initSwipeRefreshLayout();
+        refreshData();
+        return view;
+    }
+
+    private void initRecycleView() {
+
         layoutManager = new LinearLayoutManager(getActivity());
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
         adapter = new HotAdapter(getActivity());
-        refreshData();
-
-        initRecycleView(recyclerView);
-        initSwipeRefreshLayout(swipeLayout);
-
-        return view;
-    }
-
-    private void initRecycleView(RecyclerView recyclerView) {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -85,18 +84,18 @@ public class HotFragment extends BaseFragment {
 
     }
 
-    private void initSwipeRefreshLayout(final SwipeRefreshLayout swipeRefreshLayout) {
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light,
+    private void initSwipeRefreshLayout() {
+        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_light,
                 android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
+                        swipeLayout.setRefreshing(false);
                         refreshData();
                     }
                 }, 3000);
