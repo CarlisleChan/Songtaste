@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +33,7 @@ public class AlbumFragment extends BaseFragment {
     @InjectView(R.id.swipe_layout)
     SwipeRefreshLayout swipeLayout;
 
-    private LinearLayoutManager layoutManager;
+    private android.support.v7.widget.GridLayoutManager layoutManager;
     private AlbumAdapter adapter;
     private Subscription subscription;
 
@@ -46,7 +46,7 @@ public class AlbumFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.recyclerview_swipe_refresh, container, false);
         ButterKnife.inject(this, view);
 
-        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new GridLayoutManager(getActivity(), 3);
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
         adapter = new AlbumAdapter(getActivity());
@@ -61,6 +61,7 @@ public class AlbumFragment extends BaseFragment {
     private void initRecycleView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
     }
 
     private void initSwipeRefreshLayout(final SwipeRefreshLayout swipeRefreshLayout) {
@@ -98,7 +99,7 @@ public class AlbumFragment extends BaseFragment {
 
                     @Override
                     public void onNext(FMAlbumResult fmAlbumResult) {
-                        adapter.insert2Top(fmAlbumResult.getData());
+                        adapter.refresh(fmAlbumResult.getData());
                     }
                 });
     }
