@@ -3,16 +3,13 @@ package com.carlisle.songtaste.modle;
 import java.util.ArrayList;
 
 /**
- * Created by carlisle on 3/9/15.
+ * Created by carlisle on 3/14/15.
  */
-public class AlbumDetailInfo {
+public class TagDetailResult {
     public int code;
-    public int p;
     public String total;
     public int n;
-    public int page;
     public ArrayList<SongDetailInfo> data;
-    public AlbumInfo albuminfo;
 
     public int getCode() {
         return code;
@@ -20,14 +17,6 @@ public class AlbumDetailInfo {
 
     public void setCode(int code) {
         this.code = code;
-    }
-
-    public int getP() {
-        return p;
-    }
-
-    public void setP(int p) {
-        this.p = p;
     }
 
     public String getTotal() {
@@ -46,27 +35,11 @@ public class AlbumDetailInfo {
         this.n = n;
     }
 
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
     public ArrayList<SongDetailInfo> getData() {
         return data;
     }
 
     public void setData(ArrayList<SongDetailInfo> data) {
         this.data = data;
-    }
-
-    public AlbumInfo getAlbuminfo() {
-        return albuminfo;
-    }
-
-    public void setAlbuminfo(AlbumInfo albuminfo) {
-        this.albuminfo = albuminfo;
     }
 }

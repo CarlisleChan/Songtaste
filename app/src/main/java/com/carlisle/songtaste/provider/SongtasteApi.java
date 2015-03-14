@@ -8,6 +8,7 @@ import com.carlisle.songtaste.modle.FMNewResult;
 import com.carlisle.songtaste.modle.FMTagResult;
 import com.carlisle.songtaste.modle.Result;
 import com.carlisle.songtaste.modle.SongDetailInfo;
+import com.carlisle.songtaste.modle.TagDetailResult;
 import com.carlisle.songtaste.modle.User;
 
 import retrofit.http.GET;
@@ -29,6 +30,10 @@ public interface SongtasteApi {
 
     @GET("/tag_list.php")
     public Observable<FMTagResult> tagList(@Query("tmp") String tmp, @Query("callback") String callback);
+
+    @GET("/tag.php")
+    public Observable<TagDetailResult> tag(@Query("key") String key, @Query("t") String t, @Query("p") String p, @Query("n") String n,
+                                     @Query("tmp") String tmp, @Query("callback") String callback, @Query("code") String code);
 
     @GET("/hot_albums.php")
     public Observable<FMAlbumResult> hotAlbums(@Query("tmp") String tmp, @Query("callback") String callback);

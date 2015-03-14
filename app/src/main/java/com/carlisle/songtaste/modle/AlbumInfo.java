@@ -4,9 +4,38 @@ package com.carlisle.songtaste.modle;
  * Created by chengxin on 2/26/15.
  */
 public class AlbumInfo {
+
+    public String aid;
+    public String creator;
+    public String creator_icon;
+
     public String album_id;
     public String album_name;
     public String album_icon;
+
+    public String getAid() {
+        return aid;
+    }
+
+    public void setAid(String aid) {
+        this.aid = aid;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public String getCreator_icon() {
+        return creator_icon;
+    }
+
+    public void setCreator_icon(String creator_icon) {
+        this.creator_icon = creator_icon;
+    }
 
     public String getAlbum_id() {
         return album_id;
@@ -31,4 +60,5 @@ public class AlbumInfo {
     public void setAlbum_icon(String album_icon) {
         this.album_icon = album_icon;
     }
+
 }
