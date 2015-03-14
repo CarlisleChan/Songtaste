@@ -12,8 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.ui.local.SongAdapter;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.modle.SongInfo;
+import com.carlisle.songtaste.ui.local.SongAdapter;
 
 import java.util.ArrayList;
 
@@ -32,12 +33,12 @@ public class OffLineFragment extends BaseFragment {
 
     private LinearLayoutManager layoutManager;
     public SongAdapter adapter;
-    public ArrayList arrayList;
+    public ArrayList<SongInfo> arrayList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_discover_recyclerview, container, false);
+        View view = inflater.inflate(R.layout.recyclerview_swipe_refresh, container, false);
         ButterKnife.inject(this, view);
 
         layoutManager = new LinearLayoutManager(getActivity());
@@ -46,11 +47,13 @@ public class OffLineFragment extends BaseFragment {
 
         arrayList = new ArrayList();
 
+        SongInfo songInfo = new SongInfo();
         for (int i = 0; i < 7; i++) {
-            arrayList.add(i, "item" + i);
+            arrayList.add(songInfo);
         }
 
         adapter = new SongAdapter(getActivity());
+        adapter.refresh(arrayList);
 
         initRecycleView(recyclerView);
         initSwipeRefreshLayout(swipeLayout);
@@ -87,7 +90,7 @@ public class OffLineFragment extends BaseFragment {
                     @Override
                     public void run() {
                         swipeRefreshLayout.setRefreshing(false);
-                        adapter.insert2Top(arrayList);
+                        adapter.refresh(arrayList);
                     }
                 }, 3000);
             }

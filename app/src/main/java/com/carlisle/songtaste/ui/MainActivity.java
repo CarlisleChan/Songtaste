@@ -113,6 +113,8 @@ public class MainActivity extends BaseActivity {
                                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                             } else {
                                 switcher.switchToFragment(drawerItem.getIdentifier());
+                                setToolBarTitle(drawerItem.getIdentifier());
+                                setMenuType(drawerItem.getIdentifier());
                             }
                         }
                     }
@@ -149,6 +151,23 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void setToolBarTitle(int position) {
+        switch (position) {
+            case 0:
+                getSupportActionBar().setTitle("发现音乐");
+                break;
+            case 1:
+                getSupportActionBar().setTitle("我的收藏");
+                break;
+            case 2:
+                getSupportActionBar().setTitle("我的离线");
+                break;
+            case 3:
+                getSupportActionBar().setTitle("本地音乐");
+                break;
+        }
+    }
+
     @Override
     protected boolean onPrepareOptionsPanel(View view, Menu menu) {
         menu.clear();
@@ -161,7 +180,21 @@ public class MainActivity extends BaseActivity {
     }
 
     public void setMenuType(int menuType) {
-        MENU_TYPE = menuType;
+        switch (menuType) {
+            case 0:
+                MENU_TYPE = R.menu.menu_discover;
+                break;
+            case 1:
+                MENU_TYPE = R.menu.menu_favorite;
+                break;
+            case 2:
+                MENU_TYPE = R.menu.menu_offline;
+                break;
+            case 3:
+                MENU_TYPE = R.menu.menu_local;
+                break;
+        }
+
     }
 
     @Override
