@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.ui.local;
+package com.carlisle.songtaste.ui.offline;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +17,10 @@ import butterknife.InjectView;
 /**
  * Created by carlisle on 3/7/15.
  */
-public class SongAdapter extends BaseAdapter {
+public class OffLineAdapter extends BaseAdapter {
     private Context context;
 
-    public SongAdapter(Context context) {
+    public OffLineAdapter(Context context) {
         this.context = context;
     }
 
@@ -31,7 +31,7 @@ public class SongAdapter extends BaseAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(parent.getContext(), R.layout.item_local_song, null);
+        View view = View.inflate(parent.getContext(), R.layout.item_offline, null);
         return new SimpleHolder(view);
     }
 

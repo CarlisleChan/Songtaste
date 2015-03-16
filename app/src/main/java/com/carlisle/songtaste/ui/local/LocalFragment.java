@@ -31,7 +31,7 @@ public class LocalFragment extends BaseFragment {
 
     private LinearLayoutManager layoutManager;
     public SongAdapter adapter;
-    public ArrayList<SongInfo> arrayList;
+    public ArrayList<SongInfo> songsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,20 +39,20 @@ public class LocalFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
 
-        arrayList = new ArrayList();
+        songsList = new ArrayList();
         SongInfo songInfo = new SongInfo();
         for (int i = 0; i < 7; i++) {
-            arrayList.add(songInfo);
+            songsList.add(songInfo);
         }
 
-        initRecycleView(recyclerView);
-        initSwipeRefreshLayout(swipeLayout);
+        initRecyclerView();
+        initSwipeRefreshLayout();
         refreshData();
 
         return view;
     }
 
-    private void initRecycleView(RecyclerView recyclerView) {
+    private void initRecyclerView() {
 
         layoutManager = new LinearLayoutManager(getActivity());
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -64,18 +64,18 @@ public class LocalFragment extends BaseFragment {
 
     }
 
-    private void initSwipeRefreshLayout(final SwipeRefreshLayout swipeRefreshLayout) {
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_light,
+    private void initSwipeRefreshLayout() {
+        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_light,
                 android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        swipeRefreshLayout.setRefreshing(false);
+                        swipeLayout.setRefreshing(false);
                         refreshData();
                     }
                 }, 3000);
@@ -84,6 +84,6 @@ public class LocalFragment extends BaseFragment {
     }
 
     private void refreshData() {
-        adapter.refresh(arrayList);
+        adapter.refresh(songsList);
     }
 }

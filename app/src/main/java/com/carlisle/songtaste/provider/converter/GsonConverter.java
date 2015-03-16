@@ -1,10 +1,14 @@
 package com.carlisle.songtaste.provider.converter;
 
+import android.util.Log;
+
+import com.carlisle.songtaste.modle.AlbumDetailInfo;
 import com.carlisle.songtaste.modle.CollectionResult;
 import com.carlisle.songtaste.modle.FMAlbumResult;
 import com.carlisle.songtaste.modle.FMHotResult;
 import com.carlisle.songtaste.modle.FMNewResult;
 import com.carlisle.songtaste.modle.FMTagResult;
+import com.carlisle.songtaste.modle.TagDetailResult;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -28,7 +32,9 @@ public class GsonConverter implements Converter {
         FM_ALBUM_RESULT,
         FM_HOT_RESULT,
         FM_NEW_RESULT,
-        FM_TAG_RESULT
+        FM_TAG_RESULT,
+        ALBUM_DETAIL,
+        TAG_DETAIL
     }
 
     ConverterType converterType = null;
@@ -51,6 +57,8 @@ public class GsonConverter implements Converter {
 
         strResult = strResult.substring(strResult.indexOf("(") + 1, strResult.lastIndexOf(")"));
 
+        Log.i("result==>", strResult);
+
         switch (converterType) {
             case COLLECTION_RESULT:
                 CollectionResult collectionResult = new Gson().fromJson(strResult, CollectionResult.class);
@@ -67,6 +75,12 @@ public class GsonConverter implements Converter {
             case FM_TAG_RESULT:
                 FMTagResult fmTagResult = new Gson().fromJson(strResult, FMTagResult.class);
                 return fmTagResult;
+            case ALBUM_DETAIL:
+                AlbumDetailInfo albumDetailInfo = new Gson().fromJson(strResult, AlbumDetailInfo.class);
+                return albumDetailInfo;
+            case TAG_DETAIL:
+                TagDetailResult tagDetailResult = new Gson().fromJson(strResult, TagDetailResult.class);
+                return tagDetailResult;
         }
 
         return null;

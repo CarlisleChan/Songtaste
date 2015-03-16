@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.modle.SongInfo;
-import com.carlisle.songtaste.ui.local.SongAdapter;
 
 import java.util.ArrayList;
 
@@ -31,8 +30,8 @@ public class OffLineFragment extends BaseFragment {
     SwipeRefreshLayout swipeLayout;
 
     private LinearLayoutManager layoutManager;
-    public SongAdapter adapter;
-    public ArrayList<SongInfo> arrayList;
+    public OffLineAdapter adapter;
+    public ArrayList<SongInfo> songsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,26 +39,25 @@ public class OffLineFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
 
-
-        arrayList = new ArrayList();
+        songsList = new ArrayList();
         SongInfo songInfo = new SongInfo();
         for (int i = 0; i < 7; i++) {
-            arrayList.add(songInfo);
+            songsList.add(songInfo);
         }
 
-        initRecycleView();
+        initRecyclerView();
         initSwipeRefreshLayout();
         refreshData();
 
         return view;
     }
 
-    private void initRecycleView() {
+    private void initRecyclerView() {
 
         layoutManager = new LinearLayoutManager(getActivity());
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
-        adapter = new SongAdapter(getActivity());
+        adapter = new OffLineAdapter(getActivity());
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -86,6 +84,6 @@ public class OffLineFragment extends BaseFragment {
     }
 
     private void refreshData() {
-        adapter.refresh(arrayList);
+        adapter.refresh(songsList);
     }
 }

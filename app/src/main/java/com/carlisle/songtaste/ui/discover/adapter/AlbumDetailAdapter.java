@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.ui.local;
+package com.carlisle.songtaste.ui.discover.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,8 +8,7 @@ import android.widget.TextView;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseAdapter;
-import com.carlisle.songtaste.modle.SongInfo;
-import com.carlisle.songtaste.ui.discover.adapter.BaseViewHolder;
+import com.carlisle.songtaste.modle.SongDetailInfo;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -17,10 +16,11 @@ import butterknife.InjectView;
 /**
  * Created by carlisle on 3/7/15.
  */
-public class SongAdapter extends BaseAdapter {
+public class AlbumDetailAdapter extends BaseAdapter {
+
     private Context context;
 
-    public SongAdapter(Context context) {
+    public AlbumDetailAdapter(Context context) {
         this.context = context;
     }
 
@@ -31,8 +31,8 @@ public class SongAdapter extends BaseAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(parent.getContext(), R.layout.item_local_song, null);
-        return new SimpleHolder(view);
+        View itemView = View.inflate(parent.getContext(), R.layout.item_album_detail, null);
+        return new SimpleHolder(itemView);
     }
 
     class SimpleHolder extends BaseViewHolder {
@@ -51,8 +51,9 @@ public class SongAdapter extends BaseAdapter {
 
         @Override
         public void bindView(int position) {
-            songName.setText(((SongInfo) getItem(position)).getName());
-            singerName.setText(((SongInfo) getItem(position)).getSinger());
+            songName.setText(((SongDetailInfo) getItem(position)).getSongname());
+            singerName.setText(((SongDetailInfo) getItem(position)).getSingername());
         }
     }
+
 }

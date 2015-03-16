@@ -13,12 +13,9 @@ import android.view.ViewGroup;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.modle.FMHotResult;
-import com.carlisle.songtaste.modle.SongInfo;
 import com.carlisle.songtaste.provider.ApiFactory;
 import com.carlisle.songtaste.provider.converter.GsonConverter;
 import com.carlisle.songtaste.ui.discover.adapter.HotAdapter;
-
-import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -39,7 +36,6 @@ public class HotFragment extends BaseFragment {
 
     private LinearLayoutManager layoutManager;
     private HotAdapter adapter;
-    private ArrayList<SongInfo> arrayList;
     private Subscription subscription;
 
     private int currentPage = 1;
@@ -53,13 +49,13 @@ public class HotFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
 
-        initRecycleView();
+        initRecyclerView();
         initSwipeRefreshLayout();
         refreshData();
         return view;
     }
 
-    private void initRecycleView() {
+    private void initRecyclerView() {
 
         layoutManager = new LinearLayoutManager(getActivity());
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);

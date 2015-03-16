@@ -46,21 +46,19 @@ public class AlbumFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
 
-        initRecycleView();
+        initRecyclerView();
         initSwipeRefreshLayout();
         refreshData();
         return view;
     }
 
-    private void initRecycleView() {
-
+    private void initRecyclerView() {
+        adapter = new AlbumAdapter(getActivity());
         layoutManager = new GridLayoutManager(getActivity(), 3);
 //      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         // 设置布局管理器
-        adapter = new AlbumAdapter(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
     }
 
     private void initSwipeRefreshLayout() {
@@ -108,4 +106,5 @@ public class AlbumFragment extends BaseFragment {
         super.onStop();
         subscription.unsubscribe();
     }
+
 }
