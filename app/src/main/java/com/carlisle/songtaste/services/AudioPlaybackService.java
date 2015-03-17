@@ -12,11 +12,11 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
+import com.carlisle.songtaste.helpers.SongtasteSongHelper;
 import com.carlisle.songtaste.remoteControlClient.RemoteControlClientCompat;
 import com.carlisle.songtaste.base.BaseApplication;
 import com.carlisle.songtaste.broadcastReceivers.HeadsetPlugBroadcastReceiver;
 import com.carlisle.songtaste.helpers.AudioManagerHelper;
-import com.carlisle.songtaste.helpers.SongHelper;
 
 import java.util.ArrayList;
 
@@ -55,7 +55,7 @@ public class AudioPlaybackService extends Service {
     private ArrayList<Integer> mFailedIndecesList = new ArrayList<Integer>();
 
     //Song data helpers for each MediaPlayer object.
-    private SongHelper mMediaPlayerSongHelper;
+    private SongtasteSongHelper mMediaPlayerSongtasteSongHelper;
 
     //Pointer variable.
     private int mCurrentSongIndex;

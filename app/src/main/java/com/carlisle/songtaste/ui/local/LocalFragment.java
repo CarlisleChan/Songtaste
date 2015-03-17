@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.helpers.LocalSongHelper;
 import com.carlisle.songtaste.modle.SongInfo;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class LocalFragment extends BaseFragment {
     SwipeRefreshLayout swipeLayout;
 
     private LinearLayoutManager layoutManager;
-    public SongAdapter adapter;
+    public LocalSongAdapter adapter;
     public ArrayList<SongInfo> songsList;
 
     @Override
@@ -38,12 +39,6 @@ public class LocalFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
-
-        songsList = new ArrayList();
-        SongInfo songInfo = new SongInfo();
-        for (int i = 0; i < 7; i++) {
-            songsList.add(songInfo);
-        }
 
         initRecyclerView();
         initSwipeRefreshLayout();
@@ -54,11 +49,8 @@ public class LocalFragment extends BaseFragment {
 
     private void initRecyclerView() {
 
+        adapter = new LocalSongAdapter(getActivity());
         layoutManager = new LinearLayoutManager(getActivity());
-//      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        // 设置布局管理器
-        adapter = new SongAdapter(getActivity());
-
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -84,6 +76,6 @@ public class LocalFragment extends BaseFragment {
     }
 
     private void refreshData() {
-        adapter.refresh(songsList);
+        adapter.refresh(LocalSongHelper.getSongList(getActivity()));
     }
 }

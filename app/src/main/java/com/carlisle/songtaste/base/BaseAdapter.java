@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by carlisle on 3/7/15.
@@ -47,7 +48,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         notifyItemRemoved(getItemCount() - 1);
     }
 
-    public void refresh(ArrayList<T> dataList) {
+    public void refresh(List<T> dataList) {
         int itemCount = dataList.size();
         this.dataList.clear();
         this.dataList.addAll(dataList);

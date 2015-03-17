@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseAdapter;
-import com.carlisle.songtaste.modle.SongInfo;
+import com.carlisle.songtaste.modle.SongDetailInfo;
 import com.carlisle.songtaste.ui.discover.adapter.BaseViewHolder;
 
 import butterknife.ButterKnife;
@@ -17,10 +17,10 @@ import butterknife.InjectView;
 /**
  * Created by carlisle on 3/7/15.
  */
-public class SongAdapter extends BaseAdapter {
+public class LocalSongAdapter extends BaseAdapter {
     private Context context;
 
-    public SongAdapter(Context context) {
+    public LocalSongAdapter(Context context) {
         this.context = context;
     }
 
@@ -51,8 +51,8 @@ public class SongAdapter extends BaseAdapter {
 
         @Override
         public void bindView(int position) {
-            songName.setText(((SongInfo) getItem(position)).getName());
-            singerName.setText(((SongInfo) getItem(position)).getSinger());
+            songName.setText(((SongDetailInfo) getItem(position)).getSong_name());
+            singerName.setText(((SongDetailInfo) getItem(position)).getSinger_name());
         }
     }
 }

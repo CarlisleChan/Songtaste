@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
+import com.carlisle.songtaste.helpers.LocalSongHelper;
 import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
 import com.carlisle.songtaste.ui.favorite.FavoriteFragment;
@@ -56,6 +57,8 @@ public class MainActivity extends BaseActivity {
         ButterKnife.inject(this);
 
         initFragment();
+
+        LocalSongHelper.getSongList(this);
 
         MENU_TYPE = R.menu.menu_local;
 

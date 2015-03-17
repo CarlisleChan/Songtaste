@@ -13,9 +13,56 @@ public class SongDetailInfo {
     public String Mbitrate;
     public String iscollection;
 
+    // songtaste
     public String songid;
     public String songname;
     public String singername;
+
+    // local
+    public String id;
+    public String album;
+    public String albumid;
+    public String size;
+
+    public String getIscollection() {
+        return iscollection;
+    }
+
+    public void setIscollection(String iscollection) {
+        this.iscollection = iscollection;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
+    }
+
+    public String getAlbumid() {
+        return albumid;
+    }
+
+    public void setAlbumid(String albumid) {
+        this.albumid = albumid;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
 
     public int getCode() {
         return code;
