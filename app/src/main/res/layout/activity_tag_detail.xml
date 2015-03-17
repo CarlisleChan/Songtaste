@@ -2,10 +2,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <com.carlisle.songtaste.ui.view.BottomScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/linear_layout"
@@ -36,7 +36,7 @@
                 android:padding="5dp" />
 
         </LinearLayout>
-    </ScrollView>
+    </com.carlisle.songtaste.ui.view.BottomScrollView>
 
     <include
         android:id="@+id/toolbar_container"

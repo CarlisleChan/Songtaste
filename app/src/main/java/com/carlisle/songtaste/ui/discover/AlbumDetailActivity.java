@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.ui.discover.discoverFragments;
+package com.carlisle.songtaste.ui.discover;
 
 import android.content.Context;
 import android.os.Bundle;

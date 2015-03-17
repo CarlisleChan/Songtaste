@@ -17,6 +17,7 @@ import com.carlisle.songtaste.modle.FMTagResult;
 import com.carlisle.songtaste.modle.TagInfo;
 import com.carlisle.songtaste.provider.ApiFactory;
 import com.carlisle.songtaste.provider.converter.GsonConverter;
+import com.carlisle.songtaste.ui.discover.TagDetailActivity;
 import com.carlisle.songtaste.ui.discover.adapter.TagAdapter;
 
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class TagFragment extends BaseFragment {
             public void onClick(View view) {
                 String text = ((TagGroup.TagView) view).getText().toString();
                 Log.i("the key===>","" + text);
-//                startTagDetailActivity(text);
+                startTagDetailActivity(text);
             }
         });
 
@@ -82,7 +83,7 @@ public class TagFragment extends BaseFragment {
     private void startTagDetailActivity(String key) {
 
         Intent intent = new Intent(getActivity(), TagDetailActivity.class);
-        intent.putExtra(TagDetailActivity.TAG_ID, 1);
+        intent.putExtra(TagDetailActivity.TAG_KEY, key);
         startActivity(intent);
     }
 

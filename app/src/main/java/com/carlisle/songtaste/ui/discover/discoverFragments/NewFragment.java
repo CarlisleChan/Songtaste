@@ -78,7 +78,6 @@ public class NewFragment extends BaseFragment {
             }
         });
 
-
     }
 
     private void initSwipeRefreshLayout() {

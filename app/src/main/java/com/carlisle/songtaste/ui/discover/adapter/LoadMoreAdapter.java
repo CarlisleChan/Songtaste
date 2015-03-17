@@ -21,6 +21,8 @@ public class LoadMoreAdapter extends BaseAdapter {
     public static final int TYPE_ITEM = 1;
     public static final int TYPE_FOOTER = 2;
 
+    public static LoadStatus loadStatus = LoadStatus.LOADING;
+
     public enum LoadStatus {
         LOADING, LOAD_CIMPLETE, LOAD_FAILED
     }
@@ -39,6 +41,7 @@ public class LoadMoreAdapter extends BaseAdapter {
     }
 
     public void resetProgressBarStatus(LoadStatus loadStatus) {
+        this.loadStatus = loadStatus;
         switch (loadStatus) {
             case LOADING:
                 ((VHFooter) viewHolder).loading();
