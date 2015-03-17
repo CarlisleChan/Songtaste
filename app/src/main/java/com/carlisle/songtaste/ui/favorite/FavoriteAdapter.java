@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseAdapter;
-import com.carlisle.songtaste.modle.SongInfo;
+import com.carlisle.songtaste.modle.SongDetailInfo;
 import com.carlisle.songtaste.ui.discover.adapter.BaseViewHolder;
 
 import butterknife.ButterKnife;
@@ -51,8 +51,8 @@ public class FavoriteAdapter extends BaseAdapter {
 
         @Override
         public void bindView(int position) {
-            songName.setText(((SongInfo) getItem(position)).getName());
-            singerName.setText(((SongInfo) getItem(position)).getSinger());
+            songName.setText(((SongDetailInfo) getItem(position)).getSongname());
+            singerName.setText(((SongDetailInfo) getItem(position)).getSingername());
         }
     }
 }

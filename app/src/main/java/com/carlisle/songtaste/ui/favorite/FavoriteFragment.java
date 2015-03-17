@@ -12,12 +12,18 @@ import android.view.ViewGroup;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.modle.CollectionResult;
 import com.carlisle.songtaste.modle.SongInfo;
+import com.carlisle.songtaste.provider.ApiFactory;
+import com.carlisle.songtaste.provider.converter.GsonConverter;
 
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.observables.AndroidObservable;
 
 /**
  * Created by chengxin on 2/25/15.
@@ -30,8 +36,16 @@ public class FavoriteFragment extends BaseFragment {
     SwipeRefreshLayout swipeLayout;
 
     private LinearLayoutManager layoutManager;
-    public FavoriteAdapter adapter;
-    public ArrayList<SongInfo> songsList;
+    private FavoriteAdapter adapter;
+    private ArrayList<SongInfo> songsList;
+    private Subscription subscription;
+
+    private String uid = "6973651";
+    private int currentPage = 1;
+    private int songsNumber = 20;
+    private String tmp = "0";
+    private String callBack = "dm.st.getDetailBackUser";
+    private String code = "utf8";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,30 +53,18 @@ public class FavoriteFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
 
-        songsList = new ArrayList();
-        SongInfo songInfo = new SongInfo();
-        for (int i = 0; i < 7; i++) {
-            songsList.add(songInfo);
-        }
-
         initRecyclerView();
         initSwipeRefreshLayout();
-        refreshData();
-
+        fetchData(uid, currentPage, songsNumber);
         return view;
     }
 
 
     private void initRecyclerView() {
-
-        layoutManager = new LinearLayoutManager(getActivity());
-//      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        // 设置布局管理器
         adapter = new FavoriteAdapter(getActivity());
-
+        layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
     }
 
     private void initSwipeRefreshLayout() {
@@ -77,14 +79,32 @@ public class FavoriteFragment extends BaseFragment {
                     @Override
                     public void run() {
                         swipeLayout.setRefreshing(false);
-                        refreshData();
+                        fetchData(uid, currentPage, songsNumber);
                     }
                 }, 3000);
             }
         });
     }
 
-    private void refreshData() {
-        adapter.refresh(songsList);
+    private void fetchData(String uid, int currentPage, int songsNumber) {
+        subscription = AndroidObservable.bindActivity(getActivity(), new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.COLLECTION_RESULT))
+                .collectionSong(uid, String.valueOf(currentPage), String.valueOf(songsNumber), tmp, callBack, code))
+                .subscribe(new Observer<CollectionResult>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(CollectionResult collectionResult) {
+                        adapter.refresh(collectionResult.getData());
+                    }
+                });
     }
+
 }
