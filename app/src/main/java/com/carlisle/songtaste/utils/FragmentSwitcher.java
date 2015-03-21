@@ -11,7 +11,7 @@ import java.util.List;
  * Created by carlisle on 3/8/15.
  */
 public class FragmentSwitcher {
-    private List<Fragment> fragments = new ArrayList<>();
+    private List<Fragment> fragments = new ArrayList();
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private int containerResId;

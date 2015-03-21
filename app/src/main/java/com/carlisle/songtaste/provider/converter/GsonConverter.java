@@ -2,6 +2,7 @@ package com.carlisle.songtaste.provider.converter;
 
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
 import com.carlisle.songtaste.modle.AlbumDetailInfo;
 import com.carlisle.songtaste.modle.CollectionResult;
 import com.carlisle.songtaste.modle.FMAlbumResult;
@@ -9,7 +10,6 @@ import com.carlisle.songtaste.modle.FMHotResult;
 import com.carlisle.songtaste.modle.FMNewResult;
 import com.carlisle.songtaste.modle.FMTagResult;
 import com.carlisle.songtaste.modle.TagDetailResult;
-import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -61,25 +61,25 @@ public class GsonConverter implements Converter {
 
         switch (converterType) {
             case COLLECTION_RESULT:
-                CollectionResult collectionResult = new Gson().fromJson(strResult, CollectionResult.class);
+                CollectionResult collectionResult = JSON.parseObject(strResult, CollectionResult.class);
                 return collectionResult;
             case FM_ALBUM_RESULT:
-                FMAlbumResult fmAlbumResult = new Gson().fromJson(strResult, FMAlbumResult.class);
+                FMAlbumResult fmAlbumResult = JSON.parseObject(strResult, FMAlbumResult.class);
                 return fmAlbumResult;
             case FM_HOT_RESULT:
-                FMHotResult fmHotResult = new Gson().fromJson(strResult, FMHotResult.class);
+                FMHotResult fmHotResult = JSON.parseObject(strResult, FMHotResult.class);
                 return fmHotResult;
             case FM_NEW_RESULT:
-                FMNewResult fmNewResult = new Gson().fromJson(strResult, FMNewResult.class);
+                FMNewResult fmNewResult = JSON.parseObject(strResult, FMNewResult.class);
                 return fmNewResult;
             case FM_TAG_RESULT:
-                FMTagResult fmTagResult = new Gson().fromJson(strResult, FMTagResult.class);
+                FMTagResult fmTagResult = JSON.parseObject(strResult, FMTagResult.class);
                 return fmTagResult;
             case ALBUM_DETAIL:
-                AlbumDetailInfo albumDetailInfo = new Gson().fromJson(strResult, AlbumDetailInfo.class);
+                AlbumDetailInfo albumDetailInfo = JSON.parseObject(strResult, AlbumDetailInfo.class);
                 return albumDetailInfo;
             case TAG_DETAIL:
-                TagDetailResult tagDetailResult = new Gson().fromJson(strResult, TagDetailResult.class);
+                TagDetailResult tagDetailResult = JSON.parseObject(strResult, TagDetailResult.class);
                 return tagDetailResult;
         }
 

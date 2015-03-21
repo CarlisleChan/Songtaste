@@ -120,7 +120,7 @@ public class XmlConverter implements Converter {
                         } else if (tagName.equals("Mbitrate")) {
                             songDetailInfo.setMbitrate(parser.nextText());
                         } else if (tagName.equals("iscollection")) {
-                            songDetailInfo.setCollection(parser.nextText());
+                            songDetailInfo.setIscollection(parser.nextText());
                         }
 
                         break;

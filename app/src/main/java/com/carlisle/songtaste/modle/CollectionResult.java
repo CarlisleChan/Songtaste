@@ -16,7 +16,7 @@ public class CollectionResult {
     public ArrayList<SongDetailInfo> data;
 
     public CollectionResult() {
-        data = new ArrayList<>();
+        data = new ArrayList();
     }
 
     public int getCode() {

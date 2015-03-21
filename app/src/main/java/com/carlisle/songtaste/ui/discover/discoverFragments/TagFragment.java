@@ -44,7 +44,7 @@ public class TagFragment extends BaseFragment {
     private LinearLayoutManager layoutManager;
     private TagAdapter adapter;
     private Subscription subscription;
-    private ArrayList<String> tags = new ArrayList<>();
+    private ArrayList<String> tags = new ArrayList();
 
     private String songsNumber = "40";
     private String temp = "0";

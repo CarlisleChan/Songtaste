@@ -10,7 +10,7 @@ import java.util.List;
  * Created by carlisle on 3/7/15.
  */
 public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public ArrayList<T> dataList = new ArrayList<>();
+    public ArrayList<T> dataList = new ArrayList();
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

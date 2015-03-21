@@ -21,7 +21,7 @@ import android.content.Intent;
 import android.view.KeyEvent;
 
 import com.carlisle.songtaste.base.BaseApplication;
-import com.carlisle.songtaste.services.AudioPlaybackService;
+import com.carlisle.songtaste.services.MusicService;
 
 /**
  * BroadcastReceiver that handles and processes all headset 
@@ -57,7 +57,7 @@ public class HeadsetButtonsReceiver extends BroadcastReceiver {
 				if (action == KeyEvent.ACTION_DOWN) {
 					//Toggle play/pause.
 					Intent playPauseIntent = new Intent();
-					playPauseIntent.setAction(AudioPlaybackService.PLAY_PAUSE_ACTION);
+					playPauseIntent.setAction(MusicService.PLAY_PAUSE_ACTION);
 					context.sendBroadcast(playPauseIntent);
 					
 				}
@@ -69,7 +69,7 @@ public class HeadsetButtonsReceiver extends BroadcastReceiver {
 				if (action == KeyEvent.ACTION_DOWN) {
 					//Fire a broadcast that skips to the next track.
 					Intent nextIntent = new Intent();
-					nextIntent.setAction(AudioPlaybackService.NEXT_ACTION);
+					nextIntent.setAction(MusicService.NEXT_ACTION);
 					context.sendBroadcast(nextIntent);
 
 			    }
@@ -82,7 +82,7 @@ public class HeadsetButtonsReceiver extends BroadcastReceiver {
 				if (action == KeyEvent.ACTION_DOWN) {
 					//Fire a broadcast that goes back to the previous track.
 					Intent previousIntent = new Intent();
-					previousIntent.setAction(AudioPlaybackService.PREVIOUS_ACTION);
+					previousIntent.setAction(MusicService.PREVIOUS_ACTION);
 					context.sendBroadcast(previousIntent);
 					
 				}

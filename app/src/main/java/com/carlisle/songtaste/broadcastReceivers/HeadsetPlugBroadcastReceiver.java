@@ -19,8 +19,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.carlisle.songtaste.base.BaseApplication;
-
 /**
  * BroadcastReceiver that handles and processes all headset 
  * unplug/plug actions and events.
@@ -37,11 +35,11 @@ public class HeadsetPlugBroadcastReceiver extends BroadcastReceiver {
 	        switch (state) {
 	        case 0:
 	            //Headset unplug event.
-	        	BaseApplication.getInstance().getService().pausePlayback();
+//	        	BaseApplication.getInstance().getService().pausePlayback();
 	            break;
 	        case 1:
 	            //Headset plug-in event.
-                BaseApplication.getInstance().getService().startPlayback();
+//                BaseApplication.getInstance().getService().startPlayback();
 	            break;
 	        default:
 	            //No idea what just happened.

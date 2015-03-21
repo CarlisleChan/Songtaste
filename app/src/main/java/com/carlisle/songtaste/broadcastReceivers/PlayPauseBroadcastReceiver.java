@@ -26,9 +26,9 @@ public class PlayPauseBroadcastReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
-		if (BaseApplication.getInstance().isServiceRunning())
-			BaseApplication.getInstance().getService().togglePlaybackState();
-		
+		if (BaseApplication.getInstance().isServiceRunning()) {
+//			BaseApplication.getInstance().getService().togglePlaybackState();
+        }
 	}
 
 }

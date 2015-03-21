@@ -34,9 +34,9 @@ public class ChangeTrackBroadcastReceiver extends BroadcastReceiver {
 		//Retrieve the new song's index.
 		int index = intent.getIntExtra("INDEX", 0);
 		
-		if (BaseApplication.getInstance().isServiceRunning())
-			BaseApplication.getInstance().getService().skipToTrack(index);
-
+		if (BaseApplication.getInstance().isServiceRunning()) {
+//			BaseApplication.getInstance().getService().skipToTrack(index);
+        }
 	}
 
 }

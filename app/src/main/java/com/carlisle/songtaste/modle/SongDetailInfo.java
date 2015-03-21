@@ -1,9 +1,15 @@
 package com.carlisle.songtaste.modle;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+
 /**
  * Created by chengxin on 2/26/15.
  */
-public class SongDetailInfo {
+@ParcelablePlease
+public class SongDetailInfo implements Parcelable {
     public int code;
     public String singer_name;
     public String song_name;
@@ -12,57 +18,16 @@ public class SongDetailInfo {
     public String Msize;
     public String Mbitrate;
     public String iscollection;
+    public String mediaId;
 
     // songtaste
-    public String songid;
     public String songname;
     public String singername;
 
     // local
-    public String id;
     public String album;
     public String albumid;
     public String size;
-
-    public String getIscollection() {
-        return iscollection;
-    }
-
-    public void setIscollection(String iscollection) {
-        this.iscollection = iscollection;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getAlbum() {
-        return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
-    public String getAlbumid() {
-        return albumid;
-    }
-
-    public void setAlbumid(String albumid) {
-        this.albumid = albumid;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
 
     public int getCode() {
         return code;
@@ -120,20 +85,20 @@ public class SongDetailInfo {
         Mbitrate = mbitrate;
     }
 
-    public String getCollection() {
+    public String getIscollection() {
         return iscollection;
     }
 
-    public void setCollection(String iscollection) {
+    public void setIscollection(String iscollection) {
         this.iscollection = iscollection;
     }
 
-    public String getSongid() {
-        return songid;
+    public String getMediaId() {
+        return mediaId;
     }
 
-    public void setSongid(String songid) {
-        this.songid = songid;
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
     }
 
     public String getSongname() {
@@ -151,4 +116,50 @@ public class SongDetailInfo {
     public void setSingername(String singername) {
         this.singername = singername;
     }
+
+    public String getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
+    }
+
+    public String getAlbumid() {
+        return albumid;
+    }
+
+    public void setAlbumid(String albumid) {
+        this.albumid = albumid;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        SongDetailInfoParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<SongDetailInfo> CREATOR = new Creator<SongDetailInfo>() {
+        public SongDetailInfo createFromParcel(Parcel source) {
+            SongDetailInfo target = new SongDetailInfo();
+            SongDetailInfoParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public SongDetailInfo[] newArray(int size) {
+            return new SongDetailInfo[size];
+        }
+    };
 }

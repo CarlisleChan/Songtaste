@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.modle.SongInfo;
+import com.carlisle.songtaste.ui.discover.SongTransfer;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
@@ -66,7 +67,7 @@ public class NewAdapter extends LoadMoreAdapter {
         }
 
         @Override
-        public void bindView(int position) {
+        public void bindView(final int position) {
             upUserName.setText(((SongInfo) getItem(position)).getUpUName());
             songName.setText(((SongInfo) getItem(position)).getName());
             singerName.setText(((SongInfo) getItem(position)).getSinger());
@@ -78,9 +79,14 @@ public class NewAdapter extends LoadMoreAdapter {
                     .load(((SongInfo) getItem(position)).getUpUIcon())
                     .placeholder(R.drawable.ic_account_circle_grey600_24dp)
                     .into(upUserAvatar);
+
+            rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SongTransfer.getInstance().getSongAndStartMusicService(context, ((SongInfo) dataList.get(position)).getID());
+                }
+            });
         }
     }
-
-
 
 }

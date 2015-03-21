@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId 'com.carlisle.songtaste'
         minSdkVersion 17
-        targetSdkVersion 21
+        targetSdkVersion 19
         versionCode 1
         versionName "1.0"
     }
@@ -20,6 +20,11 @@ android {
         }
     }
     productFlavors {
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
     }
 }
 
@@ -63,12 +68,8 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.easing:library:1.0.1@aar'
     compile 'com.daimajia.androidanimations:library:1.1.3@aar'
-    compile 'com.facebook.rebound:rebound:0.3.7'
     // UI
-    compile 'com.github.premnirmal:TextCounter:1.0.1'
-    compile 'com.github.amlcurran.showcaseview:library:5.0.0'
     compile 'com.makeramen:roundedimageview:1.5.0'
-    compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.github.bluejamesbond:textjustify-android:2.1.0'
     compile 'com.actionbarsherlock:viewpagerindicator:2.4.1'
     compile 'com.github.techfreak:wizardpager:1.0.0'
@@ -82,13 +83,7 @@ dependencies {
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
     compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     compile 'com.jpardogo.materialtabstrip:library:1.0.9'
-    compile 'com.github.qiujuer:genius:2.3.1'
     compile('com.mikepenz.materialdrawer:library:2.0.0@aar') {
         transitive = true
     }
-
-    // UI IOS Style
-
-    // icon
-    compile 'com.mikepenz.iconics:meteocons-typeface:1.1.1@aar'
 }

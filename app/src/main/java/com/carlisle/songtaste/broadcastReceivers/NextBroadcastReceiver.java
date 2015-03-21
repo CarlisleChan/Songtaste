@@ -26,9 +26,9 @@ public class NextBroadcastReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
-        if (BaseApplication.getInstance().isServiceRunning())
-			BaseApplication.getInstance().getService().skipToNextTrack();
-
+        if (BaseApplication.getInstance().isServiceRunning()) {
+//			BaseApplication.getInstance().getService().skipToNextTrack();
+        }
 	}
 	  
 }

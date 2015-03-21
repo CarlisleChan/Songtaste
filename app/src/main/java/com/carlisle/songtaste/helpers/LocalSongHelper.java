@@ -90,7 +90,7 @@ public class LocalSongHelper {
                     .getColumnIndexOrThrow(MediaStore.Audio.Media.IS_MUSIC));
 
             SongDetailInfo songDetailInfo = new SongDetailInfo();
-            songDetailInfo.setId(strID);
+            songDetailInfo.setMediaId(strID);
             songDetailInfo.setSong_name(strTitle);
             songDetailInfo.setSinger_name(strArtist);
             songDetailInfo.setAlbum(strAlbum);
