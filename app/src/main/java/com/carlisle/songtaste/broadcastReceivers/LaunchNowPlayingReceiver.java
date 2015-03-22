@@ -20,7 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.carlisle.songtaste.base.BaseApplication;
-import com.carlisle.songtaste.ui.playing.NowPlayingActivity;
+import com.carlisle.songtaste.ui.NowPlayingActivity;
 
 public class LaunchNowPlayingReceiver extends BroadcastReceiver {
 	

@@ -83,7 +83,10 @@
 
         <!--<activity android:name=".ui.recyclerView.RecycleViewActivity"/>-->
 
-        <service android:name=".services.MusicService"/>
+        <service android:name=".services.MusicService"
+            android:enabled="true"/>
+
+        <activity android:name=".ui.NowPlayingActivity"/>
 
     </application>
 

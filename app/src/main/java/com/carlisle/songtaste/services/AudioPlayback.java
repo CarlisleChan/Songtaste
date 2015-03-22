@@ -21,10 +21,7 @@ public class AudioPlayback implements Playback, AudioManager.OnAudioFocusChangeL
         OnCompletionListener, OnErrorListener, OnPreparedListener, OnSeekCompleteListener {
     private static final String TAG = AudioPlayback.class.getSimpleName();
 
-    // The volume we set the media player to when we lose audio focus, but are
-    // allowed to reduce the volume instead of stopping playback.
     public static final float VOLUME_DUCK = 0.2f;
-    // The volume we set the media player when we have audio focus.
     public static final float VOLUME_NORMAL = 1.0f;
 
     // we don't have audio focus, and can't duck (play at a low volume)
@@ -359,7 +356,5 @@ public class AudioPlayback implements Playback, AudioManager.OnAudioFocusChangeL
             mediaPlayer.release();
             mediaPlayer = null;
         }
-
     }
-
 }

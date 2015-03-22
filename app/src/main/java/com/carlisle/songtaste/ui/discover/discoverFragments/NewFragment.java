@@ -13,9 +13,13 @@ import android.view.ViewGroup;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.modle.FMNewResult;
+import com.carlisle.songtaste.modle.SongDetailInfo;
+import com.carlisle.songtaste.modle.SongInfo;
 import com.carlisle.songtaste.provider.ApiFactory;
 import com.carlisle.songtaste.provider.converter.GsonConverter;
+import com.carlisle.songtaste.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.NewAdapter;
+import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -28,6 +32,7 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by chengxin on 2/25/15.
  */
 public class NewFragment extends BaseFragment {
+    private static int SONG_NUMBER = -1;
 
     @InjectView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -106,6 +111,10 @@ public class NewFragment extends BaseFragment {
                 .subscribe(new Observer<FMNewResult>() {
                     @Override
                     public void onCompleted() {
+                        SONG_NUMBER = 0;
+                        SongInfo songInfo = (SongInfo)adapter.dataList.get(SONG_NUMBER);
+                        QueueHelper.getInstance().getSongtasteQueue().clear();
+                        setSongtasteQueue(songInfo.getID());
                     }
 
                     @Override
@@ -127,6 +136,10 @@ public class NewFragment extends BaseFragment {
                 .subscribe(new Observer<FMNewResult>() {
                     @Override
                     public void onCompleted() {
+                        SONG_NUMBER = 0;
+                        SongInfo songInfo = (SongInfo)adapter.dataList.get(SONG_NUMBER);
+                        QueueHelper.getInstance().getSongtasteQueue().clear();
+                        setSongtasteQueue(songInfo.getID());
                     }
 
                     @Override
@@ -137,9 +150,34 @@ public class NewFragment extends BaseFragment {
                     @Override
                     public void onNext(FMNewResult songListResult) {
                         adapter.refresh(songListResult.getData());
+
                     }
                 });
     }
+
+    public void setSongtasteQueue(String songId) {
+        new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
+                .songUrl(songId, "")
+                .subscribe(new Observer<SongDetailInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        if (++SONG_NUMBER < adapter.dataList.size()) {
+                            setSongtasteQueue(((SongInfo)adapter.dataList.get(SONG_NUMBER)).getID());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(SongDetailInfo songDetailInfo) {
+                        QueueHelper.getInstance().getSongtasteQueue().add(songDetailInfo);
+                    }
+                });
+    }
+
 
     @Override
     public void onStop() {

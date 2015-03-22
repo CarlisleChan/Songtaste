@@ -1,19 +1,25 @@
 package com.carlisle.songtaste.services;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
+import com.carlisle.songtaste.R;
+import com.carlisle.songtaste.events.PauseEvent;
+import com.carlisle.songtaste.events.PlayEvent;
+import com.carlisle.songtaste.events.SkipToNextEvent;
+import com.carlisle.songtaste.events.SkipToPrevEvent;
+import com.carlisle.songtaste.events.UpdateUIEvent;
 import com.carlisle.songtaste.modle.SongDetailInfo;
+import com.carlisle.songtaste.utils.QueueHelper;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by chengxin on 2/28/15.
@@ -21,25 +27,15 @@ import java.util.List;
 public class MusicService extends Service implements Playback.Callback {
     private static final String TAG = MusicService.class.getSimpleName();
 
-    private Service service;
-    private Context context;
-
-    //Custom actions for media player controls via the notification bar.
     public static final String LAUNCH_NOW_PLAYING_ACTION = "com.carlisle.songtaste.LAUNCH_NOW_PLAYING_ACTION";
-    public static final String PREVIOUS_ACTION = "com.carlisle.songtaste.PREVIOUS_ACTION";
-    public static final String PLAY_PAUSE_ACTION = "com.carlisle.songtaste.PLAY_PAUSE_ACTION";
-    public static final String NEXT_ACTION = "com.carlisle.songtaste.NEXT_ACTION";
-    public static final String STOP_SERVICE = "com.carlisle.songtaste.STOP_SERVICE";
+    public static final String CURRENT_ID = "current id";
 
     private static final int STOP_DELAY = 30000;
 
     private Playback playback;
-    private DelayedStopHandler delayedStopHandler = new DelayedStopHandler(this);
 
-    // Indicates whether the service was started.
     private boolean serviceStarted;
-
-    private List<SongDetailInfo> playingQueue;
+    private int currentIndexOnQueue;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -47,68 +43,116 @@ public class MusicService extends Service implements Playback.Callback {
     }
 
     @Override
-    public int onStartCommand(Intent startIntent, int flags, int startId) {
-        if (startIntent != null) {
-
-            SongDetailInfo song = (SongDetailInfo) startIntent.getParcelableExtra(LAUNCH_NOW_PLAYING_ACTION);
-
-            Log.d("song====>", JSON.toJSONString(song));
-
-            if (playback != null) {
-                playback.play(song);
-            }
-        }
+    public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate");
 
-        playingQueue = new ArrayList<>();
+        NotificationManager mNM = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notification = new Notification(R.drawable.ic_launcher,
+                "Foreground Service Started.", System.currentTimeMillis());
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, MusicService.class), 0);
+        notification.setLatestEventInfo(this, "Foreground Service",
+                "Foreground Service Started.", contentIntent);
+        startForeground(1, notification);
+
+        EventBus.getDefault().register(this);
         playback = new AudioPlayback(this);
         playback.setState(Playback.STATE_NONE);
         playback.setCallback(this);
         playback.start();
 
-
     }
 
-    /**
-     * Handle a request to play music
-     */
+    public void onEvent(PlayEvent event) {
+        Log.d("playevent===>","yeah" + event.position);
+        if (event.position != -1) {
+            currentIndexOnQueue = event.position;
+        }
+        onPlay();
+    }
+
+    public void onEvent(PauseEvent event) {
+        onPause();
+    }
+
+    public void onEvent(SkipToNextEvent event) {
+        onSkipToNext();
+    }
+
+    public void onEvent(SkipToPrevEvent event) {
+        onSkipToPrev();
+    }
+
+    public void onPlay() {
+        if (!QueueHelper.getInstance().getCurrentQueue().isEmpty()) {
+            handlePlayRequest();
+        } else {
+            currentIndexOnQueue = 0;
+        }
+    }
+
+    public void onPause() {
+        handlePauseRequest();
+    }
+
+    public void onSkipToNext() {
+        playback.stop(true);
+        ++currentIndexOnQueue;
+
+        if (QueueHelper.getInstance().isIndexPlayable(currentIndexOnQueue)) {
+            handlePlayRequest();
+        } else {
+            --currentIndexOnQueue;
+            Toast.makeText(this, "end", Toast.LENGTH_SHORT).show();
+            handleStopRequest();
+        }
+    }
+
+    public void onSkipToPrev() {
+        playback.stop(true);
+        --currentIndexOnQueue;
+
+        if (QueueHelper.getInstance().isIndexPlayable(currentIndexOnQueue)) {
+            handlePlayRequest();
+        } else {
+            ++currentIndexOnQueue;
+            handleStopRequest();
+        }
+    }
+
     private void handlePlayRequest() {
-        Log.d(TAG, "handlePlayRequest: mState=" + playback.getState());
-
-        delayedStopHandler.removeCallbacksAndMessages(null);
-
+        Log.d("handlePlay===>","you are here");
         if (!serviceStarted) {
-            Log.v(TAG, "Starting service");
-            // The MusicService needs to keep running even after the calling MediaBrowser
-            // is disconnected. Call startService(Intent) and then stopSelf(..) when we no longer
-            // need to play media.
             startService(new Intent(getApplicationContext(), MusicService.class));
             serviceStarted = true;
         }
 
-//        if (QueueHelper.isIndexPlayable(mCurrentIndexOnQueue, mPlayingQueue)) {
-//            updateMetadata();
-//            playback.play(mPlayingQueue.get(mCurrentIndexOnQueue));
-//        }
+        if (QueueHelper.getInstance().isIndexPlayable(currentIndexOnQueue)) {
+            SongDetailInfo songDetailInfo = QueueHelper.getInstance().getCurrentQueue().get(currentIndexOnQueue);
+            playback.play(songDetailInfo);
+            EventBus.getDefault().post(new UpdateUIEvent(songDetailInfo));
+        }
     }
 
     private void handlePauseRequest() {
-        Log.d(TAG, "handlePauseRequest: mState=" + playback.getState());
+        Log.d("handlePause===>","you are here");
         playback.pause();
-        // reset the delayed stop handler.
-        delayedStopHandler.removeCallbacksAndMessages(null);
-        delayedStopHandler.sendEmptyMessageDelayed(0, STOP_DELAY);
+        EventBus.getDefault().post(new UpdateUIEvent(playback.getState()));
+    }
+
+    private void handleStopRequest() {
+        playback.stop(true);
+        EventBus.getDefault().post(new UpdateUIEvent(playback.getState()));
     }
 
     @Override
     public void onCompletion() {
-
+        onSkipToNext();
     }
 
     @Override
@@ -126,30 +170,9 @@ public class MusicService extends Service implements Playback.Callback {
 
     }
 
-    /**
-     * A simple handler that stops the service if playback is not active (playing)
-     */
-    private static class DelayedStopHandler extends Handler {
-        private final WeakReference<MusicService> mWeakReference;
-
-        private DelayedStopHandler(MusicService service) {
-            mWeakReference = new WeakReference(service);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            MusicService service = mWeakReference.get();
-            if (service != null && service.playback != null) {
-                if (service.playback.isPlaying()) {
-                    Log.d(TAG, "Ignoring delayed stop since the media player is in use.");
-                    return;
-                }
-                Log.d(TAG, "Stopping service with delay handler.");
-                service.stopSelf();
-                service.serviceStarted = false;
-            }
-        }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
-
-
 }

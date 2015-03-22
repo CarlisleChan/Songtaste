@@ -8,12 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.carlisle.songtaste.R;
+import com.carlisle.songtaste.events.PlayEvent;
 import com.carlisle.songtaste.modle.SongInfo;
-import com.carlisle.songtaste.ui.discover.SongTransfer;
+import com.carlisle.songtaste.utils.QueueHelper;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by chengxin on 12/25/14.
@@ -83,7 +85,8 @@ public class NewAdapter extends LoadMoreAdapter {
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SongTransfer.getInstance().getSongAndStartMusicService(context, ((SongInfo) dataList.get(position)).getID());
+                    QueueHelper.getInstance().setCurrentQueue(1);
+                    EventBus.getDefault().post(new PlayEvent(position));
                 }
             });
         }

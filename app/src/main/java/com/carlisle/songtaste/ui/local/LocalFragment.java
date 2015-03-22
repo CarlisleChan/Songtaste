@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.carlisle.songtaste.helpers.LocalSongHelper;
+import com.carlisle.songtaste.utils.LocalSongHelper;
 import com.carlisle.songtaste.modle.SongInfo;
 
 import java.util.ArrayList;

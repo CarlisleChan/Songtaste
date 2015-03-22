@@ -60,7 +60,6 @@ public class XmlConverter implements Converter {
             case SUPPORT:
                 return parseResultXml(strResult);
             case USER:
-                Log.d("USER====>", "====");
                 return parseUserXml(strResult);
             case COLLECTION:
                 return parseResultXml(strResult);

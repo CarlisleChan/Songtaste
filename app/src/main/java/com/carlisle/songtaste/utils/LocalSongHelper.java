@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.helpers;
+package com.carlisle.songtaste.utils;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -16,7 +16,6 @@ import android.util.Log;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.modle.SongDetailInfo;
-import com.carlisle.songtaste.utils.Utils;
 import com.google.gson.Gson;
 
 import java.io.FileDescriptor;

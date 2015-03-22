@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
-import com.carlisle.songtaste.helpers.LocalSongHelper;
+import com.carlisle.songtaste.services.MusicService;
 import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
 import com.carlisle.songtaste.ui.favorite.FavoriteFragment;
@@ -58,7 +58,7 @@ public class MainActivity extends BaseActivity {
 
         initFragment();
 
-        LocalSongHelper.getSongList(this);
+        startService(new Intent(this, MusicService.class));
 
         MENU_TYPE = R.menu.menu_local;
 

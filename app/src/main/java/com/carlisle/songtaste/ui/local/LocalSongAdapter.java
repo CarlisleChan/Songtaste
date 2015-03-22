@@ -1,20 +1,23 @@
 package com.carlisle.songtaste.ui.local;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseAdapter;
+import com.carlisle.songtaste.events.PlayEvent;
 import com.carlisle.songtaste.modle.SongDetailInfo;
-import com.carlisle.songtaste.services.MusicService;
 import com.carlisle.songtaste.ui.discover.adapter.BaseViewHolder;
+import com.carlisle.songtaste.utils.LocalSongHelper;
+import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by carlisle on 3/7/15.
@@ -59,9 +62,10 @@ public class LocalSongAdapter extends BaseAdapter {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(context, MusicService.class);
-                    i.putExtra(MusicService.LAUNCH_NOW_PLAYING_ACTION, (SongDetailInfo)dataList.get(position));
-                    context.startService(i);
+                    QueueHelper.getInstance().setLocalSongQueue(LocalSongHelper.getSongList(context));
+                    QueueHelper.getInstance().setCurrentQueue(0);
+                    Log.i("position====>", "" + position);
+                    EventBus.getDefault().post(new PlayEvent(position));
                 }
             });
         }
