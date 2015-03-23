@@ -2,16 +2,20 @@ package com.carlisle.songtaste.ui.discover.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.baidao.superrecyclerview.adapter.BaseAdapter;
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.base.BaseAdapter;
+import com.carlisle.songtaste.events.PlayEvent;
 import com.carlisle.songtaste.modle.SongDetailInfo;
+import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by carlisle on 3/7/15.
@@ -19,23 +23,22 @@ import butterknife.InjectView;
 public class AlbumDetailAdapter extends BaseAdapter {
 
     private Context context;
-
     public AlbumDetailAdapter(Context context) {
         this.context = context;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((BaseViewHolder) holder).bindView(position);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+        AlbumDetailVH albumDetailVH = new AlbumDetailVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_songtaste_song, parent, false));
+        return albumDetailVH;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = View.inflate(parent.getContext(), R.layout.item_album_detail, null);
-        return new SimpleHolder(itemView);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ((AlbumDetailVH) holder).bindView(position);
     }
 
-    class SimpleHolder extends BaseViewHolder {
+    class AlbumDetailVH extends RecyclerView.ViewHolder {
         public View rootView;
 
         @InjectView(R.id.tv_song_name)
@@ -43,16 +46,23 @@ public class AlbumDetailAdapter extends BaseAdapter {
         @InjectView(R.id.tv_singer_name)
         TextView singerName;
 
-        public SimpleHolder(View view) {
+        public AlbumDetailVH(View view) {
             super(view);
             rootView = view;
             ButterKnife.inject(this, view);
         }
 
-        @Override
-        public void bindView(int position) {
+        public void bindView(final int position) {
             songName.setText(((SongDetailInfo) getItem(position)).getSongname());
             singerName.setText(((SongDetailInfo) getItem(position)).getSingername());
+
+            rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    QueueHelper.getInstance().setCurrentQueue(QueueHelper.QueueType.ALBUM_DETAIL_QUEUE);
+                    EventBus.getDefault().post(new PlayEvent(position));
+                }
+            });
         }
     }
 

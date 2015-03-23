@@ -97,8 +97,6 @@ public class LocalSongHelper {
             songDetailInfo.setSize(strSize);
             songDetailInfo.setUrl(strData);
             songList.add(songDetailInfo);
-
-            Log.d("==>", "" + new Gson().toJson(songDetailInfo));
         }
         audioCursor.close();
         return songList;

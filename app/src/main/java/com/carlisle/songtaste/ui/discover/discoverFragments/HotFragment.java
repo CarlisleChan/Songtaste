@@ -1,21 +1,31 @@
 package com.carlisle.songtaste.ui.discover.discoverFragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.baidao.superrecyclerview.OnMoreListener;
+import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.modle.FMHotResult;
+import com.carlisle.songtaste.modle.SongDetailInfo;
+import com.carlisle.songtaste.modle.SongInfo;
 import com.carlisle.songtaste.provider.ApiFactory;
-import com.carlisle.songtaste.provider.converter.GsonConverter;
+import com.carlisle.songtaste.provider.converter.JsonConverter;
+import com.carlisle.songtaste.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.HotAdapter;
+import com.carlisle.songtaste.utils.Common;
+import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -27,118 +37,156 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by chengxin on 2/25/15.
  */
-public class HotFragment extends BaseFragment {
+public class HotFragment extends BaseFragment implements OnMoreListener {
 
     @InjectView(R.id.recyclerView)
-    RecyclerView recyclerView;
-    @InjectView(R.id.swipe_layout)
-    SwipeRefreshLayout swipeLayout;
+    SuperRecyclerView superRecyclerView;
+    ProgressDialog progressDialog;
 
-    private LinearLayoutManager layoutManager;
     private HotAdapter adapter;
     private Subscription subscription;
 
-    private int currentPage = 1;
+    private int currentPage = 0;
     private String songsNumber = "20";
     private String temp = "0";
     private String callback = "dm.st.fmHot";
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
-
-        initRecyclerView();
-        initSwipeRefreshLayout();
-        refreshData();
+        setupSuperRecyclerView();
         return view;
     }
 
-    private void initRecyclerView() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter.isEmpty()) {
+            fetchData(currentPage, true);
+        }
+    }
 
-        layoutManager = new LinearLayoutManager(getActivity());
-//      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        // 设置布局管理器
+    private void setupSuperRecyclerView() {
         adapter = new HotAdapter(getActivity());
+        adapter.setOnLoadMoreClickListener(this);
 
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        superRecyclerView.setAdapter(adapter);
+        superRecyclerView.setMoreListener(this);
+        superRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()) {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItem = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
-                int totalItemCount = layoutManager.getItemCount();
-
-                // dy > 0 表示下滑
-                if (lastVisibleItem >= totalItemCount - 1 && dy > 0) {
-                    loadMoreData(++currentPage);
-                }
+            protected int getExtraLayoutSpace(RecyclerView.State state) {
+                return 300;
             }
         });
 
-    }
-
-    private void initSwipeRefreshLayout() {
-        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_light,
-                android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
-
-        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
+        superRecyclerView.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        swipeLayout.setRefreshing(false);
-                        refreshData();
+                        superRecyclerView.getSwipeToRefresh().setRefreshing(false);
+                        fetchData(currentPage, true);
                     }
                 }, 3000);
             }
         });
+
     }
 
-    private void loadMoreData(int page) {
-        subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_NEW_RESULT))
+    protected final void onLoadingFinished(boolean success) {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+
+        if (getActivity() == null) return;
+        if (!success) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getActivity(), "刷新失败，请再试一次", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && superRecyclerView != null) {
+            subscription.unsubscribe();
+        }
+    }
+
+    @Override
+    public void onMoreAsked(int totalCount, int currentPosition) {
+        fetchData(++currentPage, false);
+    }
+
+    private void fetchData(int page, final boolean reset) {
+        if (reset) {
+            currentPage = page = 1;
+        }
+        Log.d("fetchData===>","");
+        subscription = AndroidObservable.bindFragment(this, new ApiFactory()
+                .getSongtasteApi(new JsonConverter(JsonConverter.ConverterType.FM_HOT_RESULT))
                 .hotSong(String.valueOf(page), songsNumber, temp, callback))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<FMHotResult>() {
                     @Override
                     public void onCompleted() {
-
+                        onLoadingFinished(true);
+                        Log.d("onCompleted===>","next");
+                        Common.SONG_NUMBER = 0;
+                        SongInfo songInfo = (SongInfo) adapter.getData().get(Common.SONG_NUMBER);
+                        QueueHelper.getInstance().getHotQueue().clear();
+                        setSongtasteQueue(songInfo.getID());
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Log.d("onError===>","next");
+                        e.printStackTrace();
+                        onLoadingFinished(false);
                     }
 
                     @Override
                     public void onNext(FMHotResult fmHotResult) {
-                        adapter.insert2Bottom(fmHotResult.getData());
+                        Log.d("onNext===>","next");
+                        if (reset) {
+                            adapter.refresh(fmHotResult.getData());
+                        } else {
+                            adapter.add(fmHotResult.getData());
+                        }
                     }
                 });
     }
 
-    private void refreshData() {
-        subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_HOT_RESULT))
-                .hotSong("1", songsNumber, temp, callback))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<FMHotResult>() {
+    public void setSongtasteQueue(String songId) {
+        new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
+                .songUrl(songId, "")
+                .subscribe(new Observer<SongDetailInfo>() {
                     @Override
                     public void onCompleted() {
+                        onLoadingFinished(true);
 
+                        if (++Common.SONG_NUMBER < adapter.getData().size()) {
+                            setSongtasteQueue(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getID());
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
+                        onLoadingFinished(false);
                     }
 
                     @Override
-                    public void onNext(FMHotResult fmHotResult) {
-                        adapter.refresh(fmHotResult.getData());
+                    public void onNext(SongDetailInfo songDetailInfo) {
+                        QueueHelper.getInstance().getHotQueue().add(songDetailInfo);
                     }
                 });
     }

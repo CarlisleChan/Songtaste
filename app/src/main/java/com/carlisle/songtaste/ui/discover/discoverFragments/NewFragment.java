@@ -1,5 +1,6 @@
 package com.carlisle.songtaste.ui.discover.discoverFragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -9,16 +10,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.baidao.superrecyclerview.OnMoreListener;
+import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.modle.FMNewResult;
 import com.carlisle.songtaste.modle.SongDetailInfo;
 import com.carlisle.songtaste.modle.SongInfo;
 import com.carlisle.songtaste.provider.ApiFactory;
-import com.carlisle.songtaste.provider.converter.GsonConverter;
+import com.carlisle.songtaste.provider.converter.JsonConverter;
 import com.carlisle.songtaste.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.NewAdapter;
+import com.carlisle.songtaste.utils.Common;
 import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
@@ -31,15 +36,12 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by chengxin on 2/25/15.
  */
-public class NewFragment extends BaseFragment {
-    private static int SONG_NUMBER = -1;
+public class NewFragment extends BaseFragment implements OnMoreListener {
 
     @InjectView(R.id.recyclerView)
-    RecyclerView recyclerView;
-    @InjectView(R.id.swipe_layout)
-    SwipeRefreshLayout swipeLayout;
+    SuperRecyclerView superRecyclerView;
+    ProgressDialog progressDialog;
 
-    private LinearLayoutManager layoutManager;
     private NewAdapter adapter;
     private Subscription subscription;
 
@@ -53,104 +55,110 @@ public class NewFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
-
-        initRecyclerView();
-        initSwipeRefreshLayout();
-        refreshData();
+        setupSuperRecyclerView();
         return view;
     }
 
-    private void initRecyclerView() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter.isEmpty()) {
+            fetchData(currentPage, true);
+        }
+    }
 
-        layoutManager = new LinearLayoutManager(getActivity());
-//      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        // 设置布局管理器
+    private void setupSuperRecyclerView() {
+
         adapter = new NewAdapter(getActivity());
+        adapter.setOnLoadMoreClickListener(this);
 
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        superRecyclerView.setAdapter(adapter);
+        superRecyclerView.setMoreListener(this);
+        superRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()) {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItem = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
-                int totalItemCount = layoutManager.getItemCount();
-
-                // dy > 0 表示下滑
-                if (lastVisibleItem >= totalItemCount - 1 && dy > 0) {
-                    loadMoreData(++currentPage);
-                }
+            protected int getExtraLayoutSpace(RecyclerView.State state) {
+                return 300;
             }
         });
 
-    }
-
-    private void initSwipeRefreshLayout() {
-        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_light,
-                android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
-
-        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
+        superRecyclerView.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        swipeLayout.setRefreshing(false);
-                        refreshData();
+                        superRecyclerView.getSwipeToRefresh().setRefreshing(false);
+                        fetchData(currentPage, true);
                     }
                 }, 3000);
             }
         });
+
     }
 
-    private void loadMoreData(int page) {
-        subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_NEW_RESULT))
+    protected final void onLoadingFinished(boolean success) {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+        if (getActivity() == null) return;
+        if (!success) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getActivity(), "刷新失败，请再试一次", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && superRecyclerView != null) {
+            subscription.unsubscribe();
+        }
+    }
+
+    @Override
+    public void onMoreAsked(int totalCount, int currentPosition) {
+        fetchData(++currentPage, false);
+    }
+
+    private void fetchData(int page, final boolean reset) {
+        if (reset) {
+            currentPage = page = 1;
+        }
+
+        subscription = AndroidObservable.bindFragment(this, new ApiFactory()
+                .getSongtasteApi(new JsonConverter(JsonConverter.ConverterType.FM_NEW_RESULT))
                 .recList(String.valueOf(page), songsNumber, temp, callback))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<FMNewResult>() {
                     @Override
                     public void onCompleted() {
-                        SONG_NUMBER = 0;
-                        SongInfo songInfo = (SongInfo)adapter.dataList.get(SONG_NUMBER);
-                        QueueHelper.getInstance().getSongtasteQueue().clear();
+                        onLoadingFinished(true);
+
+                        Common.SONG_NUMBER = 0;
+                        SongInfo songInfo = (SongInfo) adapter.getData().get(Common.SONG_NUMBER);
+                        QueueHelper.getInstance().getNewQueue().clear();
                         setSongtasteQueue(songInfo.getID());
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
+                        onLoadingFinished(false);
                     }
 
                     @Override
                     public void onNext(FMNewResult songListResult) {
-                        adapter.insert2Bottom(songListResult.getData());
-                    }
-                });
-    }
-
-    private void refreshData() {
-        subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_NEW_RESULT))
-                .recList("1", songsNumber, temp, callback))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<FMNewResult>() {
-                    @Override
-                    public void onCompleted() {
-                        SONG_NUMBER = 0;
-                        SongInfo songInfo = (SongInfo)adapter.dataList.get(SONG_NUMBER);
-                        QueueHelper.getInstance().getSongtasteQueue().clear();
-                        setSongtasteQueue(songInfo.getID());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(FMNewResult songListResult) {
-                        adapter.refresh(songListResult.getData());
-
+                        if (reset) {
+                            adapter.refresh(songListResult.getData());
+                        } else {
+                            adapter.add(songListResult.getData());
+                        }
                     }
                 });
     }
@@ -161,8 +169,8 @@ public class NewFragment extends BaseFragment {
                 .subscribe(new Observer<SongDetailInfo>() {
                     @Override
                     public void onCompleted() {
-                        if (++SONG_NUMBER < adapter.dataList.size()) {
-                            setSongtasteQueue(((SongInfo)adapter.dataList.get(SONG_NUMBER)).getID());
+                        if (++Common.SONG_NUMBER < adapter.getData().size()) {
+                            setSongtasteQueue(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getID());
                         }
                     }
 
@@ -173,11 +181,10 @@ public class NewFragment extends BaseFragment {
 
                     @Override
                     public void onNext(SongDetailInfo songDetailInfo) {
-                        QueueHelper.getInstance().getSongtasteQueue().add(songDetailInfo);
+                        QueueHelper.getInstance().getNewQueue().add(songDetailInfo);
                     }
                 });
     }
-
 
     @Override
     public void onStop() {

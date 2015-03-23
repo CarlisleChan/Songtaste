@@ -5,11 +5,11 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.modle.SongInfo;
@@ -22,15 +22,13 @@ import butterknife.InjectView;
 /**
  * Created by chengxin on 2/25/15.
  */
-public class OffLineFragment extends BaseFragment {
+public class OfflineFragment extends BaseFragment {
 
     @InjectView(R.id.recyclerView)
-    RecyclerView recyclerView;
-    @InjectView(R.id.swipe_layout)
-    SwipeRefreshLayout swipeLayout;
+    SuperRecyclerView superRecyclerView;
 
     private LinearLayoutManager layoutManager;
-    public OffLineAdapter adapter;
+    public OfflineAdapter adapter;
     public ArrayList<SongInfo> songsList;
 
     @Override
@@ -46,41 +44,29 @@ public class OffLineFragment extends BaseFragment {
         }
 
         initRecyclerView();
-        initSwipeRefreshLayout();
-        refreshData();
-
         return view;
     }
 
     private void initRecyclerView() {
 
         layoutManager = new LinearLayoutManager(getActivity());
-//      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        // 设置布局管理器
-        adapter = new OffLineAdapter(getActivity());
+        adapter = new OfflineAdapter(getActivity());
 
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-
-    }
-
-    private void initSwipeRefreshLayout() {
-        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_light,
-                android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
-
-        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
+        superRecyclerView.setLayoutManager(layoutManager);
+        superRecyclerView.setAdapter(adapter);
+        superRecyclerView.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        swipeLayout.setRefreshing(false);
+                        superRecyclerView.getSwipeToRefresh().setRefreshing(false);
                         refreshData();
                     }
                 }, 3000);
             }
         });
+
     }
 
     private void refreshData() {

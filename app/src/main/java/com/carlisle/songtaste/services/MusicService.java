@@ -69,11 +69,12 @@ public class MusicService extends Service implements Playback.Callback {
     }
 
     public void onEvent(PlayEvent event) {
-        Log.d("playevent===>","yeah" + event.position);
         if (event.position != -1) {
             currentIndexOnQueue = event.position;
         }
         onPlay();
+
+
     }
 
     public void onEvent(PauseEvent event) {

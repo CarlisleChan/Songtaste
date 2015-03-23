@@ -1,5 +1,6 @@
 package com.carlisle.songtaste.ui.discover;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,15 +11,21 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
+import com.carlisle.songtaste.modle.SongDetailInfo;
+import com.carlisle.songtaste.modle.SongInfo;
 import com.carlisle.songtaste.modle.TagDetailResult;
 import com.carlisle.songtaste.provider.ApiFactory;
-import com.carlisle.songtaste.provider.converter.GsonConverter;
-import com.carlisle.songtaste.ui.discover.adapter.LoadMoreAdapter;
+import com.carlisle.songtaste.provider.converter.JsonConverter;
+import com.carlisle.songtaste.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.TagDetailAdapter;
 import com.carlisle.songtaste.ui.view.BottomScrollView;
+import com.carlisle.songtaste.utils.Common;
+import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -38,12 +45,13 @@ public class TagDetailActivity extends BaseActivity {
     Toolbar toolbar;
     @InjectView(R.id.album_bg)
     ImageView albumBg;
-    @InjectView(R.id.recyclerView)
-    RecyclerView recyclerView;
     @InjectView(R.id.scroll_view)
     BottomScrollView scrollView;
     @InjectView(R.id.linear_layout)
     LinearLayout linearLayout;
+    @InjectView(R.id.recyclerView)
+    SuperRecyclerView superRecyclerView;
+    ProgressDialog progressDialog;
 
     private MyLayoutManager layoutManager;
     private TagDetailAdapter adapter;
@@ -65,29 +73,43 @@ public class TagDetailActivity extends BaseActivity {
         ButterKnife.inject(this);
 
 //        initStatusBar();
-        toolbar.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
-        toolbarContainer.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        adapter = new TagDetailAdapter(this);
-        fetchData(key, currentPage, songsNumber);
-
-        layoutManager = new MyLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-
+        setupToolBar();
+        setupRecyclerView();
         scrollView.setOnScrollToBottomLintener(new BottomScrollView.OnScrollToBottomListener() {
 
             @Override
             public void onScrollBottomListener(boolean isBottom) {
-                if (isBottom && adapter.loadStatus != LoadMoreAdapter.LoadStatus.LOADING) {
+                if (isBottom && adapter.isLoading()) {
                     fetchData(key, ++currentPage, songsNumber);
                 }
             }
         });
 
+    }
+
+    private void setupToolBar() {
+        toolbar.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
+        toolbarContainer.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    private void setupRecyclerView() {
+
+        adapter = new TagDetailAdapter(this);
+
+        layoutManager = new MyLayoutManager(this);
+        superRecyclerView.setLayoutManager(layoutManager);
+        superRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adapter.isEmpty()) {
+            fetchData(key, currentPage, songsNumber);
+        }
     }
 
     @Override
@@ -122,25 +144,71 @@ public class TagDetailActivity extends BaseActivity {
 
     }
 
-    private void fetchData(String key, int currentPage, int songsNumber) {
-        subscription = AndroidObservable.bindActivity(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.TAG_DETAIL))
-                .tag(key, t, String.valueOf(currentPage), String.valueOf(songsNumber), tmp, callback, code))
-                .subscribe(new Observer<TagDetailResult>() {
+    public void setSongtasteQueue(String songId) {
+        new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
+                .songUrl(songId, "")
+                .subscribe(new Observer<SongDetailInfo>() {
                     @Override
                     public void onCompleted() {
-                        adapter.loadStatus = LoadMoreAdapter.LoadStatus.LOAD_CIMPLETE;
+                        if (++Common.SONG_NUMBER < adapter.getData().size()) {
+                            setSongtasteQueue(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getID());
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        adapter.loadStatus = LoadMoreAdapter.LoadStatus.LOAD_FAILED;
+
+                    }
+
+                    @Override
+                    public void onNext(SongDetailInfo songDetailInfo) {
+                        QueueHelper.getInstance().getTagDetailQueue().add(songDetailInfo);
+                    }
+                });
+    }
+
+    private void fetchData(String key, int currentPage, int songsNumber) {
+        subscription = AndroidObservable.bindActivity(this, new ApiFactory()
+                .getSongtasteApi(new JsonConverter(JsonConverter.ConverterType.TAG_DETAIL))
+                .tag(key, t, String.valueOf(currentPage), String.valueOf(songsNumber), tmp, callback, code))
+                .subscribe(new Observer<TagDetailResult>() {
+                    @Override
+                    public void onCompleted() {
+                        onLoadingFinished(true);
+
+                        Common.SONG_NUMBER = 0;
+                        SongInfo songInfo = (SongInfo) adapter.getData().get(Common.SONG_NUMBER);
+                        QueueHelper.getInstance().getTagDetailQueue().clear();
+                        setSongtasteQueue(songInfo.getID());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        onLoadingFinished(false);
                     }
 
                     @Override
                     public void onNext(TagDetailResult tagDetailResult) {
-                        adapter.insert2Bottom(tagDetailResult.getData());
+                        adapter.add(tagDetailResult.getData());
                     }
                 });
+    }
+
+    protected final void onLoadingFinished(boolean success) {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+        if (!success) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(TagDetailActivity.this, "刷新失败，请再试一次", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
     }
 
     @Override

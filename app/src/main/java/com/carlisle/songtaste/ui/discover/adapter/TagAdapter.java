@@ -2,12 +2,13 @@ package com.carlisle.songtaste.ui.discover.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.baidao.superrecyclerview.adapter.BaseAdapter;
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.base.BaseAdapter;
 import com.carlisle.songtaste.modle.TagInfo;
 
 import butterknife.ButterKnife;
@@ -19,35 +20,35 @@ import butterknife.InjectView;
 public class TagAdapter extends BaseAdapter {
 
     private Context context;
-
     public TagAdapter(Context context) {
         this.context = context;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = View.inflate(parent.getContext(), R.layout.item_tag, null);
-        return new VHItem(itemView);
+        TagViewHolder tagViewHolder = new TagViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tag, parent, false));
+        return tagViewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((BaseViewHolder) holder).bindView(position);
+        ((TagViewHolder) holder).bindView(position);
     }
 
-    class VHItem extends BaseViewHolder {
+
+
+    class TagViewHolder extends RecyclerView.ViewHolder {
         public View rootView;
 
         @InjectView(R.id.tag_name)
         TextView tagName;
 
-        public VHItem(View view) {
+        public TagViewHolder(View view) {
             super(view);
             rootView = view;
             ButterKnife.inject(this, view);
         }
 
-        @Override
         public void bindView(int position) {
             tagName.setText(((TagInfo) getItem(position)).getKey());
         }

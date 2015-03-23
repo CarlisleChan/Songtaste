@@ -1,7 +1,5 @@
 package com.carlisle.songtaste.provider.converter;
 
-import android.util.Log;
-
 import com.alibaba.fastjson.JSON;
 import com.carlisle.songtaste.modle.AlbumDetailInfo;
 import com.carlisle.songtaste.modle.CollectionResult;
@@ -25,7 +23,7 @@ import retrofit.mime.TypedOutput;
 /**
  * Created by chengxin on 2/26/15.
  */
-public class GsonConverter implements Converter {
+public class JsonConverter implements Converter {
 
     public enum ConverterType {
         COLLECTION_RESULT,
@@ -39,7 +37,7 @@ public class GsonConverter implements Converter {
 
     ConverterType converterType = null;
 
-    public GsonConverter(ConverterType converterType) {
+    public JsonConverter(ConverterType converterType) {
         this.converterType = converterType;
     }
 
@@ -56,8 +54,6 @@ public class GsonConverter implements Converter {
         }
 
         strResult = strResult.substring(strResult.indexOf("(") + 1, strResult.lastIndexOf(")"));
-
-        Log.i("result==>", strResult);
 
         switch (converterType) {
             case COLLECTION_RESULT:

@@ -16,7 +16,7 @@ import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
 import com.carlisle.songtaste.ui.favorite.FavoriteFragment;
 import com.carlisle.songtaste.ui.local.LocalFragment;
-import com.carlisle.songtaste.ui.offline.OffLineFragment;
+import com.carlisle.songtaste.ui.offline.OfflineFragment;
 import com.carlisle.songtaste.ui.setting.SettingActivity;
 import com.carlisle.songtaste.utils.FragmentSwitcher;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -36,6 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 public class MainActivity extends BaseActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int PROFILE_SETTING = 1;
     private static int MENU_TYPE = R.menu.menu_discover;
@@ -145,7 +146,7 @@ public class MainActivity extends BaseActivity {
         switcher = new FragmentSwitcher(getSupportFragmentManager(), R.id.fragment_content);
         switcher.addFragment(new DiscoverFragment());
         switcher.addFragment(new FavoriteFragment());
-        switcher.addFragment(new OffLineFragment());
+        switcher.addFragment(new OfflineFragment());
         switcher.addFragment(new LocalFragment());
         switcher.switchToFragment(0);
     }
@@ -225,4 +226,5 @@ public class MainActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -3,6 +3,7 @@ package com.carlisle.songtaste.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,8 @@ import rx.android.observables.AndroidObservable;
  * Created by carlisle on 3/22/15.
  */
 public class PlaybackControlsFragment extends BaseFragment {
+    private static final String TAG = PlaybackControlsFragment.class.getSimpleName();
+    public static final String PLAYBACK_STATE = "playback state";
 
     @InjectView(R.id.album_art)
     ImageButton albumArt;
@@ -70,7 +73,14 @@ public class PlaybackControlsFragment extends BaseFragment {
         Intent intent = new Intent(getActivity(), NowPlayingActivity.class);
         intent.putExtra(NowPlayingActivity.NOW_PLAYING, songDetailInfo);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        super.startActivityForResult(intent, 0);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        boolean type = data.getBooleanExtra(PLAYBACK_STATE, false);
+        Log.i(TAG, "==>");
+
     }
 
     @OnClick(R.id.im_next)

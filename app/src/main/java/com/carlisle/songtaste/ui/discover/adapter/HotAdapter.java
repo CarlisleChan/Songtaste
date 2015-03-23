@@ -2,17 +2,22 @@ package com.carlisle.songtaste.ui.discover.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidao.superrecyclerview.adapter.LoadMoreAdapter;
 import com.carlisle.songtaste.R;
+import com.carlisle.songtaste.events.PlayEvent;
 import com.carlisle.songtaste.modle.SongInfo;
+import com.carlisle.songtaste.utils.QueueHelper;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by chengxin on 12/25/14.
@@ -20,27 +25,28 @@ import butterknife.InjectView;
 public class HotAdapter extends LoadMoreAdapter {
 
     private Context context;
-
     public HotAdapter(Context context) {
+        super(context);
         this.context = context;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_ITEM) {
-            View itemView = View.inflate(parent.getContext(), R.layout.item_songtaste_song, null);
-            return new VHItem(itemView);
-        }
-
-        return super.onCreateViewHolder(parent, viewType);
+    protected int getMyItemViewType(int position) {
+        return 0;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((BaseViewHolder) holder).bindView(position);
+    protected RecyclerView.ViewHolder onCreateMyHolder(ViewGroup parent, int viewType) {
+        HotViewHolder hotViewHolder = new HotViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_songtaste_song, parent, false));
+        return hotViewHolder;
     }
 
-    class VHItem extends BaseViewHolder {
+    @Override
+    protected void onBindMyViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ((HotViewHolder) holder).bindView(position);
+    }
+
+    class HotViewHolder extends RecyclerView.ViewHolder {
         public View rootView;
 
         @InjectView(R.id.iv_up_user_avatar)
@@ -58,15 +64,13 @@ public class HotAdapter extends LoadMoreAdapter {
         @InjectView(R.id.tv_fav_num)
         TextView favNum;
 
-        public VHItem(View view) {
+        public HotViewHolder(View view) {
             super(view);
             rootView = view;
             ButterKnife.inject(this, view);
-
         }
 
-        @Override
-        public void bindView(int position) {
+        public void bindView(final int position) {
             upUserName.setText(((SongInfo) getItem(position)).getUserName());
             songName.setText(((SongInfo) getItem(position)).getName());
             singerName.setText(((SongInfo) getItem(position)).getSinger());
@@ -78,6 +82,14 @@ public class HotAdapter extends LoadMoreAdapter {
                     .load(((SongInfo) getItem(position)).getUserIcon())
                     .placeholder(R.drawable.ic_account_circle_grey600_24dp)
                     .into(upUserAvatar);
+
+            rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    QueueHelper.getInstance().setCurrentQueue(QueueHelper.QueueType.HOT_QUEUE);
+                    EventBus.getDefault().post(new PlayEvent(position));
+                }
+            });
         }
     }
 

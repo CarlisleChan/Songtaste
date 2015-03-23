@@ -1,7 +1,5 @@
 package com.carlisle.songtaste.provider.converter;
 
-import android.util.Log;
-
 import com.carlisle.songtaste.modle.Result;
 import com.carlisle.songtaste.modle.SongDetailInfo;
 import com.carlisle.songtaste.modle.User;
@@ -51,8 +49,6 @@ public class XmlConverter implements Converter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        Log.d("fromBody====>", strResult);
 
         switch (convterType) {
             case SONG:

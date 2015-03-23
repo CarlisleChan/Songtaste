@@ -2,11 +2,13 @@ package com.carlisle.songtaste.ui.discover.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidao.superrecyclerview.adapter.LoadMoreAdapter;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.events.PlayEvent;
 import com.carlisle.songtaste.modle.SongInfo;
@@ -25,25 +27,27 @@ public class NewAdapter extends LoadMoreAdapter {
     private Context context;
 
     public NewAdapter(Context context) {
+        super(context);
         this.context = context;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_ITEM) {
-            View itemView = View.inflate(parent.getContext(), R.layout.item_songtaste_song, null);
-            return new VHItem(itemView);
-        }
-
-        return super.onCreateViewHolder(parent, viewType);
+    protected RecyclerView.ViewHolder onCreateMyHolder(ViewGroup parent, int viewType) {
+        NewViewHolder newViewHolder = new NewViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_songtaste_song, parent, false));
+        return newViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((BaseViewHolder) holder).bindView(position);
+    protected void onBindMyViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ((NewViewHolder)holder).bindView(position);
     }
 
-    class VHItem extends BaseViewHolder {
+    @Override
+    protected int getMyItemViewType(int position) {
+        return 0;
+    }
+
+    class NewViewHolder extends RecyclerView.ViewHolder {
         public View rootView;
 
         @InjectView(R.id.iv_up_user_avatar)
@@ -61,14 +65,12 @@ public class NewAdapter extends LoadMoreAdapter {
         @InjectView(R.id.tv_fav_num)
         TextView favNum;
 
-        public VHItem(View view) {
+        public NewViewHolder(View view) {
             super(view);
             rootView = view;
             ButterKnife.inject(this, view);
-
         }
 
-        @Override
         public void bindView(final int position) {
             upUserName.setText(((SongInfo) getItem(position)).getUpUName());
             songName.setText(((SongInfo) getItem(position)).getName());
@@ -85,7 +87,7 @@ public class NewAdapter extends LoadMoreAdapter {
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    QueueHelper.getInstance().setCurrentQueue(1);
+                    QueueHelper.getInstance().setCurrentQueue(QueueHelper.QueueType.NEW_QUEUE);
                     EventBus.getDefault().post(new PlayEvent(position));
                 }
             });

@@ -5,16 +5,16 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.modle.FMAlbumResult;
 import com.carlisle.songtaste.provider.ApiFactory;
-import com.carlisle.songtaste.provider.converter.GsonConverter;
+import com.carlisle.songtaste.provider.converter.JsonConverter;
 import com.carlisle.songtaste.ui.discover.adapter.AlbumAdapter;
 
 import butterknife.ButterKnife;
@@ -29,9 +29,7 @@ import rx.android.observables.AndroidObservable;
 public class AlbumFragment extends BaseFragment {
 
     @InjectView(R.id.recyclerView)
-    RecyclerView recyclerView;
-    @InjectView(R.id.swipe_layout)
-    SwipeRefreshLayout swipeLayout;
+    SuperRecyclerView superRecyclerView;
 
     private android.support.v7.widget.GridLayoutManager layoutManager;
     private AlbumAdapter adapter;
@@ -47,41 +45,41 @@ public class AlbumFragment extends BaseFragment {
         ButterKnife.inject(this, view);
 
         initRecyclerView();
-        initSwipeRefreshLayout();
-        refreshData();
+        fetchData();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter.isEmpty()) {
+            fetchData();
+        }
     }
 
     private void initRecyclerView() {
         adapter = new AlbumAdapter(getActivity());
         layoutManager = new GridLayoutManager(getActivity(), 3);
-//      layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        // 设置布局管理器
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-    }
 
-    private void initSwipeRefreshLayout() {
-        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_light,
-                android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
-
-        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
+        superRecyclerView.setLayoutManager(layoutManager);
+        superRecyclerView.setAdapter(adapter);
+        superRecyclerView.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        swipeLayout.setRefreshing(false);
-                        refreshData();
+                        superRecyclerView.getSwipeToRefresh().setRefreshing(false);
+                        fetchData();
                     }
                 }, 3000);
             }
         });
     }
 
-    private void refreshData() {
-        subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.FM_ALBUM_RESULT))
+    private void fetchData() {
+        subscription = AndroidObservable.bindFragment(this, new ApiFactory()
+                .getSongtasteApi(new JsonConverter(JsonConverter.ConverterType.FM_ALBUM_RESULT))
                 .hotAlbums(temp, callback))
                 .subscribe(new Observer<FMAlbumResult>() {
                     @Override

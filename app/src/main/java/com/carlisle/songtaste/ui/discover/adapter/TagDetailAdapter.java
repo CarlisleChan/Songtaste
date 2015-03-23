@@ -2,15 +2,20 @@ package com.carlisle.songtaste.ui.discover.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.baidao.superrecyclerview.adapter.LoadMoreAdapter;
 import com.carlisle.songtaste.R;
+import com.carlisle.songtaste.events.PlayEvent;
 import com.carlisle.songtaste.modle.SongDetailInfo;
+import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by chengxin on 12/25/14.
@@ -18,27 +23,28 @@ import butterknife.InjectView;
 public class TagDetailAdapter extends LoadMoreAdapter {
 
     private Context context;
-
     public TagDetailAdapter(Context context) {
+        super(context);
         this.context = context;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_ITEM) {
-            View itemView = View.inflate(parent.getContext(), R.layout.item_tag_detail, null);
-            return new VHItem(itemView);
-        }
-
-        return super.onCreateViewHolder(parent, viewType);
+    protected RecyclerView.ViewHolder onCreateMyHolder(ViewGroup parent, int viewType) {
+        TagDetailVH tagDetailVH = new TagDetailVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_songtaste_song, parent, false));
+        return tagDetailVH;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((BaseViewHolder) holder).bindView(position);
+    protected void onBindMyViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ((TagDetailVH) holder).bindView(position);
     }
 
-    class VHItem extends BaseViewHolder {
+    @Override
+    protected int getMyItemViewType(int position) {
+        return 0;
+    }
+
+    class TagDetailVH extends RecyclerView.ViewHolder {
         public View rootView;
 
         @InjectView(R.id.tv_song_name)
@@ -46,19 +52,23 @@ public class TagDetailAdapter extends LoadMoreAdapter {
         @InjectView(R.id.tv_singer_name)
         TextView singerName;
 
-        public VHItem(View view) {
+        public TagDetailVH(View view) {
             super(view);
             rootView = view;
             ButterKnife.inject(this, view);
         }
 
-        @Override
-        public void bindView(int position) {
+        public void bindView(final int position) {
             songName.setText(((SongDetailInfo) getItem(position)).getSongname());
             singerName.setText(((SongDetailInfo) getItem(position)).getSingername());
+
+            rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    QueueHelper.getInstance().setCurrentQueue(QueueHelper.QueueType.TAG_DEAIL_QUEUE);
+                    EventBus.getDefault().post(new PlayEvent(position));
+                }
+            });
         }
     }
-
-
-
 }

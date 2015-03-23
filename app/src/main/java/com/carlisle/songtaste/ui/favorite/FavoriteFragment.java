@@ -1,5 +1,6 @@
 package com.carlisle.songtaste.ui.favorite;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -9,15 +10,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.baidao.superrecyclerview.OnMoreListener;
+import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.modle.CollectionResult;
+import com.carlisle.songtaste.modle.SongDetailInfo;
 import com.carlisle.songtaste.modle.SongInfo;
 import com.carlisle.songtaste.provider.ApiFactory;
-import com.carlisle.songtaste.provider.converter.GsonConverter;
-
-import java.util.ArrayList;
+import com.carlisle.songtaste.provider.converter.JsonConverter;
+import com.carlisle.songtaste.provider.converter.XmlConverter;
+import com.carlisle.songtaste.utils.Common;
+import com.carlisle.songtaste.utils.QueueHelper;
+import com.carlisle.songtaste.utils.UserHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -28,19 +35,15 @@ import rx.android.observables.AndroidObservable;
 /**
  * Created by chengxin on 2/25/15.
  */
-public class FavoriteFragment extends BaseFragment {
+public class FavoriteFragment extends BaseFragment implements OnMoreListener {
 
     @InjectView(R.id.recyclerView)
-    RecyclerView recyclerView;
-    @InjectView(R.id.swipe_layout)
-    SwipeRefreshLayout swipeLayout;
+    SuperRecyclerView superRecyclerView;
+    ProgressDialog progressDialog;
 
-    private LinearLayoutManager layoutManager;
     private FavoriteAdapter adapter;
-    private ArrayList<SongInfo> songsList;
     private Subscription subscription;
 
-    private String uid = "6973651";
     private int currentPage = 1;
     private int songsNumber = 20;
     private String tmp = "0";
@@ -49,55 +52,97 @@ public class FavoriteFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
-
-        initRecyclerView();
-        initSwipeRefreshLayout();
-        fetchData(uid, currentPage, songsNumber);
+        setupSuperRecyclerView();
         return view;
     }
 
-
-    private void initRecyclerView() {
-        adapter = new FavoriteAdapter(getActivity());
-        layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter.isEmpty()) {
+            fetchData(UserHelper.getInstance().getUID(), currentPage, songsNumber);
+        }
     }
 
-    private void initSwipeRefreshLayout() {
-        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_light,
-                android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
+    private void setupSuperRecyclerView() {
+        adapter = new FavoriteAdapter(getActivity());
+//        adapter.setOnLoadMoreClickListener(this);
 
-        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        superRecyclerView.setAdapter(adapter);
+        superRecyclerView.setMoreListener(this);
+        superRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()) {
+            @Override
+            protected int getExtraLayoutSpace(RecyclerView.State state) {
+                return 300;
+            }
+        });
 
+        superRecyclerView.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        swipeLayout.setRefreshing(false);
-                        fetchData(uid, currentPage, songsNumber);
+                        superRecyclerView.getSwipeToRefresh().setRefreshing(false);
+                        fetchData(UserHelper.getInstance().getUID(), currentPage, songsNumber);
                     }
                 }, 3000);
             }
         });
+
+    }
+
+    protected final void onLoadingFinished(boolean success) {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+
+        if (getActivity() == null) return;
+        if (!success) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getActivity(), "刷新失败，请再试一次", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && superRecyclerView != null) {
+            subscription.unsubscribe();
+        }
+    }
+
+    @Override
+    public void onMoreAsked(int totalCount, int currentPosition) {
+        fetchData(UserHelper.getInstance().getUID(), currentPage, songsNumber);
     }
 
     private void fetchData(String uid, int currentPage, int songsNumber) {
-        subscription = AndroidObservable.bindActivity(getActivity(), new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.COLLECTION_RESULT))
+        subscription = AndroidObservable.bindActivity(getActivity(), new ApiFactory()
+                .getSongtasteApi(new JsonConverter(JsonConverter.ConverterType.COLLECTION_RESULT))
                 .collectionSong(uid, String.valueOf(currentPage), String.valueOf(songsNumber), tmp, callBack, code))
                 .subscribe(new Observer<CollectionResult>() {
                     @Override
                     public void onCompleted() {
-
+                        onLoadingFinished(true);
+                        Common.SONG_NUMBER = 0;
+                        SongInfo songInfo = (SongInfo) adapter.getData().get(Common.SONG_NUMBER);
+                        QueueHelper.getInstance().getFavoriteQueue().clear();
+                        setSongtasteQueue(songInfo.getSongid());
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
+                        onLoadingFinished(false);
                     }
 
                     @Override
@@ -107,4 +152,32 @@ public class FavoriteFragment extends BaseFragment {
                 });
     }
 
+    public void setSongtasteQueue(String songId) {
+        new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
+                .songUrl(songId, "")
+                .subscribe(new Observer<SongDetailInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        if ((++Common.SONG_NUMBER) < adapter.getData().size()) {
+                            setSongtasteQueue(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getSongid());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(SongDetailInfo songDetailInfo) {
+                        QueueHelper.getInstance().getFavoriteQueue().add(songDetailInfo);
+                    }
+                });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        subscription.unsubscribe();
+    }
 }

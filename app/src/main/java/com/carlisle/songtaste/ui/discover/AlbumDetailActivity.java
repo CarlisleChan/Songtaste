@@ -1,5 +1,6 @@
 package com.carlisle.songtaste.ui.discover;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,13 +10,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.modle.AlbumDetailInfo;
+import com.carlisle.songtaste.modle.SongDetailInfo;
+import com.carlisle.songtaste.modle.SongInfo;
 import com.carlisle.songtaste.provider.ApiFactory;
-import com.carlisle.songtaste.provider.converter.GsonConverter;
+import com.carlisle.songtaste.provider.converter.JsonConverter;
+import com.carlisle.songtaste.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.AlbumDetailAdapter;
+import com.carlisle.songtaste.utils.Common;
+import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -35,7 +43,8 @@ public class AlbumDetailActivity extends BaseActivity {
     @InjectView(R.id.album_bg)
     ImageView albumBg;
     @InjectView(R.id.recyclerView)
-    RecyclerView recyclerView;
+    SuperRecyclerView superRecyclerView;
+    ProgressDialog progressDialog;
 
     private MyLayoutManager layoutManager;
     private AlbumDetailAdapter adapter;
@@ -65,8 +74,8 @@ public class AlbumDetailActivity extends BaseActivity {
         fetchData(aid, currentPage, songsNumber);
 
         layoutManager = new MyLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+        superRecyclerView.setLayoutManager(layoutManager);
+        superRecyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -101,18 +110,63 @@ public class AlbumDetailActivity extends BaseActivity {
 
     }
 
-    private void fetchData(String aid, int currentPage, int songsNumber) {
-        subscription = AndroidObservable.bindActivity(this, new ApiFactory().getSongtasteApi(new GsonConverter(GsonConverter.ConverterType.ALBUM_DETAIL))
-                .albumSong(aid, String.valueOf(currentPage), String.valueOf(songsNumber), tmp, callback, code))
-                .subscribe(new Observer<AlbumDetailInfo>() {
+    protected final void onLoadingFinished(boolean success) {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+        if (!success) {
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(AlbumDetailActivity.this, "刷新失败，请再试一次", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+    }
+
+    public void setSongtasteQueue(String songId) {
+        new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
+                .songUrl(songId, "")
+                .subscribe(new Observer<SongDetailInfo>() {
                     @Override
                     public void onCompleted() {
-
+                        if (++Common.SONG_NUMBER < adapter.getData().size()) {
+                            setSongtasteQueue(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getID());
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
 
+                    }
+
+                    @Override
+                    public void onNext(SongDetailInfo songDetailInfo) {
+                        QueueHelper.getInstance().getAlbumDetailQueue().add(songDetailInfo);
+                    }
+                });
+    }
+
+    private void fetchData(String aid, int currentPage, int songsNumber) {
+        subscription = AndroidObservable.bindActivity(this, new ApiFactory()
+                .getSongtasteApi(new JsonConverter(JsonConverter.ConverterType.ALBUM_DETAIL))
+                .albumSong(aid, String.valueOf(currentPage), String.valueOf(songsNumber), tmp, callback, code))
+                .subscribe(new Observer<AlbumDetailInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        onLoadingFinished(true);
+                        Common.SONG_NUMBER = 0;
+                        SongInfo songInfo = (SongInfo) adapter.getData().get(Common.SONG_NUMBER);
+                        QueueHelper.getInstance().getAlbumDetailQueue().clear();
+                        setSongtasteQueue(songInfo.getID());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        onLoadingFinished(false);
                     }
 
                     @Override

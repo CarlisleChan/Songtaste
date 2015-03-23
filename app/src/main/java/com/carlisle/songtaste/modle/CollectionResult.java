@@ -13,7 +13,7 @@ public class CollectionResult {
     public int num;
     public int page;
     public User userinfo;
-    public ArrayList<SongDetailInfo> data;
+    public ArrayList<SongInfo> data;
 
     public CollectionResult() {
         data = new ArrayList();
@@ -75,11 +75,11 @@ public class CollectionResult {
         this.userinfo = userinfo;
     }
 
-    public ArrayList<SongDetailInfo> getData() {
+    public ArrayList<SongInfo> getData() {
         return data;
     }
 
-    public void setData(ArrayList<SongDetailInfo> data) {
+    public void setData(ArrayList<SongInfo> data) {
         this.data = data;
     }
 }

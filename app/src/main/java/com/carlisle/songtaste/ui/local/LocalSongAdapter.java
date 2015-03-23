@@ -2,16 +2,15 @@ package com.carlisle.songtaste.ui.local;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.baidao.superrecyclerview.adapter.BaseAdapter;
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.base.BaseAdapter;
 import com.carlisle.songtaste.events.PlayEvent;
 import com.carlisle.songtaste.modle.SongDetailInfo;
-import com.carlisle.songtaste.ui.discover.adapter.BaseViewHolder;
 import com.carlisle.songtaste.utils.LocalSongHelper;
 import com.carlisle.songtaste.utils.QueueHelper;
 
@@ -31,16 +30,16 @@ public class LocalSongAdapter extends BaseAdapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((BaseViewHolder) holder).bindView(position);
+        ((LocalSongVH) holder).bindView(position);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(parent.getContext(), R.layout.item_local_song, null);
-        return new SimpleHolder(view);
+        LocalSongVH localSongVH = new LocalSongVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_local_song, parent, false));
+        return localSongVH;
     }
 
-    class SimpleHolder extends BaseViewHolder {
+    class LocalSongVH extends RecyclerView.ViewHolder {
         public View itemView;
 
         @InjectView(R.id.tv_song_name)
@@ -48,13 +47,12 @@ public class LocalSongAdapter extends BaseAdapter {
         @InjectView(R.id.tv_singer_name)
         TextView singerName;
 
-        public SimpleHolder(View view) {
+        public LocalSongVH(View view) {
             super(view);
             itemView = view;
             ButterKnife.inject(this, view);
         }
 
-        @Override
         public void bindView(final int position) {
             songName.setText(((SongDetailInfo) getItem(position)).getSong_name());
             singerName.setText(((SongDetailInfo) getItem(position)).getSinger_name());
@@ -63,8 +61,7 @@ public class LocalSongAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     QueueHelper.getInstance().setLocalSongQueue(LocalSongHelper.getSongList(context));
-                    QueueHelper.getInstance().setCurrentQueue(0);
-                    Log.i("position====>", "" + position);
+                    QueueHelper.getInstance().setCurrentQueue(QueueHelper.QueueType.LOCAL_QUEUE);
                     EventBus.getDefault().post(new PlayEvent(position));
                 }
             });

@@ -118,5 +118,4 @@ public class DiscoverFragment extends BaseFragment {
         }
         return fragment;
     }
-
 }

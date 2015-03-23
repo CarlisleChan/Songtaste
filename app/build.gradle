@@ -38,6 +38,7 @@ dependencies {
     compile files('libs/android-viewbadger.jar')
     compile files('libs/litecommon1.0.0.jar')
     compile project(':taggrouplibrary')
+    compile project(':SuperRecyclerView')
     // android
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.github.frankiesardo:icepick:2.3.6'

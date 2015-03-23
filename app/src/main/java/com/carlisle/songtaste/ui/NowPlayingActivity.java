@@ -1,5 +1,6 @@
 package com.carlisle.songtaste.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -71,7 +72,6 @@ public class NowPlayingActivity extends BaseActivity {
         }
     }
 
-
     @OnClick({R.id.im_prev, R.id.cb_play_pause, R.id.im_next})
     public void onControllerClick(View view) {
         switch (view.getId()) {
@@ -103,7 +103,10 @@ public class NowPlayingActivity extends BaseActivity {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(PlaybackControlsFragment.PLAYBACK_STATE, playOrPause.isChecked());
+        setResult(RESULT_OK, intent);
         EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }
