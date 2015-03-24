@@ -85,6 +85,10 @@ public class DiscoverFragment extends BaseFragment {
             return TITLES.length;
         }
 
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+
+        }
     }
 
     private NewFragment getNewFragment() {
