@@ -25,6 +25,7 @@ import com.carlisle.songtaste.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.NewAdapter;
 import com.carlisle.songtaste.utils.Common;
 import com.carlisle.songtaste.utils.QueueHelper;
+import com.github.stephanenicolas.loglifecycle.LogLifeCycle;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -36,6 +37,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * Created by chengxin on 2/25/15.
  */
+@LogLifeCycle
 public class NewFragment extends BaseFragment implements OnMoreListener {
 
     @InjectView(R.id.recyclerView)
