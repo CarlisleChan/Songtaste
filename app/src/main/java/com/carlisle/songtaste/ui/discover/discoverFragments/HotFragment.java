@@ -116,7 +116,7 @@ public class HotFragment extends BaseFragment implements OnMoreListener {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && superRecyclerView != null) {
+        if (!isVisibleToUser && superRecyclerView != null) {
             subscription.unsubscribe();
         }
     }

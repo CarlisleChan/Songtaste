@@ -73,8 +73,6 @@ public class MusicService extends Service implements Playback.Callback {
             currentIndexOnQueue = event.position;
         }
         onPlay();
-
-
     }
 
     public void onEvent(PauseEvent event) {
@@ -109,7 +107,7 @@ public class MusicService extends Service implements Playback.Callback {
             handlePlayRequest();
         } else {
             --currentIndexOnQueue;
-            Toast.makeText(this, "end", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "已是最后一首", Toast.LENGTH_SHORT).show();
             handleStopRequest();
         }
     }
@@ -122,6 +120,7 @@ public class MusicService extends Service implements Playback.Callback {
             handlePlayRequest();
         } else {
             ++currentIndexOnQueue;
+            Toast.makeText(this, "已是第一首", Toast.LENGTH_SHORT).show();
             handleStopRequest();
         }
     }
@@ -143,12 +142,11 @@ public class MusicService extends Service implements Playback.Callback {
     private void handlePauseRequest() {
         Log.d("handlePause===>","you are here");
         playback.pause();
-        EventBus.getDefault().post(new UpdateUIEvent(playback.getState()));
+
     }
 
     private void handleStopRequest() {
         playback.stop(true);
-        EventBus.getDefault().post(new UpdateUIEvent(playback.getState()));
     }
 
     @Override

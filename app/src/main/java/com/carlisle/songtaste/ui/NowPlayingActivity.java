@@ -15,6 +15,7 @@ import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.events.PauseEvent;
 import com.carlisle.songtaste.events.PlayEvent;
+import com.carlisle.songtaste.events.ProgressEvent;
 import com.carlisle.songtaste.events.SkipToNextEvent;
 import com.carlisle.songtaste.events.SkipToPrevEvent;
 import com.carlisle.songtaste.events.UpdateUIEvent;
@@ -70,6 +71,25 @@ public class NowPlayingActivity extends BaseActivity {
                 singerName.setText(songDetailInfo.getSinger_name());
             }
         }
+
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser == true) {
+                    EventBus.getDefault().post(new ProgressEvent(progress, seekBar.getMax(), true));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     @OnClick({R.id.im_prev, R.id.cb_play_pause, R.id.im_next})
@@ -92,13 +112,35 @@ public class NowPlayingActivity extends BaseActivity {
     }
 
     public void onEvent(UpdateUIEvent event) {
-        songDetailInfo = event.songDetailInfo;
-        songName.setText(songDetailInfo.getSong_name());
-        singerName.setText(songDetailInfo.getSinger_name());
-
-        if (event.state == Playback.STATE_STOPPED) {
-            playOrPause.setChecked(false);
+        switch (event.state) {
+            case Playback.STATE_PAUSED:
+                playOrPause.setChecked(true);
+                break;
+            case Playback.STATE_STOPPED:
+                playOrPause.setChecked(false);
+                break;
+            default:
+                songDetailInfo = event.songDetailInfo;
+                songName.setText(songDetailInfo.getSong_name());
+                singerName.setText(songDetailInfo.getSinger_name());
+                playOrPause.setChecked(false);
+                break;
         }
+    }
+
+    public int position = 0;
+    public void onEvent(ProgressEvent progressEvent) {
+        Log.d("onEvent=====>","time:" + progressEvent.currentPosition);
+        if (progressEvent.trackTouch) return;
+        if (progressEvent.currentPosition == position) {
+            // loading, show progress
+            Log.d("loading=====>","=====");
+        } else {
+            position = progressEvent.currentPosition;
+        }
+
+        seekbar.setProgress(progressEvent.currentPosition);
+        seekbar.setMax(progressEvent.maxPosition);
     }
 
     @Override

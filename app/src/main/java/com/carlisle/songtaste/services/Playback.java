@@ -108,13 +108,13 @@ public interface Playback {
      *
      * @param mediaId to be set as the current.
      */
-    void setCurrentMediaId(String mediaId);
+    void setCurrentMediaUrl(String mediaId);
 
     /**
      *
      * @return the current media Id being processed in any state or null.
      */
-    String getCurrentMediaId();
+    String getCurrentMediaUrl();
 
     interface Callback {
         /**

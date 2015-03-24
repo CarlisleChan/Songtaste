@@ -90,8 +90,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_toStartOf="@+id/tv_end_time"
-                    android:layout_toEndOf="@+id/tv_start_time"
-                    android:visibility="gone"/>
+                    android:layout_toEndOf="@+id/tv_start_time"/>
 
                 <TextView
                     android:id="@+id/tv_end_time"

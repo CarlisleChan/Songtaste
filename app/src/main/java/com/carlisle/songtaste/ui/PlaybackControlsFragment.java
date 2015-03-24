@@ -24,6 +24,7 @@ import com.carlisle.songtaste.modle.Result;
 import com.carlisle.songtaste.modle.SongDetailInfo;
 import com.carlisle.songtaste.provider.ApiFactory;
 import com.carlisle.songtaste.provider.converter.XmlConverter;
+import com.carlisle.songtaste.services.Playback;
 import com.carlisle.songtaste.utils.UserHelper;
 
 import butterknife.ButterKnife;
@@ -124,11 +125,21 @@ public class PlaybackControlsFragment extends BaseFragment {
 
     public void onEvent(UpdateUIEvent event) {
         container.setVisibility(View.VISIBLE);
-        songDetailInfo = event.songDetailInfo;
-        songName.setText(songDetailInfo.getSong_name());
-        singerName.setText(songDetailInfo.getSinger_name());
 
-            playOrPause.setChecked(false);
+        switch (event.state) {
+            case Playback.STATE_PAUSED:
+                playOrPause.setChecked(true);
+                break;
+            case Playback.STATE_STOPPED:
+                playOrPause.setChecked(false);
+                break;
+            default:
+                songDetailInfo = event.songDetailInfo;
+                songName.setText(songDetailInfo.getSong_name());
+                singerName.setText(songDetailInfo.getSinger_name());
+                playOrPause.setChecked(false);
+                break;
+        }
 
 //        Picasso.with(getActivity())
 //                .load("")
