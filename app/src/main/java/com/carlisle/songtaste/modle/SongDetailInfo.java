@@ -10,6 +10,13 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
  */
 @ParcelablePlease
 public class SongDetailInfo implements Parcelable {
+    public enum SongType {
+        LOCAL_SONG,
+        SONGTASTE_SONG
+    }
+
+    public SongType songType = SongType.SONGTASTE_SONG;
+
     public int code;
     public String singer_name;
     public String song_name;
@@ -23,11 +30,20 @@ public class SongDetailInfo implements Parcelable {
     // songtaste
     public String songname;
     public String singername;
+    public String albumArt;
 
     // local
     public String album;
     public String albumid;
     public String size;
+
+    public SongType getSongType() {
+        return songType;
+    }
+
+    public void setSongType(SongType songType) {
+        this.songType = songType;
+    }
 
     public int getCode() {
         return code;
@@ -115,6 +131,14 @@ public class SongDetailInfo implements Parcelable {
 
     public void setSingername(String singername) {
         this.singername = singername;
+    }
+
+    public String getAlbumArt() {
+        return albumArt;
+    }
+
+    public void setAlbumArt(String albumArt) {
+        this.albumArt = albumArt;
     }
 
     public String getAlbum() {

@@ -73,7 +73,6 @@ public class AudioPlayback implements Playback, AudioManager.OnAudioFocusChangeL
 
         String url = songDetailInfo.getUrl();
         boolean hasMediaChanged = !TextUtils.equals(url, currentMediaUrl);
-        Log.d("==========", url + "//" + currentMediaUrl);
         if (hasMediaChanged) {
             currentPosition = 0;
             currentMediaUrl = url;
@@ -219,7 +218,6 @@ public class AudioPlayback implements Playback, AudioManager.OnAudioFocusChangeL
 
     public void onEvent(ProgressEvent progressEvent) {
         if (progressEvent.trackTouch) {
-            Log.d("audioplayback===>", "got it");
             seekTo(progressEvent.currentPosition);
         }
     }
@@ -351,7 +349,6 @@ public class AudioPlayback implements Playback, AudioManager.OnAudioFocusChangeL
 
             if (playOnFocusGain) {
                 if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
-                    Log.d(TAG, "configMediaPlayerState startMediaPlayer. seeking to " + currentPosition);
                     if (currentPosition == mediaPlayer.getCurrentPosition()) {
                         mediaPlayer.start();
                         state = Playback.STATE_PLAYING;

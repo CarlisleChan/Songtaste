@@ -165,7 +165,7 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
                 });
     }
 
-    public void setSongtasteQueue(String songId) {
+    public void setSongtasteQueue(final String songId) {
         new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
                 .songUrl(songId, "")
                 .subscribe(new Observer<SongDetailInfo>() {
@@ -183,6 +183,8 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
 
                     @Override
                     public void onNext(SongDetailInfo songDetailInfo) {
+                        SongDetailInfo songDetailInfo1 = songDetailInfo;
+                        songDetailInfo1.setAlbumArt(((SongInfo)adapter.getData().get(Common.SONG_NUMBER)).getUpUIcon());
                         QueueHelper.getInstance().getNewQueue().add(songDetailInfo);
                     }
                 });

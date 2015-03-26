@@ -2,11 +2,13 @@ package com.carlisle.songtaste.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -32,7 +34,12 @@ import de.greenrobot.event.EventBus;
  */
 public class NowPlayingActivity extends BaseActivity {
     public static final String NOW_PLAYING = "now playing";
+    public static final String PLAYBACK_STATE = "playback state";
 
+    @InjectView(R.id.toolbar_container)
+    RelativeLayout toolbarContainer;
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
     @InjectView(R.id.background_image)
     ImageView backgroundImage;
     @InjectView(R.id.tv_song_name)
@@ -63,8 +70,15 @@ public class NowPlayingActivity extends BaseActivity {
         ButterKnife.inject(this);
         EventBus.getDefault().register(this);
 
+        toolbar.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
+        toolbarContainer.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         if (getIntent() != null) {
             songDetailInfo = (SongDetailInfo) getIntent().getParcelableExtra(NOW_PLAYING);
+            playOrPause.setChecked(getIntent().getBooleanExtra(PLAYBACK_STATE, false));
             Log.d("now playing", JSON.toJSONString(songDetailInfo));
             if (songDetailInfo != null) {
                 songName.setText(songDetailInfo.getSong_name());
@@ -130,7 +144,6 @@ public class NowPlayingActivity extends BaseActivity {
 
     public int position = 0;
     public void onEvent(ProgressEvent progressEvent) {
-        Log.d("onEvent=====>","time:" + progressEvent.currentPosition);
         if (progressEvent.trackTouch) return;
         if (progressEvent.currentPosition == position) {
             // loading, show progress

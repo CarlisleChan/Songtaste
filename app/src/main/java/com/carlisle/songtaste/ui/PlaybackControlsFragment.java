@@ -25,7 +25,10 @@ import com.carlisle.songtaste.modle.SongDetailInfo;
 import com.carlisle.songtaste.provider.ApiFactory;
 import com.carlisle.songtaste.provider.converter.XmlConverter;
 import com.carlisle.songtaste.services.Playback;
+import com.carlisle.songtaste.utils.LocalSongHelper;
 import com.carlisle.songtaste.utils.UserHelper;
+import com.orhanobut.logger.Logger;
+import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -73,6 +76,7 @@ public class PlaybackControlsFragment extends BaseFragment {
     public void onContainerClick() {
         Intent intent = new Intent(getActivity(), NowPlayingActivity.class);
         intent.putExtra(NowPlayingActivity.NOW_PLAYING, songDetailInfo);
+        intent.putExtra(NowPlayingActivity.PLAYBACK_STATE, playOrPause.isChecked());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         super.startActivityForResult(intent, 0);
     }
@@ -126,6 +130,7 @@ public class PlaybackControlsFragment extends BaseFragment {
     public void onEvent(UpdateUIEvent event) {
         container.setVisibility(View.VISIBLE);
 
+        Logger.d("" + event.state);
         switch (event.state) {
             case Playback.STATE_PAUSED:
                 playOrPause.setChecked(true);
@@ -138,13 +143,24 @@ public class PlaybackControlsFragment extends BaseFragment {
                 songName.setText(songDetailInfo.getSong_name());
                 singerName.setText(songDetailInfo.getSinger_name());
                 playOrPause.setChecked(false);
+                setAlbumArt(songDetailInfo);
                 break;
         }
 
-//        Picasso.with(getActivity())
-//                .load("")
-//                .placeholder(R.drawable.ic_account_circle_grey600_24dp)
-//                .into(albumArt);
+    }
+
+    public void setAlbumArt(SongDetailInfo songDetailInfo) {
+        if (songDetailInfo.songType == SongDetailInfo.SongType.LOCAL_SONG) {
+
+            albumArt.setImageBitmap(LocalSongHelper.getArtwork(getActivity(), Long.parseLong(songDetailInfo.mediaId),
+                    Long.parseLong(songDetailInfo.albumid), true));
+        } else {
+            Picasso.with(getActivity())
+                    .load(songDetailInfo.getAlbumArt())
+                    .placeholder(R.drawable.ic_account_circle_grey600_24dp)
+                    .into(albumArt);
+        }
+
     }
 
     @Override
