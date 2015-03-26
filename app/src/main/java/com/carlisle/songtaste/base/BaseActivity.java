@@ -18,6 +18,7 @@ public class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setBackgroundDrawable(null);
         super.onCreate(savedInstanceState);
 
 //        initStatusBar();
