@@ -21,7 +21,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.login.LoginActicity"
             android:label="@string/app_name"
             android:launchMode="standard">
             <intent-filter>

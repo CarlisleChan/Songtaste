@@ -52,11 +52,9 @@ dependencies {
     compile 'org.androidannotations:androidannotations-api:3.3-SNAPSHOT'
     apt "org.androidannotations:androidannotations:3.3-SNAPSHOT"
     compile 'com.neenbedankt.bundles:common:1.0.4'
-    compile 'com.github.anrwatchdog:anrwatchdog:1.1.+'
     // Tools
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'joda-time:joda-time:2.7'
-    compile 'org.ocpsoft.prettytime:prettytime:3.2.7.Final'
     compile 'com.google.guava:guava-parent:18.0'
     compile 'com.squareup.picasso:picasso:2.4.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
@@ -78,6 +76,7 @@ dependencies {
     compile('de.keyboardsurfer.android.widget:crouton:1.8.5@aar') {
         exclude group: 'com.google.android', module: 'support-v4'
     }
+    compile 'com.flaviofaria:kenburnsview:1.0.6'
     // UI Google Style
     compile 'com.android.support:cardview-v7:21.0.+'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
