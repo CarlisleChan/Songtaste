@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.baidao.superrecyclerview.adapter.BaseAdapter;
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.modle.AlbumInfo;
+import com.carlisle.songtaste.cmpts.modle.AlbumInfo;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;

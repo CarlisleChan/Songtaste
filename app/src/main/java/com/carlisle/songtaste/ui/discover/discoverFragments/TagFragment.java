@@ -11,10 +11,10 @@ import android.view.ViewGroup;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.carlisle.songtaste.modle.FMTagResult;
-import com.carlisle.songtaste.modle.TagInfo;
-import com.carlisle.songtaste.provider.ApiFactory;
-import com.carlisle.songtaste.provider.converter.JsonConverter;
+import com.carlisle.songtaste.cmpts.modle.FMTagResult;
+import com.carlisle.songtaste.cmpts.modle.TagInfo;
+import com.carlisle.songtaste.cmpts.provider.ApiFactory;
+import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
 import com.carlisle.songtaste.ui.discover.adapter.TagAdapter;
 
 import java.util.ArrayList;

@@ -7,7 +7,7 @@
     <include layout="@layout/toolbar"
         android:id="@+id/toolbar_container"/>
 
-    <fragment android:name="com.carlisle.songtaste.ui.PlaybackControlsFragment"
+    <fragment android:name="com.carlisle.songtaste.ui.main.PlaybackControlsFragment"
         android:id="@+id/fragment_playback_controls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

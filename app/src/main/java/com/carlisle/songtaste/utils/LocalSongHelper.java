@@ -15,8 +15,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.modle.SongDetailInfo;
-import com.google.gson.Gson;
+import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;

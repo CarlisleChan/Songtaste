@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.baidao.superrecyclerview.adapter.BaseAdapter;
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.modle.TagInfo;
+import com.carlisle.songtaste.cmpts.modle.TagInfo;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

@@ -21,7 +21,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:label="@string/app_name"
             android:launchMode="standard">
             <intent-filter>
@@ -35,7 +35,7 @@
 
         <!-- Widget/Notification Now Playing Activity Broadcast Receiver -->
 
-        <receiver android:name=".broadcastReceivers.LaunchNowPlayingReceiver" >
+        <receiver android:name=".cmpts.broadcastReceivers.LaunchNowPlayingReceiver" >
             <intent-filter>
                 <action android:name="com.carlisle.songtaste.LAUNCH_NOW_PLAYING_ACTION" />
             </intent-filter>
@@ -43,7 +43,7 @@
 
         <!-- Widget/Notification Play/Pause Broadcast Receiver -->
 
-        <receiver android:name=".broadcastReceivers.PlayPauseBroadcastReceiver" >
+        <receiver android:name=".cmpts.broadcastReceivers.PlayPauseBroadcastReceiver" >
             <intent-filter>
                 <action android:name="com.carlisle.songtaste.PLAY_PAUSE_ACTION" />
             </intent-filter>
@@ -51,7 +51,7 @@
 
         <!-- Widget/Notification Previous Broadcast Receiver -->
 
-        <receiver android:name=".broadcastReceivers.PreviousBroadcastReceiver" >
+        <receiver android:name=".cmpts.broadcastReceivers.PreviousBroadcastReceiver" >
             <intent-filter>
                 <action android:name="com.carlisle.songtaste.PREVIOUS_ACTION" />
             </intent-filter>
@@ -59,7 +59,7 @@
 
         <!-- Widget/Notification Next Broadcast Receiver -->
 
-        <receiver android:name=".broadcastReceivers.NextBroadcastReceiver" >
+        <receiver android:name=".cmpts.broadcastReceivers.NextBroadcastReceiver" >
             <intent-filter>
                 <action android:name="com.carlisle.songtaste.NEXT_ACTION" />
             </intent-filter>
@@ -67,7 +67,7 @@
 
         <!-- Stop Service Broadcast Receiver -->
 
-        <receiver android:name=".broadcastReceivers.StopServiceBroadcastReceiver" >
+        <receiver android:name=".cmpts.broadcastReceivers.StopServiceBroadcastReceiver" >
             <intent-filter>
                 <action android:name="com.carlisle.songtaste.STOP_SERVICE" />
             </intent-filter>
@@ -75,7 +75,7 @@
 
         <!-- Receiver that gets called when the user changes songs from the Large Widget -->
 
-        <receiver android:name=".broadcastReceivers.ChangeTrackBroadcastReceiver" >
+        <receiver android:name=".cmpts.broadcastReceivers.ChangeTrackBroadcastReceiver" >
             <intent-filter>
                 <action android:name="com.carlisle.songtaste.WIDGET_CHANGE_TRACK" />
             </intent-filter>
@@ -83,10 +83,10 @@
 
         <!--<activity android:name=".ui.recyclerView.RecycleViewActivity"/>-->
 
-        <service android:name=".services.MusicService"
+        <service android:name=".cmpts.services.MusicService"
             android:enabled="true"/>
 
-        <activity android:name=".ui.NowPlayingActivity"
+        <activity android:name=".ui.playback.NowPlayingActivity"
             android:launchMode="standard"/>
 
     </application>

@@ -2,7 +2,7 @@ package com.carlisle.songtaste.base;
 
 import android.app.Application;
 
-import com.carlisle.songtaste.services.MusicService;
+import com.carlisle.songtaste.cmpts.services.MusicService;
 
 /**
  * Created by chengxin on 2/13/15.

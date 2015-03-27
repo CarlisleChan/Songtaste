@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.baidao.superrecyclerview.adapter.BaseAdapter;
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.events.PlayEvent;
-import com.carlisle.songtaste.modle.SongInfo;
+import com.carlisle.songtaste.cmpts.events.PlayEvent;
+import com.carlisle.songtaste.cmpts.modle.SongInfo;
 import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.carlisle.songtaste.modle.SongInfo;
+import com.carlisle.songtaste.cmpts.modle.SongInfo;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,6 @@
 package com.carlisle.songtaste.utils;
 
-import com.carlisle.songtaste.modle.SongDetailInfo;
+import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 
 import java.util.ArrayList;
 import java.util.List;
