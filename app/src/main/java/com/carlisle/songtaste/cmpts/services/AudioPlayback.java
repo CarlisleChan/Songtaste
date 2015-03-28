@@ -104,7 +104,7 @@ public class AudioPlayback implements Playback, AudioManager.OnAudioFocusChangeL
         }
 
         onSeekBarUpdate();
-        EventBus.getDefault().post(new UpdateUIEvent(state));
+//        EventBus.getDefault().post(new UpdateUIEvent(state));
     }
 
     @Override
@@ -150,7 +150,7 @@ public class AudioPlayback implements Playback, AudioManager.OnAudioFocusChangeL
         giveUpAudioFocus();
         relaxResources(true);
 
-        EventBus.getDefault().post(new UpdateUIEvent(state));
+//        EventBus.getDefault().post(new UpdateUIEvent(state));
     }
 
     @Override
@@ -271,7 +271,6 @@ public class AudioPlayback implements Playback, AudioManager.OnAudioFocusChangeL
         configMediaPlayerState();
     }
 
-
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Log.e(TAG, "Media player error: what=" + what + ", extra=" + extra);
@@ -307,7 +306,6 @@ public class AudioPlayback implements Playback, AudioManager.OnAudioFocusChangeL
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
-        Log.d(TAG, "BufferingUpdate");
         int currentPosition;
         int maxPosition;
 

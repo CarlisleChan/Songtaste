@@ -136,10 +136,12 @@ public class NowPlayingActivity extends BaseActivity {
                 playOrPause.setChecked(false);
                 break;
             default:
+                if (event.songDetailInfo != null) {
                 songDetailInfo = event.songDetailInfo;
-                songName.setText(songDetailInfo.getSong_name());
-                singerName.setText(songDetailInfo.getSinger_name());
-                playOrPause.setChecked(false);
+                    songName.setText(songDetailInfo.getSong_name());
+                    singerName.setText(songDetailInfo.getSinger_name());
+                    playOrPause.setChecked(false);
+                }
                 break;
         }
     }

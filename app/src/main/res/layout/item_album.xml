@@ -16,7 +16,7 @@
             android:id="@+id/album_icon"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/album"/>
+            android:src="@drawable/ic_account_circle_grey600_24dp"/>
 
         <TextView
             android:id="@+id/album_name"

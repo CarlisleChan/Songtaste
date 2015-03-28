@@ -67,7 +67,7 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         // Create a few sample profile
-        final IProfile profile = new ProfileDrawerItem().withName("Mike Penz").withIcon(getResources().getDrawable(R.drawable.photo));
+        final IProfile profile = new ProfileDrawerItem().withName("Mike Penz").withIcon(getResources().getDrawable(R.drawable.ic_account_circle_grey600_24dp));
 
         // Create the AccountHeader
         headerResult = new AccountHeader()
@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity {
                         //sample usage of the onProfileChanged listener
                         //if the clicked item has the identifier 1 add a new profile ;)
                         if (profile instanceof IDrawerItem && ((IDrawerItem) profile).getIdentifier() == PROFILE_SETTING) {
-                            IProfile newProfile = new ProfileDrawerItem().withNameShown(true).withName("Batman").withIcon(getResources().getDrawable(R.drawable.photo));
+                            IProfile newProfile = new ProfileDrawerItem().withNameShown(true).withName("Batman").withIcon(getResources().getDrawable(R.drawable.ic_account_circle_grey600_24dp));
                             if (headerResult.getProfiles() != null) {
                                 //we know that there are 2 setting elements. set the new profile above them ;)
                                 headerResult.addProfile(newProfile, headerResult.getProfiles().size() - 2);

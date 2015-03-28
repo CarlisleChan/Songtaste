@@ -1,22 +1,22 @@
 package com.carlisle.songtaste.cmpts.services;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.cmpts.events.PauseEvent;
 import com.carlisle.songtaste.cmpts.events.PlayEvent;
+import com.carlisle.songtaste.cmpts.events.ScreenOnEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToNextEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToPrevEvent;
 import com.carlisle.songtaste.cmpts.events.UpdateUIEvent;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
+import com.carlisle.songtaste.cmpts.reveiver.HeadsetPlugReceiver;
+import com.carlisle.songtaste.cmpts.reveiver.NotificationReceiver;
+import com.carlisle.songtaste.cmpts.reveiver.RemoteControlReceiver;
+import com.carlisle.songtaste.cmpts.reveiver.ScreenOnReceiver;
 import com.carlisle.songtaste.utils.QueueHelper;
 
 import de.greenrobot.event.EventBus;
@@ -37,6 +37,11 @@ public class MusicService extends Service implements Playback.Callback {
     private boolean serviceStarted;
     private int currentIndexOnQueue;
 
+    private HeadsetPlugReceiver headsetPlugReceiver = new HeadsetPlugReceiver();
+    private NotificationReceiver notificationReceiver = new NotificationReceiver();
+    private ScreenOnReceiver screenOnReceiver = new ScreenOnReceiver();
+    private RemoteControlReceiver remoteControlReceiver = new RemoteControlReceiver();
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -50,22 +55,32 @@ public class MusicService extends Service implements Playback.Callback {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        NotificationManager mNM = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(R.drawable.ic_launcher,
-                "Foreground Service Started.", System.currentTimeMillis());
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MusicService.class), 0);
-        notification.setLatestEventInfo(this, "Foreground Service",
-                "Foreground Service Started.", contentIntent);
-        startForeground(1, notification);
-
         EventBus.getDefault().register(this);
+
+        headsetPlugReceiver.register(this);
+        screenOnReceiver.register(this);
+        notificationReceiver.register(this);
+        remoteControlReceiver.register(this);
+
         playback = new AudioPlayback(this);
         playback.setState(Playback.STATE_NONE);
         playback.setCallback(this);
         playback.start();
 
+    }
+
+    public Playback getPlayback() {
+        return playback;
+    }
+
+    public void setPlayback(Playback playback) {
+        this.playback = playback;
+    }
+
+    public void onEvent(ScreenOnEvent screenOnEvent) {
+        Log.d("showRemoteControl===","service");
+        SongDetailInfo songDetailInfo = QueueHelper.getInstance().getCurrentQueue().get(currentIndexOnQueue);
+        EventBus.getDefault().post(new UpdateUIEvent(songDetailInfo));
     }
 
     public void onEvent(PlayEvent event) {
@@ -142,11 +157,12 @@ public class MusicService extends Service implements Playback.Callback {
     private void handlePauseRequest() {
         Log.d("handlePause===>","you are here");
         playback.pause();
-
+        EventBus.getDefault().post(new UpdateUIEvent(playback.getState()));
     }
 
     private void handleStopRequest() {
         playback.stop(true);
+        EventBus.getDefault().post(new UpdateUIEvent(playback.getState()));
     }
 
     @Override

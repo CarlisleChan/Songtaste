@@ -140,11 +140,13 @@ public class PlaybackControlsFragment extends BaseFragment {
                 playOrPause.setChecked(false);
                 break;
             default:
-                songDetailInfo = event.songDetailInfo;
-                songName.setText(songDetailInfo.getSong_name());
-                singerName.setText(songDetailInfo.getSinger_name());
-                playOrPause.setChecked(false);
-                setAlbumArt(songDetailInfo);
+                if (event.songDetailInfo != null) {
+                    songDetailInfo = event.songDetailInfo;
+                    songName.setText(songDetailInfo.getSong_name());
+                    singerName.setText(songDetailInfo.getSinger_name());
+                    playOrPause.setChecked(false);
+                    setAlbumArt(songDetailInfo);
+                }
                 break;
         }
 
@@ -152,7 +154,6 @@ public class PlaybackControlsFragment extends BaseFragment {
 
     public void setAlbumArt(SongDetailInfo songDetailInfo) {
         if (songDetailInfo.songType == SongDetailInfo.SongType.LOCAL_SONG) {
-
             albumArt.setImageBitmap(LocalSongHelper.getArtwork(getActivity(), Long.parseLong(songDetailInfo.mediaId),
                     Long.parseLong(songDetailInfo.albumid), true));
         } else {
@@ -161,7 +162,6 @@ public class PlaybackControlsFragment extends BaseFragment {
                     .placeholder(R.drawable.ic_account_circle_grey600_24dp)
                     .into(albumArt);
         }
-
     }
 
     @Override
