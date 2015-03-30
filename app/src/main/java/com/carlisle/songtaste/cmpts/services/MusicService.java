@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.carlisle.songtaste.cmpts.events.ExitEvent;
 import com.carlisle.songtaste.cmpts.events.PauseEvent;
 import com.carlisle.songtaste.cmpts.events.PlayEvent;
 import com.carlisle.songtaste.cmpts.events.ScreenOnEvent;
@@ -77,6 +78,10 @@ public class MusicService extends Service implements Playback.Callback {
         this.playback = playback;
     }
 
+    public void onEvent(ExitEvent exitEvent) {
+        stopSelf();
+    }
+
     public void onEvent(ScreenOnEvent screenOnEvent) {
         Log.d("showRemoteControl===","service");
         SongDetailInfo songDetailInfo = QueueHelper.getInstance().getCurrentQueue().get(currentIndexOnQueue);
@@ -141,7 +146,6 @@ public class MusicService extends Service implements Playback.Callback {
     }
 
     private void handlePlayRequest() {
-        Log.d("handlePlay===>","you are here");
         if (!serviceStarted) {
             startService(new Intent(getApplicationContext(), MusicService.class));
             serviceStarted = true;
@@ -155,7 +159,6 @@ public class MusicService extends Service implements Playback.Callback {
     }
 
     private void handlePauseRequest() {
-        Log.d("handlePause===>","you are here");
         playback.pause();
         EventBus.getDefault().post(new UpdateUIEvent(playback.getState()));
     }

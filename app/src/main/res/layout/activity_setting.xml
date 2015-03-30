@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_margin="16dp"
-            android:text="定时关闭"
+            android:text="定时停止播放"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
 

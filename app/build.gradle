@@ -8,7 +8,7 @@ android {
     buildToolsVersion "21.1.2"
     defaultConfig {
         applicationId 'com.carlisle.songtaste'
-        minSdkVersion 17
+        minSdkVersion 14
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
@@ -39,7 +39,6 @@ dependencies {
     compile files('libs/litecommon1.0.0.jar')
     compile project(':taggrouplibrary')
     compile project(':SuperRecyclerView')
-    compile project(':logger')
     // android
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.github.frankiesardo:icepick:2.3.6'

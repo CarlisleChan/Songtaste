@@ -92,7 +92,7 @@ public class PickerView extends View {
 
     private void performSelect() {
         if (mSelectListener != null)
-            mSelectListener.onSelect(mCurrentSelected);
+            mSelectListener.onSelect(mDataList.get(mCurrentSelected));
     }
 
     public void setData(List<String> datas) {
@@ -302,6 +302,6 @@ public class PickerView extends View {
     }
 
     public interface onSelectListener {
-        void onSelect(int index);
+        void onSelect(String string);
     }
 }

@@ -1,1 +1,1 @@
-include ':app', ':taggrouplibrary', ':SuperRecyclerView', ':logger'
+include ':app', ':taggrouplibrary', ':SuperRecyclerView'

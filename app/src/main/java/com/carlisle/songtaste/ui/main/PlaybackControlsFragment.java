@@ -28,7 +28,6 @@ import com.carlisle.songtaste.cmpts.services.Playback;
 import com.carlisle.songtaste.ui.playback.NowPlayingActivity;
 import com.carlisle.songtaste.utils.LocalSongHelper;
 import com.carlisle.songtaste.utils.UserHelper;
-import com.orhanobut.logger.Logger;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
@@ -131,7 +130,6 @@ public class PlaybackControlsFragment extends BaseFragment {
     public void onEvent(UpdateUIEvent event) {
         container.setVisibility(View.VISIBLE);
 
-        Logger.d("" + event.state);
         switch (event.state) {
             case Playback.STATE_PAUSED:
                 playOrPause.setChecked(true);
