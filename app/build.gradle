@@ -39,6 +39,7 @@ dependencies {
     compile files('libs/litecommon1.0.0.jar')
     compile project(':taggrouplibrary')
     compile project(':SuperRecyclerView')
+    compile project(':SwipeBackLayoutLibrary')
     // android
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.github.frankiesardo:icepick:2.3.6'
