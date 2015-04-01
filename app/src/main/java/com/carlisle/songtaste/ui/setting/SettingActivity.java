@@ -1,9 +1,12 @@
 package com.carlisle.songtaste.ui.setting;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,8 +16,9 @@ import android.widget.TextView;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
-import com.carlisle.songtaste.cmpts.events.ExitEvent;
 import com.carlisle.songtaste.ui.view.PickerView;
+
+import org.joda.time.LocalTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +26,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
-import me.drakeet.materialdialog.MaterialDialog;
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivityBase;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
@@ -41,7 +43,6 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
     Toolbar toolbar;
 
     private Double time;
-    private Handler killSelf;
     private SwipeBackActivityHelper mHelper;
 
     @Override
@@ -57,7 +58,6 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
 
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
-
     }
 
     @Override
@@ -112,13 +112,7 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        killSelf = new Handler();
-                        killSelf.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                EventBus.getDefault().post(new ExitEvent());
-                            }
-                        }, time.longValue());
+                        setAlarm();
                     }
                 })
                 .setView(view)
@@ -127,25 +121,41 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
         dialog.show();
     }
 
+    private void setAlarm() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, StopPlaybackService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        LocalTime localTime = new LocalTime();
+        localTime = localTime.plusSeconds(time.intValue());
+        alarmManager.set(AlarmManager.RTC_WAKEUP, localTime.toDateTimeToday().getMillis(), pendingIntent);
+    }
+
     @OnClick(R.id.rl_clear_cache)
     protected void onClearCacheClick() {
 
-        final MaterialDialog dialog = new MaterialDialog(this);
-        dialog.setTitle("提示");
-        dialog.setMessage("确定清除缓存");
-        dialog.setPositiveButton("确定", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.setNegativeButton("取消", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        View view = View.inflate(this, R.layout.dialog_clear_cache, null);
+        TextView cancleButton = (TextView)view.findViewById(R.id.cancle);
+        TextView confirmButton = (TextView)view.findViewById(R.id.confirm);
+
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(view)
+                .create();
         dialog.show();
+
+        cancleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearCache();
+                dialog.dismiss();
+            }
+        });
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
 
     }
 

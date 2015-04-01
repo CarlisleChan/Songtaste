@@ -39,6 +39,7 @@
 
         <service android:name=".cmpts.services.MusicService"
             android:enabled="true"/>
+        <service android:name=".ui.setting.StopPlaybackService"/>
 
         <activity android:name=".ui.playback.NowPlayingActivity"
             android:launchMode="standard"/>
