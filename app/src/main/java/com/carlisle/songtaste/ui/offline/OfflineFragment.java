@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.ui.temp;
+package com.carlisle.songtaste.ui.offline;
 
 import android.os.Bundle;
 import android.os.Handler;
