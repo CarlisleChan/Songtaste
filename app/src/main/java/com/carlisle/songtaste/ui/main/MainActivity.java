@@ -16,7 +16,7 @@ import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
 import com.carlisle.songtaste.ui.favorite.FavoriteFragment;
 import com.carlisle.songtaste.ui.local.LocalFragment;
-import com.carlisle.songtaste.ui.offline.OfflineFragment;
+import com.carlisle.songtaste.ui.temp.OfflineFragment;
 import com.carlisle.songtaste.ui.setting.SettingActivity;
 import com.carlisle.songtaste.utils.FragmentSwitcher;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;

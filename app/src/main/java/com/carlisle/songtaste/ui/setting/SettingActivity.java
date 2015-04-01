@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
+import me.drakeet.materialdialog.MaterialDialog;
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivityBase;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
@@ -30,7 +31,7 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
 /**
  * Created by carlisle on 3/7/15.
  */
-public class SettingActivity extends BaseActivity implements SwipeBackActivityBase{
+public class SettingActivity extends BaseActivity implements SwipeBackActivityBase {
 
     @InjectView(R.id.cb_use_gprs)
     CheckBox useGprsCheckBox;
@@ -102,7 +103,7 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
                 if (time > 2) {
                     time = time * 60 * 1000;
                 } else {
-                    time  = time * 60 * 60 * 1000;
+                    time = time * 60 * 60 * 1000;
                 }
             }
         });
@@ -128,22 +129,22 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
 
     @OnClick(R.id.rl_clear_cache)
     protected void onClearCacheClick() {
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("提示")
-                .setMessage("确定清除缓存")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO clear cache
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).create();
 
+        final MaterialDialog dialog = new MaterialDialog(this);
+        dialog.setTitle("提示");
+        dialog.setMessage("确定清除缓存");
+        dialog.setPositiveButton("确定", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setNegativeButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
         dialog.show();
 
     }
