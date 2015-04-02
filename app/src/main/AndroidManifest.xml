@@ -42,9 +42,6 @@
             android:enabled="true"/>
         <service android:name=".ui.setting.StopPlaybackService"/>
 
-        <activity android:name=".ui.playback.NowPlayingActivity"
-            android:launchMode="standard"/>
-
         <receiver
             android:name="com.carlisle.songtaste.cmpts.reveiver.RemoteControlReceiver"
             android:enabled="true">

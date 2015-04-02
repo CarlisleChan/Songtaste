@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
 
     <ImageButton
         android:id="@+id/ib_album_art"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        android:background="@drawable/no_border"
         android:contentDescription="@string/app_name"
         android:scaleType="centerCrop"
-        android:background="@drawable/no_border"
         android:src="@drawable/bottom_no_album" />
 
     <ImageButton
@@ -25,44 +25,46 @@
         android:id="@+id/ll_control_bar"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_toLeftOf="@id/ib_close_btn"
         android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/ib_close_btn"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-        
-        <ImageButton 
+
+        <ImageButton
             android:id="@+id/ib_prev_btn"
             style="@style/notify_btn_style"
-            android:src="@drawable/notification_media_previous"/>
-        <ImageButton 
+            android:src="@drawable/notification_media_previous" />
+
+        <ImageButton
             android:id="@+id/ib_pause_btn"
             style="@style/notify_btn_style"
-            android:src="@drawable/notification_media_pause"/>
-        <ImageButton 
+            android:src="@drawable/notification_media_pause" />
+
+        <ImageButton
             android:id="@+id/ib_next_btn"
             style="@style/notify_btn_style"
-            android:src="@drawable/notification_media_next"/>
+            android:src="@drawable/notification_media_next" />
     </LinearLayout>
-    
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="7dip"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="7dip"
         android:layout_toLeftOf="@id/ib_prev_btn"
-        android:layout_toRightOf="@id/ib_album_art" >
+        android:layout_toRightOf="@id/ib_album_art">
 
         <TextView
             android:id="@+id/ib_song_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-			android:textColor="@android:color/white"
-            android:singleLine="true"
             android:ellipsize="end"
-            android:textSize="16sp"
-            android:maxEms="6" 
-            android:text="name" />
+            android:maxEms="6"
+            android:singleLine="true"
+            android:text="name"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/ib_singer_name"
@@ -70,11 +72,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/ib_song_name"
-            android:singleLine="true"
             android:ellipsize="end"
-            android:textSize="14sp" 
-            android:maxEms="6" 
-            android:text="artist"/>
+            android:maxEms="6"
+            android:singleLine="true"
+            android:text="artist"
+            android:textSize="14sp" />
     </RelativeLayout>
 
 </RelativeLayout>

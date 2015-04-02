@@ -33,12 +33,12 @@
                 android:id="@+id/tv_up_user_name"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:layout_alignRight="@+id/album_icon"
+                android:layout_marginTop="2dp"
                 android:gravity="center"
                 android:singleLine="true"
-                android:textSize="14sp"
-                android:text="13efdseee" />
+                android:text="13efdseee"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -66,8 +66,8 @@
             android:layout_toLeftOf="@+id/ll_num_content"
             android:layout_toRightOf="@+id/ll_up_user"
             android:singleLine="true"
-            android:textSize="14sp"
-            android:text="singer nameeeeeeeeeeeee" />
+            android:text="singer nameeeeeeeeeeeee"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tv_rate_date_time"

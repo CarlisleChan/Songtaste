@@ -10,9 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:gravity="center"
-        android:textSize="18sp"
         android:text="定时停止播放"
-        android:textColor="@android:color/darker_gray"/>
+        android:textColor="@android:color/darker_gray"
+        android:textSize="18sp" />
 
     <com.carlisle.songtaste.ui.view.PickerView
         android:id="@+id/picker"

@@ -1,20 +1,19 @@
-package com.carlisle.songtaste.ui.playback;
+package com.carlisle.songtaste.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.base.BaseActivity;
+import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.cmpts.events.PauseEvent;
 import com.carlisle.songtaste.cmpts.events.PlayEvent;
 import com.carlisle.songtaste.cmpts.events.ProgressEvent;
@@ -23,8 +22,6 @@ import com.carlisle.songtaste.cmpts.events.SkipToPrevEvent;
 import com.carlisle.songtaste.cmpts.events.UpdateUIEvent;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.services.Playback;
-import com.carlisle.songtaste.ui.main.MainActivity;
-import com.carlisle.songtaste.ui.main.PlaybackControlsFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -32,16 +29,9 @@ import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 
 /**
- * Created by carlisle on 3/5/15.
+ * Created by carlisle on 4/3/15.
  */
-public class NowPlayingActivity extends BaseActivity {
-    public static final String NOW_PLAYING = "now playing";
-    public static final String PLAYBACK_STATE = "playback state";
-
-    @InjectView(R.id.toolbar_container)
-    RelativeLayout toolbarContainer;
-    @InjectView(R.id.toolbar)
-    Toolbar toolbar;
+public class NowPlayingFragment extends BaseFragment {
     @InjectView(R.id.background_image)
     ImageView backgroundImage;
     @InjectView(R.id.tv_song_name)
@@ -62,50 +52,41 @@ public class NowPlayingActivity extends BaseActivity {
     ImageView nextButton;
     @InjectView(R.id.progressBar)
     ProgressBar progressBar;
+    @InjectView(R.id.bottom_control)
+    View bottonControl;
 
     SongDetailInfo songDetailInfo;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_full_player);
-        ButterKnife.inject(this);
         EventBus.getDefault().register(this);
+    }
 
-        toolbar.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
-        toolbarContainer.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_full_player, container, false);
 
-        if (getIntent() != null) {
-            songDetailInfo = (SongDetailInfo) getIntent().getParcelableExtra(NOW_PLAYING);
-            playOrPause.setChecked(getIntent().getBooleanExtra(PLAYBACK_STATE, false));
-            Log.d("now playing", JSON.toJSONString(songDetailInfo));
-            if (songDetailInfo != null) {
-                songName.setText(songDetailInfo.getSong_name());
-                singerName.setText(songDetailInfo.getSinger_name());
-            }
-        }
-
-        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser == true) {
-                    EventBus.getDefault().post(new ProgressEvent(progress, seekBar.getMax(), true));
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
+//        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                if (fromUser == true) {
+//                    EventBus.getDefault().post(new ProgressEvent(progress, seekBar.getMax(), true));
+//                }
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//            }
+//        });
+        ButterKnife.inject(this, view);
+        return view;
     }
 
     @OnClick({R.id.im_prev, R.id.cb_play_pause, R.id.im_next})
@@ -137,7 +118,7 @@ public class NowPlayingActivity extends BaseActivity {
                 break;
             default:
                 if (event.songDetailInfo != null) {
-                songDetailInfo = event.songDetailInfo;
+                    songDetailInfo = event.songDetailInfo;
                     songName.setText(songDetailInfo.getSong_name());
                     singerName.setText(songDetailInfo.getSinger_name());
                     playOrPause.setChecked(false);
@@ -162,10 +143,11 @@ public class NowPlayingActivity extends BaseActivity {
 
     @Override
     public void onDestroy() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(PlaybackControlsFragment.PLAYBACK_STATE, playOrPause.isChecked());
-        setResult(RESULT_OK, intent);
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    public void hideBottomControl(float v) {
+        bottonControl.setAlpha(v);
     }
 }

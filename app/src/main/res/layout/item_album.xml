@@ -16,18 +16,18 @@
             android:id="@+id/album_icon"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/ic_account_circle_grey600_24dp"/>
+            android:src="@drawable/ic_account_circle_grey600_24dp" />
 
         <TextView
             android:id="@+id/album_name"
-            android:layout_below="@+id/album_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:layout_alignRight="@+id/album_icon"
+            android:layout_below="@+id/album_icon"
+            android:layout_marginTop="5dp"
             android:singleLine="true"
-            android:text="qwfdsafdsfdsaef"/>
+            android:text="qwfdsafdsfdsaef" />
 
-        </RelativeLayout>
+    </RelativeLayout>
 
 </android.support.v7.widget.CardView>

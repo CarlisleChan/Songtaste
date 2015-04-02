@@ -29,9 +29,9 @@
             android:layout_below="@+id/tv_song_name"
             android:layout_marginTop="5dp"
             android:singleLine="true"
+            android:text="singer "
             android:textColor="@android:color/darker_gray"
-            android:textSize="14sp"
-            android:text="singer " />
+            android:textSize="14sp" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

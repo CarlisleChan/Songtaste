@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
@@ -31,6 +32,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -41,10 +43,15 @@ public class MainActivity extends BaseActivity {
     private static final int PROFILE_SETTING = 1;
     private static int MENU_TYPE = R.menu.menu_discover;
 
+    @InjectView(R.id.toolbar_container)
+    RelativeLayout toolBarContainer;
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
+    @InjectView(R.id.sliding_layout)
+    SlidingUpPanelLayout slidingUpPanelLayout;
 
     private FragmentSwitcher switcher;
+    private NowPlayingFragment nowPlayingFragment;
 
     private AccountHeader.Result headerResult = null;
     private Drawer.Result result = null;
@@ -57,7 +64,15 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
-        initFragment();
+        if (savedInstanceState == null) {
+            createAddFragment();
+        } else {
+            this.nowPlayingFragment = (NowPlayingFragment) getSupportFragmentManager()
+                    .findFragmentByTag(NowPlayingFragment.class.getSimpleName());
+        }
+
+        initFragmentSwitcher();
+        initSlidingUpPanel();
 
         startService(new Intent(this, MusicService.class));
 
@@ -142,7 +157,18 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    private void initFragment() {
+    private void createAddFragment() {
+        if (nowPlayingFragment != null) {
+            return;
+        }
+        nowPlayingFragment = new NowPlayingFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fl_playback_control, nowPlayingFragment, NowPlayingFragment.class.getSimpleName())
+                .commit();
+    }
+
+    private void initFragmentSwitcher() {
         switcher = new FragmentSwitcher(getSupportFragmentManager(), R.id.fragment_content);
         switcher.addFragment(new DiscoverFragment());
         switcher.addFragment(new FavoriteFragment());
@@ -151,13 +177,52 @@ public class MainActivity extends BaseActivity {
         switcher.switchToFragment(0);
     }
 
+    private void initSlidingUpPanel() {
+        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View view, float v) {
+                nowPlayingFragment.hideBottomControl(1 - v);
+                toolbar.getBackground().setAlpha((int) ((1 - v) * 255));
+                toolBarContainer.getBackground().setAlpha((int) ((1 - v) * 255));
+            }
+
+            @Override
+            public void onPanelCollapsed(View view) {
+
+            }
+
+            @Override
+            public void onPanelExpanded(View view) {
+
+            }
+
+            @Override
+            public void onPanelAnchored(View view) {
+
+            }
+
+            @Override
+            public void onPanelHidden(View view) {
+
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
         //handle the back press :D close the drawer first and if the drawer is closed close the activity
-        if (result != null && result.isDrawerOpen()) {
-            result.closeDrawer();
+
+        if (slidingUpPanelLayout != null
+                && (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
+                || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
+            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         } else {
-            super.onBackPressed();
+            if (result != null && result.isDrawerOpen()) {
+                result.closeDrawer();
+            } else {
+                finish();
+            }
         }
     }
 
@@ -226,5 +291,4 @@ public class MainActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

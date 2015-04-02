@@ -8,19 +8,19 @@
     <include layout="@layout/toolbar" />
 
     <TextView
-        android:layout_marginTop="50dp"
         android:id="@+id/tv_app_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="1.0.0" />
+        android:layout_marginTop="50dp"
+        android:text="1.0.0"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/tv_about"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:textSize="18sp"
-        android:text="um.. this is a client of songtaste\n develop by carlisle" />
+        android:text="um.. this is a client of songtaste\n develop by carlisle"
+        android:textSize="18sp" />
 
 </LinearLayout>

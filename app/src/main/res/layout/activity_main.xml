@@ -1,32 +1,51 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:gravity="center"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar"
-        android:id="@+id/toolbar_container"/>
-
-    <fragment android:name="com.carlisle.songtaste.ui.main.PlaybackControlsFragment"
-        android:id="@+id/fragment_playback_controls"
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"/>
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:umanoDragView="@+id/dragView"
+        sothree:umanoOverlay="true"
+        sothree:umanoPanelHeight="68dp"
+        sothree:umanoParalaxOffset="100dp"
+        sothree:umanoShadowHeight="4dp">
 
-    <FrameLayout
-        android:layout_below="@id/toolbar_container"
-        android:layout_above="@+id/fragment_playback_controls"
-        android:id="@+id/fragment_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txtLabel"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="16sp"/>
-    </FrameLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tool_bar_top_padding"
+                android:background="?attr/colorPrimaryDark" />
 
-</RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimaryDark" />
+
+            <FrameLayout
+                android:id="@+id/fragment_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/fragment_playback_controls"
+                android:layout_below="@id/toolbar_container" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_playback_control"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+    <include
+        android:id="@+id/toolbar_container"
+        layout="@layout/toolbar" />
+</FrameLayout>

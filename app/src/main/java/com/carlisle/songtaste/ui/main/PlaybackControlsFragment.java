@@ -1,9 +1,7 @@
 package com.carlisle.songtaste.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +23,6 @@ import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.cmpts.services.Playback;
-import com.carlisle.songtaste.ui.playback.NowPlayingActivity;
 import com.carlisle.songtaste.utils.LocalSongHelper;
 import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.squareup.picasso.Picasso;
@@ -67,25 +64,9 @@ public class PlaybackControlsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_playback_controls, container, false);
+        View view = inflater.inflate(R.layout.bottom_control, container, false);
         ButterKnife.inject(this, view);
         return view;
-    }
-
-    @OnClick(R.id.container)
-    public void onContainerClick() {
-        Intent intent = new Intent(getActivity(), NowPlayingActivity.class);
-        intent.putExtra(NowPlayingActivity.NOW_PLAYING, songDetailInfo);
-        intent.putExtra(NowPlayingActivity.PLAYBACK_STATE, playOrPause.isChecked());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        super.startActivityForResult(intent, 0);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        boolean type = data.getBooleanExtra(PLAYBACK_STATE, false);
-        Log.i(TAG, "==>");
-
     }
 
     @OnClick(R.id.im_next)
