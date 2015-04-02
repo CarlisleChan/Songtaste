@@ -13,10 +13,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.ui.view.PickerView;
+import com.carlisle.songtaste.utils.PreferencesHelper;
 
 import org.joda.time.LocalTime;
 
@@ -80,6 +82,7 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
         } else {
             useGprsCheckBox.setChecked(true);
         }
+        PreferencesHelper.getInstance(this).setPlayOnlyWifi(!useGprsCheckBox.isChecked());
     }
 
     @OnClick(R.id.tv_timer)
@@ -113,6 +116,8 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         setAlarm();
+                        Toast.makeText(SettingActivity.this, data.get(3).toString() + "后将停止播放" , Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
                     }
                 })
                 .setView(view)
@@ -191,4 +196,5 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
     public void scrollToFinishActivity() {
         getSwipeBackLayout().scrollToFinishActivity();
     }
+
 }
