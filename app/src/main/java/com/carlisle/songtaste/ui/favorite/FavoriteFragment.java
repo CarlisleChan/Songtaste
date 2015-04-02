@@ -23,8 +23,8 @@ import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
 import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.utils.Common;
+import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.carlisle.songtaste.utils.QueueHelper;
-import com.carlisle.songtaste.utils.UserHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -62,7 +62,7 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
     public void onResume() {
         super.onResume();
         if (adapter.isEmpty()) {
-            fetchData(UserHelper.getInstance().getUID(), currentPage, songsNumber);
+            fetchData(PreferencesHelper.getInstance(getActivity()).getUID(), currentPage, songsNumber);
         }
     }
 
@@ -86,7 +86,7 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
                     @Override
                     public void run() {
                         superRecyclerView.getSwipeToRefresh().setRefreshing(false);
-                        fetchData(UserHelper.getInstance().getUID(), currentPage, songsNumber);
+                        fetchData(PreferencesHelper.getInstance(getActivity()).getUID(), currentPage, songsNumber);
                     }
                 }, 3000);
             }
@@ -122,7 +122,7 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
 
     @Override
     public void onMoreAsked(int totalCount, int currentPosition) {
-        fetchData(UserHelper.getInstance().getUID(), currentPage, songsNumber);
+        fetchData(PreferencesHelper.getInstance(getActivity()).getUID(), currentPage, songsNumber);
     }
 
     private void fetchData(String uid, int currentPage, int songsNumber) {

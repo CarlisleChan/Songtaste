@@ -27,7 +27,7 @@ import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.cmpts.services.Playback;
 import com.carlisle.songtaste.ui.playback.NowPlayingActivity;
 import com.carlisle.songtaste.utils.LocalSongHelper;
-import com.carlisle.songtaste.utils.UserHelper;
+import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
@@ -96,7 +96,7 @@ public class PlaybackControlsFragment extends BaseFragment {
     @OnClick(R.id.im_favorite)
     public void onFavoriteClick(View view) {
         subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.COLLECTION))
-                .collection(UserHelper.getInstance().getUID(), songDetailInfo.getMediaId(), "xml"))
+                .collection(PreferencesHelper.getInstance(getActivity()).getUID(), songDetailInfo.getMediaId(), "xml"))
                 .subscribe(new Observer<Result>() {
                     @Override
                     public void onCompleted() {
