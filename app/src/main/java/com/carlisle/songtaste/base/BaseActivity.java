@@ -1,5 +1,6 @@
 package com.carlisle.songtaste.base;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -58,5 +59,23 @@ public class BaseActivity extends ActionBarActivity {
 
     protected int setStatusBarColor() {
         return getResources().getColor(android.R.color.transparent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.push_right_in_no_alpha, R.anim.push_right_out_no_alpha);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        overridePendingTransition(R.anim.push_right_in_no_alpha, R.anim.push_right_out_no_alpha);
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
     }
 }
