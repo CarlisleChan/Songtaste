@@ -1,16 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.baidao.superrecyclerview.SuperRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recyclerView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.baidao.superrecyclerview.SuperRecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#f4f4f4"
-        app:layout_empty="@layout/empty_view"
-        app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
-        app:recyclerClipToPadding="true"
-        app:scrollbarStyle="insideInset" />
-
-</LinearLayout>
+    android:layout_height="match_parent"
+    android:background="#f4f4f4"
+    app:layout_empty="@layout/empty_view"
+    app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
+    app:recyclerClipToPadding="true"
+    app:scrollbarStyle="insideInset" />

@@ -5,12 +5,19 @@
 
     <ImageButton
         android:id="@+id/ib_album_art"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:background="@drawable/no_border"
-        android:contentDescription="@string/app_name"
-        android:scaleType="centerCrop"
-        android:src="@drawable/album_art_default" />
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/album_art_default"
+        android:scaleType="center" />
+
+    <ImageButton
+        android:id="@+id/ib_pause_btn"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:layout_alignParentLeft="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_btn_play_white" />
 
     <ImageButton
         android:id="@+id/ib_close_btn"
@@ -21,37 +28,28 @@
         android:background="@android:color/transparent"
         android:src="@drawable/ic_btn_close" />
 
-    <LinearLayout
-        android:id="@+id/ll_control_bar"
-        android:layout_width="wrap_content"
+    <ImageButton
+        android:id="@+id/ib_next_btn"
+        android:layout_width="48dp"
         android:layout_height="match_parent"
-        android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/ib_close_btn"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:src="@drawable/ic_btn_next_white"
+        android:tint="@android:color/white" />
 
-        <ImageButton
-            android:id="@+id/ib_prev_btn"
-            style="@style/notify_btn_style"
-            android:src="@drawable/ic_btn_pre_white" />
-
-        <ImageButton
-            android:id="@+id/ib_pause_btn"
-            style="@style/notify_btn_style"
-            android:src="@drawable/ic_btn_play_white" />
-
-        <ImageButton
-            android:id="@+id/ib_next_btn"
-            style="@style/notify_btn_style"
-            android:src="@drawable/ic_btn_next_white" />
-    </LinearLayout>
+    <ImageButton
+        android:id="@+id/ib_favorite"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/ib_next_btn"
+        android:tint="@android:color/white"
+        android:src="@drawable/ic_btn_love" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="7dip"
-        android:layout_toLeftOf="@id/ib_prev_btn"
+        android:layout_toLeftOf="@id/ib_favorite"
         android:layout_toRightOf="@id/ib_album_art">
 
         <TextView
@@ -60,7 +58,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:ellipsize="end"
-            android:maxEms="6"
             android:singleLine="true"
             android:text="name"
             android:textColor="@android:color/white"
@@ -73,7 +70,6 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/ib_song_name"
             android:ellipsize="end"
-            android:maxEms="6"
             android:singleLine="true"
             android:text="artist"
             android:textSize="14sp" />

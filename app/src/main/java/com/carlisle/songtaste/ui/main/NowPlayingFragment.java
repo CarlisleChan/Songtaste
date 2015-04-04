@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.cmpts.events.PauseEvent;
+import com.carlisle.songtaste.cmpts.events.PlayEvent;
 import com.carlisle.songtaste.cmpts.events.ProgressEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToNextEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToPrevEvent;
@@ -44,8 +47,8 @@ public class NowPlayingFragment extends BaseFragment {
     SeekBar seekbar;
     @InjectView(R.id.im_prev)
     ImageView prevButton;
-//    @InjectView(R.id.cb_play_pause)
-//    CheckBox playOrPause;
+    @InjectView(R.id.cb_play_pause)
+    CheckBox playOrPause;
     @InjectView(R.id.im_next)
     ImageView nextButton;
     @InjectView(R.id.progressBar)
@@ -93,13 +96,13 @@ public class NowPlayingFragment extends BaseFragment {
             case R.id.im_prev:
                 EventBus.getDefault().post(new SkipToPrevEvent());
                 break;
-//            case R.id.cb_play_pause:
-//                if (!((CheckBox)view).isChecked()) {
-//                    EventBus.getDefault().post(new PlayEvent());
-//                } else {
-//                    EventBus.getDefault().post(new PauseEvent());
-//                }
-//                break;
+            case R.id.cb_play_pause:
+                if (!((CheckBox)view).isChecked()) {
+                    EventBus.getDefault().post(new PlayEvent());
+                } else {
+                    EventBus.getDefault().post(new PauseEvent());
+                }
+                break;
             case R.id.im_next:
                 EventBus.getDefault().post(new SkipToNextEvent());
                 break;
@@ -109,17 +112,17 @@ public class NowPlayingFragment extends BaseFragment {
     public void onEvent(UpdateUIEvent event) {
         switch (event.state) {
             case Playback.STATE_PAUSED:
-//                playOrPause.setChecked(true);
+                playOrPause.setChecked(true);
                 break;
             case Playback.STATE_STOPPED:
-//                playOrPause.setChecked(false);
+                playOrPause.setChecked(false);
                 break;
             default:
                 if (event.songDetailInfo != null) {
                     songDetailInfo = event.songDetailInfo;
                     songName.setText(songDetailInfo.getSong_name());
                     singerName.setText(songDetailInfo.getSinger_name());
-//                    playOrPause.setChecked(false);
+                    playOrPause.setChecked(false);
                 }
                 break;
         }

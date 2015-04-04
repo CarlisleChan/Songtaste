@@ -14,6 +14,7 @@ public class Common {
         public final static int NOTIFICATION_PAUSE = 1002;
         public final static int NOTIFICATION_NEXT = 1003;
         public final static int NOTIFICATION_CLOSE = 1004;
+        public final static int NOTIFICATION_FAVORITE = 1005;
     }
 
 

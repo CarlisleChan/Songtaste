@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.support.v4.app.NotificationCompat;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import com.carlisle.songtaste.R;
@@ -23,7 +22,6 @@ import com.carlisle.songtaste.cmpts.services.Playback;
 import com.carlisle.songtaste.ui.main.MainActivity;
 import com.carlisle.songtaste.utils.Common;
 import com.carlisle.songtaste.utils.LocalSongHelper;
-import com.carlisle.songtaste.utils.Utils;
 
 import de.greenrobot.event.EventBus;
 
@@ -98,13 +96,13 @@ public class NotificationReceiver extends BroadcastReceiver {
         state = event.state;
         switch (event.state) {
             case Playback.STATE_PAUSED:
-                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.ic_btn_play_white);
+                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.bottom_btn_play);
                 break;
             case Playback.STATE_STOPPED:
-                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.ic_btn_play_white);
+                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.bottom_btn_play);
                 break;
             default:
-                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.ic_btn_pause_white);
+                remoteViews.setImageViewResource(R.id.ib_pause_btn, android.R.color.transparent);
                 break;
         }
 
@@ -113,13 +111,6 @@ public class NotificationReceiver extends BroadcastReceiver {
             remoteViews.setTextViewText(R.id.ib_song_name, event.songDetailInfo.getSong_name());
             typeFace = Typeface.createFromAsset(musicService.getAssets(), "fonts/Roboto-Thin.ttf");
             remoteViews.setTextViewText(R.id.ib_singer_name, event.songDetailInfo.getSinger_name());
-        }
-
-        if (Utils.getSystemVersion() <= 9) {
-            remoteViews.setViewVisibility(R.id.ll_control_bar, View.GONE);
-        } else {
-            remoteViews.setViewVisibility(R.id.ll_control_bar,
-                    View.VISIBLE);
         }
 
         showNotification();
@@ -141,10 +132,10 @@ public class NotificationReceiver extends BroadcastReceiver {
                 intent_pause);
 
         buttonIntent.putExtra(Common.Notification.INTENT_BUTTONID_TAG,
-                Common.Notification.NOTIFICATION_PREV);
-        PendingIntent intent_prev = PendingIntent.getBroadcast(musicService, 3,
+                Common.Notification.NOTIFICATION_FAVORITE);
+        PendingIntent intent_favorite = PendingIntent.getBroadcast(musicService, 3,
                 buttonIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.ib_prev_btn, intent_prev);
+        remoteViews.setOnClickPendingIntent(R.id.ib_favorite, intent_favorite);
 
         buttonIntent.putExtra(Common.Notification.INTENT_BUTTONID_TAG,
                 Common.Notification.NOTIFICATION_CLOSE);

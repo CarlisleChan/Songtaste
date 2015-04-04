@@ -11,11 +11,4 @@
 
     </style>
 
-    <style name="notify_btn_style">
-        <item name="android:layout_width">48dip</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_gravity">center|right</item>
-        <item name="android:background">?android:listChoiceBackgroundIndicator</item>
-    </style>
-
 </resources>

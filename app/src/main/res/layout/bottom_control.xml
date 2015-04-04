@@ -13,7 +13,7 @@
         android:scaleType="center"
         android:background="@drawable/album_art_default" />
 
-    <CheckBox
+    <Button
         android:id="@+id/cb_play_pause"
         android:layout_width="68dp"
         android:layout_height="68dp"
@@ -74,7 +74,7 @@
         android:paddingRight="10dp"
         android:paddingLeft="10dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/ic_btn_love_black"
+        android:src="@drawable/ic_btn_love"
         android:tintMode="src_in" />
 
 </RelativeLayout>
