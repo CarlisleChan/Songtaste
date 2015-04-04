@@ -1,10 +1,26 @@
-<com.baidao.superrecyclerview.SuperRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/recyclerView"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f4f4f4"
-    app:layout_empty="@layout/empty_view"
-    app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
-    app:recyclerClipToPadding="true"
-    app:scrollbarStyle="insideInset" />
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/blank"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" />
+
+    <com.baidao.superrecyclerview.SuperRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        app:layout_empty="@layout/empty_view"
+        app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
+        app:recyclerClipToPadding="true"
+        app:scrollbarStyle="insideInset" />
+
+    <include layout="@layout/progress_wheel" />
+
+</RelativeLayout>

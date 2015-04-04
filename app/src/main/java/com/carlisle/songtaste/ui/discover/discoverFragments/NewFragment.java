@@ -23,6 +23,7 @@ import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
 import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.NewAdapter;
+import com.carlisle.songtaste.ui.view.ProgressWheel;
 import com.carlisle.songtaste.utils.Common;
 import com.carlisle.songtaste.utils.QueueHelper;
 import com.github.stephanenicolas.loglifecycle.LogLifeCycle;
@@ -39,9 +40,10 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 @LogLifeCycle
 public class NewFragment extends BaseFragment implements OnMoreListener {
-
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
+    @InjectView(R.id.progressBar)
+    ProgressWheel progressBar;
     ProgressDialog progressDialog;
 
     private NewAdapter adapter;
@@ -141,6 +143,7 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
                     @Override
                     public void onCompleted() {
                         onLoadingFinished(true);
+                        progressBar.setVisibility(View.GONE);
 
                         Common.SONG_NUMBER = 0;
                         SongInfo songInfo = (SongInfo) adapter.getData().get(Common.SONG_NUMBER);
@@ -152,6 +155,7 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         onLoadingFinished(false);
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -195,4 +199,5 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
         super.onStop();
         subscription.unsubscribe();
     }
+
 }

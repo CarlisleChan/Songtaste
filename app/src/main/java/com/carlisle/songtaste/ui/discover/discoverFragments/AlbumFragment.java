@@ -16,6 +16,7 @@ import com.carlisle.songtaste.cmpts.modle.FMAlbumResult;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
 import com.carlisle.songtaste.ui.discover.adapter.AlbumAdapter;
+import com.carlisle.songtaste.ui.view.ProgressWheel;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -30,6 +31,10 @@ public class AlbumFragment extends BaseFragment {
 
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
+    @InjectView(R.id.blank)
+    View blank;
+    @InjectView(R.id.progressBar)
+    ProgressWheel progressBar;
 
     private android.support.v7.widget.GridLayoutManager layoutManager;
     private AlbumAdapter adapter;
@@ -43,9 +48,8 @@ public class AlbumFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
-
+        blank.setVisibility(View.VISIBLE);
         initRecyclerView();
-        fetchData();
         return view;
     }
 
@@ -84,12 +88,12 @@ public class AlbumFragment extends BaseFragment {
                 .subscribe(new Observer<FMAlbumResult>() {
                     @Override
                     public void onCompleted() {
-
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override

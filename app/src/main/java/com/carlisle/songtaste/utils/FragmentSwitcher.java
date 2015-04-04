@@ -48,6 +48,4 @@ public class FragmentSwitcher {
         fragments.get(index).setUserVisibleHint(true);
         fragmentTransaction.commit();
     }
-
-
 }

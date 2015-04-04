@@ -24,6 +24,7 @@ import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
 import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.HotAdapter;
+import com.carlisle.songtaste.ui.view.ProgressWheel;
 import com.carlisle.songtaste.utils.Common;
 import com.carlisle.songtaste.utils.QueueHelper;
 
@@ -38,9 +39,10 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by chengxin on 2/25/15.
  */
 public class HotFragment extends BaseFragment implements OnMoreListener {
-
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
+    @InjectView(R.id.progressBar)
+    ProgressWheel progressBar;
     ProgressDialog progressDialog;
 
     private HotAdapter adapter;
@@ -139,7 +141,7 @@ public class HotFragment extends BaseFragment implements OnMoreListener {
                     @Override
                     public void onCompleted() {
                         onLoadingFinished(true);
-                        Log.d("onCompleted===>","next");
+                        progressBar.setVisibility(View.GONE);
                         Common.SONG_NUMBER = 0;
                         SongInfo songInfo = (SongInfo) adapter.getData().get(Common.SONG_NUMBER);
                         QueueHelper.getInstance().getHotQueue().clear();
@@ -148,9 +150,9 @@ public class HotFragment extends BaseFragment implements OnMoreListener {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d("onError===>","next");
                         e.printStackTrace();
                         onLoadingFinished(false);
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -196,4 +198,5 @@ public class HotFragment extends BaseFragment implements OnMoreListener {
         super.onStop();
         subscription.unsubscribe();
     }
+
 }

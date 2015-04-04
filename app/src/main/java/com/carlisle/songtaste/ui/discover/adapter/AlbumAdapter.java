@@ -63,6 +63,7 @@ public class AlbumAdapter extends BaseAdapter {
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                 }
             });
         }

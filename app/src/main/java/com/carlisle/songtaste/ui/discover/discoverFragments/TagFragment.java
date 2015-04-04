@@ -16,6 +16,7 @@ import com.carlisle.songtaste.cmpts.modle.TagInfo;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
 import com.carlisle.songtaste.ui.discover.adapter.TagAdapter;
+import com.carlisle.songtaste.ui.view.ProgressWheel;
 
 import java.util.ArrayList;
 
@@ -32,11 +33,12 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by chengxin on 2/25/15.
  */
 public class TagFragment extends BaseFragment {
-
     @InjectView(R.id.tag_group)
     TagGroup tagGroup;
     @InjectView(R.id.swipe_layout)
     SwipeRefreshLayout swipeLayout;
+    @InjectView(R.id.progressBar)
+    ProgressWheel progressBar;
 
     private LinearLayoutManager layoutManager;
     private TagAdapter adapter;
@@ -49,14 +51,24 @@ public class TagFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_tag, container, false);
         ButterKnife.inject(this, view);
-
         initTagGroup();
         initSwipeRefreshLayout();
-        fetchData();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter.isEmpty()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fetchData();
+                }
+            }, 2000);
+        }
     }
 
     private void initTagGroup() {
@@ -106,12 +118,12 @@ public class TagFragment extends BaseFragment {
                 .subscribe(new Observer<FMTagResult>() {
                     @Override
                     public void onCompleted() {
-
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -130,4 +142,5 @@ public class TagFragment extends BaseFragment {
         super.onStop();
         subscription.unsubscribe();
     }
+
 }

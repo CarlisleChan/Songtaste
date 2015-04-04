@@ -33,6 +33,7 @@
         android:layout_width="48dp"
         android:layout_height="match_parent"
         android:layout_toLeftOf="@id/ib_close_btn"
+        android:background="@android:color/transparent"
         android:src="@drawable/ic_btn_next_white"
         android:tint="@android:color/white" />
 
@@ -41,8 +42,9 @@
         android:layout_width="48dp"
         android:layout_height="match_parent"
         android:layout_toLeftOf="@id/ib_next_btn"
-        android:tint="@android:color/white"
-        android:src="@drawable/ic_btn_love" />
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_btn_love"
+        android:tint="@android:color/white" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
