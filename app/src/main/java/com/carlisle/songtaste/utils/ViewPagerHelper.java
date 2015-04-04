@@ -8,17 +8,19 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.cmpts.events.RefreshEvent;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by carlisle on 4/4/15.
@@ -55,7 +57,7 @@ public class ViewPagerHelper {
         tabStrip.setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
             @Override
             public void onTabReselected(int i) {
-                Toast.makeText(context, "" + i, Toast.LENGTH_SHORT).show();
+                EventBus.getDefault().post(new RefreshEvent(i));
             }
         });
         tabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

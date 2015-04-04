@@ -8,9 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.cmpts.events.RefreshEvent;
 import com.carlisle.songtaste.cmpts.modle.FMTagResult;
 import com.carlisle.songtaste.cmpts.modle.TagInfo;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 import me.gujun.android.taggroup.OnTagGroupCLickListener;
 import me.gujun.android.taggroup.TagGroup;
 import rx.Observer;
@@ -37,6 +40,8 @@ public class TagFragment extends BaseFragment {
     TagGroup tagGroup;
     @InjectView(R.id.swipe_layout)
     SwipeRefreshLayout swipeLayout;
+    @InjectView(R.id.scroll_view)
+    ScrollView scrollView;
     @InjectView(R.id.progressBar)
     ProgressWheel progressBar;
 
@@ -53,6 +58,7 @@ public class TagFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tag, container, false);
         ButterKnife.inject(this, view);
+        EventBus.getDefault().register(this);
         initTagGroup();
         initSwipeRefreshLayout();
         return view;
@@ -68,6 +74,20 @@ public class TagFragment extends BaseFragment {
                     fetchData();
                 }
             }, 2000);
+        }
+    }
+
+    public void onEvent(RefreshEvent event) {
+        if (event.position == 3) {
+            swipeLayout.setRefreshing(true);
+            scrollView.fullScroll(ScrollView.FOCUS_UP);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeLayout.setRefreshing(false);
+                    fetchData();
+                }
+            }, 3000);
         }
     }
 
@@ -141,6 +161,7 @@ public class TagFragment extends BaseFragment {
     public void onStop() {
         super.onStop();
         subscription.unsubscribe();
+        EventBus.getDefault().unregister(this);
     }
 
 }

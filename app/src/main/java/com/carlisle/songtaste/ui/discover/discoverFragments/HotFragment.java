@@ -17,6 +17,7 @@ import com.baidao.superrecyclerview.OnMoreListener;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.cmpts.events.RefreshEvent;
 import com.carlisle.songtaste.cmpts.modle.FMHotResult;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
@@ -30,6 +31,7 @@ import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.observables.AndroidObservable;
@@ -57,6 +59,7 @@ public class HotFragment extends BaseFragment implements OnMoreListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
+        EventBus.getDefault().register(this);
         setupSuperRecyclerView();
         return view;
     }
@@ -66,6 +69,20 @@ public class HotFragment extends BaseFragment implements OnMoreListener {
         super.onResume();
         if (adapter.isEmpty()) {
             fetchData(currentPage, true);
+        }
+    }
+
+    public void onEvent(RefreshEvent event) {
+        if (event.position == 1) {
+            superRecyclerView.getSwipeToRefresh().setRefreshing(true);
+            superRecyclerView.getRecyclerView().smoothScrollToPosition(0);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    superRecyclerView.getSwipeToRefresh().setRefreshing(false);
+                    fetchData(currentPage, true);
+                }
+            }, 3000);
         }
     }
 
@@ -197,6 +214,7 @@ public class HotFragment extends BaseFragment implements OnMoreListener {
     public void onStop() {
         super.onStop();
         subscription.unsubscribe();
+        EventBus.getDefault().unregister(this);
     }
 
 }

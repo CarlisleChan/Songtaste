@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.cmpts.events.RefreshEvent;
 import com.carlisle.songtaste.cmpts.modle.FMAlbumResult;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
@@ -20,6 +21,7 @@ import com.carlisle.songtaste.ui.view.ProgressWheel;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.observables.AndroidObservable;
@@ -48,6 +50,7 @@ public class AlbumFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
+        EventBus.getDefault().register(this);
         blank.setVisibility(View.VISIBLE);
         initRecyclerView();
         return view;
@@ -58,6 +61,20 @@ public class AlbumFragment extends BaseFragment {
         super.onResume();
         if (adapter.isEmpty()) {
             fetchData();
+        }
+    }
+
+    public void onEvent(RefreshEvent event) {
+        if (event.position == 2) {
+            superRecyclerView.getSwipeToRefresh().setRefreshing(true);
+            superRecyclerView.getRecyclerView().smoothScrollToPosition(0);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    superRecyclerView.getSwipeToRefresh().setRefreshing(false);
+                    fetchData();
+                }
+            }, 3000);
         }
     }
 
@@ -107,6 +124,7 @@ public class AlbumFragment extends BaseFragment {
     public void onStop() {
         super.onStop();
         subscription.unsubscribe();
+        EventBus.getDefault().unregister(this);
     }
 
 }
