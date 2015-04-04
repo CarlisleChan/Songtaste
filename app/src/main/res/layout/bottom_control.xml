@@ -13,7 +13,7 @@
         android:scaleType="center"
         android:background="@drawable/album_art_default" />
 
-    <Button
+    <CheckBox
         android:id="@+id/cb_play_pause"
         android:layout_width="68dp"
         android:layout_height="68dp"

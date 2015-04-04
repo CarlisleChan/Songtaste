@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.baidao.superrecyclerview.adapter.LoadMoreAdapter;
@@ -13,6 +12,7 @@ import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.cmpts.events.PlayEvent;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
 import com.carlisle.songtaste.utils.QueueHelper;
+import com.makeramen.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
@@ -25,6 +25,7 @@ import de.greenrobot.event.EventBus;
 public class HotAdapter extends LoadMoreAdapter {
 
     private Context context;
+
     public HotAdapter(Context context) {
         super(context);
         this.context = context;
@@ -50,19 +51,13 @@ public class HotAdapter extends LoadMoreAdapter {
         public View rootView;
 
         @InjectView(R.id.iv_up_user_avatar)
-        ImageView upUserAvatar;
+        RoundedImageView upUserAvatar;
         @InjectView(R.id.tv_up_user_name)
         TextView upUserName;
         @InjectView(R.id.tv_song_name)
         TextView songName;
-        @InjectView(R.id.tv_singer_name)
-        TextView singerName;
         @InjectView(R.id.tv_rate_date_time)
         TextView rateDateTime;
-        @InjectView(R.id.tv_grade_num)
-        TextView gradeNum;
-        @InjectView(R.id.tv_fav_num)
-        TextView favNum;
 
         public HotViewHolder(View view) {
             super(view);
@@ -73,10 +68,7 @@ public class HotAdapter extends LoadMoreAdapter {
         public void bindView(final int position) {
             upUserName.setText(((SongInfo) getItem(position)).getUserName());
             songName.setText(((SongInfo) getItem(position)).getName());
-            singerName.setText(((SongInfo) getItem(position)).getSinger());
             rateDateTime.setText(((SongInfo) getItem(position)).getUpDT());
-            favNum.setText(((SongInfo) getItem(position)).getFavNum());
-            gradeNum.setText(((SongInfo) getItem(position)).getGradeNum());
 
             Picasso.with(context)
                     .load(((SongInfo) getItem(position)).getUserIcon())
@@ -90,6 +82,7 @@ public class HotAdapter extends LoadMoreAdapter {
                     EventBus.getDefault().post(new PlayEvent(position));
                 }
             });
+
         }
     }
 

@@ -5,6 +5,7 @@ package com.carlisle.songtaste.utils;
  */
 public class Common {
     public static int SONG_NUMBER = -1;
+    public static int CURRENT_POSITION = -1;
 
     public class Notification{
         /** 通知栏按钮点击事件对应的ACTION */
