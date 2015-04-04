@@ -13,6 +13,7 @@
     <com.baidao.superrecyclerview.SuperRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/recyclerView"
+        android:layout_above="@+id/blank"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"

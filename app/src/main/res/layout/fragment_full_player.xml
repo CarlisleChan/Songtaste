@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
-            android:layout_margin="10dp" />
+            android:thumb="@drawable/seekbar_thumb"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,8 +107,9 @@
         android:id="@+id/toolbar_container"
         layout="@layout/custom_toolbar" />
 
-    <include
-        android:id="@+id/bottom_control"
-        layout="@layout/bottom_control" />
+    <FrameLayout
+        android:id="@+id/fl_bottom_control"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </FrameLayout>

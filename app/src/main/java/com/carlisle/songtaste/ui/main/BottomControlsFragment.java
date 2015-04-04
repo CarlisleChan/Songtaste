@@ -2,13 +2,11 @@ package com.carlisle.songtaste.ui.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,21 +37,15 @@ import rx.android.observables.AndroidObservable;
 /**
  * Created by carlisle on 3/22/15.
  */
-public class PlaybackControlsFragment extends BaseFragment {
-    private static final String TAG = PlaybackControlsFragment.class.getSimpleName();
-    public static final String PLAYBACK_STATE = "playback state";
+public class BottomControlsFragment extends BaseFragment {
+    private static final String TAG = BottomControlsFragment.class.getSimpleName();
 
-    @InjectView(R.id.toolbar_container)
-    RelativeLayout toolbarContainer;
-    @InjectView(R.id.toolbar)
-    Toolbar toolbar;
+    @InjectView(R.id.im_album_art)
     ImageButton albumArt;
     @InjectView(R.id.tv_song_name)
     TextView songName;
     @InjectView(R.id.tv_singer_name)
     TextView singerName;
-    @InjectView(R.id.content)
-    LinearLayout content;
     @InjectView(R.id.im_next)
     ImageButton next;
     @InjectView(R.id.im_favorite)
@@ -70,14 +62,6 @@ public class PlaybackControlsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottom_control, container, false);
         ButterKnife.inject(this, view);
-
-        toolbar.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
-        toolbarContainer.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
-//        getActivity().setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-
         return view;
     }
 

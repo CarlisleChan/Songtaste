@@ -53,10 +53,9 @@ public class NowPlayingFragment extends BaseFragment {
     ImageView nextButton;
     @InjectView(R.id.progressBar)
     ProgressBar progressBar;
-    @InjectView(R.id.bottom_control)
-    View bottonControl;
 
     SongDetailInfo songDetailInfo;
+    private BottomControlsFragment bottomControlsFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +66,21 @@ public class NowPlayingFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_full_player, container, false);
+        ButterKnife.inject(this, view);
+
+        if (savedInstanceState == null) {
+            if (bottomControlsFragment == null) {
+                bottomControlsFragment = new BottomControlsFragment();
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fl_bottom_control, bottomControlsFragment, BottomControlsFragment.class.getSimpleName())
+                        .commit();
+            }
+
+        } else {
+            this.bottomControlsFragment = (BottomControlsFragment) getActivity()
+                    .getSupportFragmentManager().findFragmentByTag(BottomControlsFragment.class.getSimpleName());
+        }
 
 //        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 //            @Override
@@ -86,7 +100,7 @@ public class NowPlayingFragment extends BaseFragment {
 //
 //            }
 //        });
-        ButterKnife.inject(this, view);
+
         return view;
     }
 
@@ -143,8 +157,14 @@ public class NowPlayingFragment extends BaseFragment {
     }
 
     public void hideBottomControl(float v) {
-        bottonControl.setAlpha(1-v);
+        bottomControlsFragment.getView().setAlpha(1 - v);
         toolbarContainer.setAlpha(v);
+
+        if (v == 1) {
+            bottomControlsFragment.getView().setVisibility(View.GONE);
+        } else {
+            bottomControlsFragment.getView().setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
