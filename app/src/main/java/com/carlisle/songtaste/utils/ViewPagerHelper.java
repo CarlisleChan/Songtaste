@@ -70,7 +70,7 @@ public class ViewPagerHelper {
 
                 animateFade(mLeft, mRight, effectOffset);
 
-//                onPageScrolled(position, positionOffset, positionOffsetPixels);
+//                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
             }
 
             @Override
