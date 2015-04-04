@@ -27,7 +27,7 @@
                 android:id="@+id/iv_up_user_avatar"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
-                android:src="@drawable/ic_account_circle_grey600_24dp" />
+                android:src="@drawable/default_artist" />
 
             <TextView
                 android:id="@+id/tv_up_user_name"
@@ -89,7 +89,7 @@
                 android:id="@+id/tv_grade_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_thumb_up_black_24dp"
+                android:drawableLeft="@drawable/ic_btn_praise_white"
                 android:gravity="center"
                 android:text="grade num" />
 
@@ -97,7 +97,7 @@
                 android:id="@+id/tv_fav_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_favorite_black_24dp"
+                android:drawableLeft="@drawable/ic_btn_love_black"
                 android:gravity="center"
                 android:paddingLeft="5dp"
                 android:text="fav name" />

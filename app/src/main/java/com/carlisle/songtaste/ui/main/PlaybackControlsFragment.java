@@ -2,6 +2,7 @@ package com.carlisle.songtaste.ui.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,10 @@ public class PlaybackControlsFragment extends BaseFragment {
     private static final String TAG = PlaybackControlsFragment.class.getSimpleName();
     public static final String PLAYBACK_STATE = "playback state";
 
-    @InjectView(R.id.album_art)
+    @InjectView(R.id.toolbar_container)
+    RelativeLayout toolbarContainer;
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
     ImageButton albumArt;
     @InjectView(R.id.tv_song_name)
     TextView songName;
@@ -66,6 +70,14 @@ public class PlaybackControlsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottom_control, container, false);
         ButterKnife.inject(this, view);
+
+        toolbar.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
+        toolbarContainer.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
+//        getActivity().setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
         return view;
     }
 
@@ -138,7 +150,7 @@ public class PlaybackControlsFragment extends BaseFragment {
         } else {
             Picasso.with(getActivity())
                     .load(songDetailInfo.getAlbumArt())
-                    .placeholder(R.drawable.ic_account_circle_grey600_24dp)
+                    .placeholder(R.drawable.default_artist)
                     .into(albumArt);
         }
     }

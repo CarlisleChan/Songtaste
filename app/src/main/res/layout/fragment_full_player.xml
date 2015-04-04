@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/pageView"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_page_View"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg">
+    android:background="@drawable/bg_playback">
 
-    <ImageView
-        android:id="@+id/background_image"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:contentDescription="Background image for album art"
-        android:scaleType="centerCrop" />
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <LinearLayout
+        android:id="@+id/controllers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/fullscreen_bg_gradient">
+        android:background="@drawable/fullscreen_bg_gradient"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tv_song_name"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/tv_singer_name"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
             android:ellipsize="end"
             android:gravity="center_horizontal"
             android:maxLines="1"
@@ -35,9 +35,11 @@
 
         <TextView
             android:id="@+id/tv_singer_name"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/line3"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
             android:ellipsize="end"
             android:fontFamily="sans-serif-light"
             android:gravity="center_horizontal"
@@ -48,103 +50,50 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#E5CCCCCC" />
 
-        <TextView
-            android:id="@+id/line3"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/controllers"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-light"
-            android:gravity="center_horizontal"
-            android:maxLines="1"
-            android:shadowColor="@android:color/black"
-            android:shadowRadius="20"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="#E5CCCCCC" />
-
-        <LinearLayout
-            android:id="@+id/controllers"
+        <SeekBar
+            android:id="@+id/seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_margin="10dp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="68dp">
 
-                <TextView
-                    android:id="@+id/tv_start_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="16dp"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:textColor="@android:color/white" />
+            <ImageView
+                android:id="@+id/im_prev"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="center"
+                android:src="@drawable/ic_btn_pre_white"
+                android:tint="#ffffff" />
 
-                <SeekBar
-                    android:id="@+id/seekbar"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_toEndOf="@+id/tv_start_time"
-                    android:layout_toStartOf="@+id/tv_end_time" />
+            <CheckBox
+                android:id="@+id/cb_play_pause"
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:button="@drawable/fullscreen_play_pause"
+                android:src="@drawable/ic_btn_play_white" />
 
-                <TextView
-                    android:id="@+id/tv_end_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignWithParentIfMissing="true"
-                    android:layout_marginEnd="16dp"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:textColor="@android:color/white" />
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp">
-
-                <ImageView
-                    android:id="@+id/im_prev"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="skip to previous"
-                    android:src="@drawable/ic_skip_previous_white_48dp" />
-
-                <CheckBox
-                    android:id="@+id/cb_play_pause"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:button="@drawable/fullscreen_play_pause"
-                    android:contentDescription="play or pause"
-                    android:gravity="center_horizontal"
-                    android:src="@drawable/ic_play_arrow_white_48dp" />
-
-                <ImageView
-                    android:id="@+id/im_next"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="skip to next"
-                    android:src="@drawable/ic_skip_next_white_48dp" />
-
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/im_next"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:scaleType="center"
+                android:src="@drawable/ic_btn_next_white"
+                android:tint="#ffffff" />
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -155,7 +104,11 @@
         android:visibility="gone" />
 
     <include
+        android:id="@+id/toolbar_container"
+        layout="@layout/custom_toolbar" />
+
+    <include
         android:id="@+id/bottom_control"
         layout="@layout/bottom_control" />
 
-</RelativeLayout>
+</FrameLayout>

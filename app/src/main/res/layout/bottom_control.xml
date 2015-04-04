@@ -1,98 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="68dp"
-    android:background="@android:color/white"
-    android:padding="8dp">
+    android:background="@android:color/white">
 
     <ImageButton
-        android:id="@+id/album_art"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_alignParentStart="true"
-        android:contentDescription="Song currently playing"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/ic_launcher" />
+        android:id="@+id/im_album_art"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:layout_alignParentLeft="true"
+        android:scaleType="center"
+        android:background="@drawable/album_art_default" />
 
     <CheckBox
         android:id="@+id/cb_play_pause"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_alignParentStart="true"
-        android:button="@drawable/bottom_play_pause"
-        android:contentDescription="Song currently playing"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
         android:gravity="center"
-        tools:src="@drawable/ic_launcher" />
+        android:scaleType="center"
+        android:layout_alignParentLeft="true"
+        android:button="@drawable/bottom_play_pause"/>
 
     <LinearLayout
-        android:id="@+id/content"
-        android:layout_width="wrap_content"
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@id/album_art"
-        android:layout_toStartOf="@+id/im_favorite"
+        android:layout_margin="5dp"
+        android:layout_toLeftOf="@+id/im_favorite"
+        android:layout_toRightOf="@+id/im_album_art"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_song_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="Song currently playing"
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black"
-            tools:text="The Best Music EVAH1111 THE BEST" />
+            android:text="The Best Music EVAH1111 THE BEST" />
 
         <TextView
             android:id="@+id/tv_singer_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="Artist of currently playing song"
             android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="John Doe and Band" />
+            android:text="John Doe and Band" />
 
-        <TextView
-            android:id="@+id/extra_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="Extra info for currently playing song"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:visibility="gone"
-            tools:text="casting to MyCast" />
     </LinearLayout>
 
     <ImageButton
         android:id="@+id/im_next"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:paddingRight="20dp"
+        android:paddingLeft="10dp"
         android:background="@android:color/transparent"
-        android:contentDescription="play or pause"
-        android:padding="8dp"
-        android:src="@drawable/ic_skip_next_white_48dp"
-        android:tint="#00B8D4"
+        android:src="@drawable/ic_btn_next_white"
         android:tintMode="src_in" />
 
     <ImageButton
         android:id="@+id/im_favorite"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/im_next"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
         android:background="@android:color/transparent"
-        android:contentDescription="favorite"
-        android:padding="8dp"
-        android:src="@drawable/ic_favorite_black_24dp"
-        android:tint="#00B8D4"
+        android:src="@drawable/ic_btn_love_black"
         android:tintMode="src_in" />
 
 </RelativeLayout>

@@ -10,7 +10,7 @@
         android:background="@drawable/no_border"
         android:contentDescription="@string/app_name"
         android:scaleType="centerCrop"
-        android:src="@drawable/bottom_no_album" />
+        android:src="@drawable/album_art_default" />
 
     <ImageButton
         android:id="@+id/ib_close_btn"
@@ -19,7 +19,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:background="@android:color/transparent"
-        android:src="@drawable/notification_close" />
+        android:src="@drawable/ic_btn_close" />
 
     <LinearLayout
         android:id="@+id/ll_control_bar"
@@ -33,17 +33,17 @@
         <ImageButton
             android:id="@+id/ib_prev_btn"
             style="@style/notify_btn_style"
-            android:src="@drawable/notification_media_previous" />
+            android:src="@drawable/ic_btn_pre_white" />
 
         <ImageButton
             android:id="@+id/ib_pause_btn"
             style="@style/notify_btn_style"
-            android:src="@drawable/notification_media_pause" />
+            android:src="@drawable/ic_btn_play_white" />
 
         <ImageButton
             android:id="@+id/ib_next_btn"
             style="@style/notify_btn_style"
-            android:src="@drawable/notification_media_next" />
+            android:src="@drawable/ic_btn_next_white" />
     </LinearLayout>
 
     <RelativeLayout

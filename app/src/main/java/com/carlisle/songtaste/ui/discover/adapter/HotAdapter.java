@@ -80,7 +80,7 @@ public class HotAdapter extends LoadMoreAdapter {
 
             Picasso.with(context)
                     .load(((SongInfo) getItem(position)).getUserIcon())
-                    .placeholder(R.drawable.ic_account_circle_grey600_24dp)
+                    .placeholder(R.drawable.default_artist)
                     .into(upUserAvatar);
 
             rootView.setOnClickListener(new View.OnClickListener() {

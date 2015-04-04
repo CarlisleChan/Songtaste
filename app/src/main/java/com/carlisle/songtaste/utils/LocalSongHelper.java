@@ -216,7 +216,7 @@ public class LocalSongHelper {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
         return BitmapFactory.decodeStream(context.getResources()
-                .openRawResource(R.drawable.bottom_no_album_big), null, opts);
+                .openRawResource(R.drawable.album_art_default), null, opts);
     }
 
     private static final Uri sArtworkUri = Uri

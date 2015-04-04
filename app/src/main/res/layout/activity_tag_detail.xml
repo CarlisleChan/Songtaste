@@ -18,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="fitStart"
-                android:src="@drawable/album_bg" />
+                android:src="@drawable/bg_album" />
 
             <TextView
                 android:id="@+id/tv_songs"

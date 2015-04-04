@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_margin="16dp"
+            android:padding="16dp"
             android:text="定时停止播放"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
@@ -40,7 +40,7 @@
             android:id="@+id/rl_use_gprs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:padding="16dp"
             android:orientation="horizontal">
 
             <TextView
@@ -77,7 +77,7 @@
             android:id="@+id/rl_clear_cache"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:padding="16dp"
             android:orientation="horizontal">
 
             <TextView

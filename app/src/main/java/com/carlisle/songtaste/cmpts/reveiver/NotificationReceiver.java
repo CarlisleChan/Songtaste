@@ -84,7 +84,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     public void setAlbumArt(SongDetailInfo songDetailInfo) {
         if (songDetailInfo.songType == SongDetailInfo.SongType.LOCAL_SONG) {
-            remoteViews.setImageViewBitmap(R.id.album_art, LocalSongHelper.getArtwork(musicService.getApplicationContext(), Long.parseLong(songDetailInfo.mediaId),
+            remoteViews.setImageViewBitmap(R.id.ib_album_art, LocalSongHelper.getArtwork(musicService.getApplicationContext(), Long.parseLong(songDetailInfo.mediaId),
                     Long.parseLong(songDetailInfo.albumid), true));
         } else {
 //            Picasso.with(musicService.getApplicationContext())
@@ -98,13 +98,13 @@ public class NotificationReceiver extends BroadcastReceiver {
         state = event.state;
         switch (event.state) {
             case Playback.STATE_PAUSED:
-                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.notification_media_play);
+                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.ic_btn_play_white);
                 break;
             case Playback.STATE_STOPPED:
-                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.notification_media_play);
+                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.ic_btn_play_white);
                 break;
             default:
-                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.notification_media_pause);
+                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.ic_btn_pause_white);
                 break;
         }
 

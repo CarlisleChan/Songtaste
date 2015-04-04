@@ -57,7 +57,7 @@ public class AlbumAdapter extends BaseAdapter {
 
             Picasso.with(context)
                     .load(((AlbumInfo) getItem(position)).getAlbum_icon())
-                    .placeholder(R.drawable.ic_account_circle_grey600_24dp)
+                    .placeholder(R.drawable.default_artist)
                     .into(albumIcon);
 
             rootView.setOnClickListener(new View.OnClickListener() {

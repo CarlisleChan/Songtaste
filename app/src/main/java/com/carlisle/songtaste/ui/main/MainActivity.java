@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
@@ -43,8 +42,6 @@ public class MainActivity extends BaseActivity {
     private static final int PROFILE_SETTING = 1;
     private static int MENU_TYPE = R.menu.menu_discover;
 
-    @InjectView(R.id.toolbar_container)
-    RelativeLayout toolBarContainer;
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
     @InjectView(R.id.sliding_layout)
@@ -82,7 +79,7 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         // Create a few sample profile
-        final IProfile profile = new ProfileDrawerItem().withName("Mike Penz").withIcon(getResources().getDrawable(R.drawable.ic_account_circle_grey600_24dp));
+        final IProfile profile = new ProfileDrawerItem().withName("Mike Penz").withIcon(getResources().getDrawable(R.drawable.default_artist));
 
         // Create the AccountHeader
         headerResult = new AccountHeader()
@@ -100,7 +97,7 @@ public class MainActivity extends BaseActivity {
                         //sample usage of the onProfileChanged listener
                         //if the clicked item has the identifier 1 add a new profile ;)
                         if (profile instanceof IDrawerItem && ((IDrawerItem) profile).getIdentifier() == PROFILE_SETTING) {
-                            IProfile newProfile = new ProfileDrawerItem().withNameShown(true).withName("Batman").withIcon(getResources().getDrawable(R.drawable.ic_account_circle_grey600_24dp));
+                            IProfile newProfile = new ProfileDrawerItem().withNameShown(true).withName("Batman").withIcon(getResources().getDrawable(R.drawable.default_artist));
                             if (headerResult.getProfiles() != null) {
                                 //we know that there are 2 setting elements. set the new profile above them ;)
                                 headerResult.addProfile(newProfile, headerResult.getProfiles().size() - 2);
@@ -182,9 +179,9 @@ public class MainActivity extends BaseActivity {
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View view, float v) {
-                nowPlayingFragment.hideBottomControl(1 - v);
-                toolbar.getBackground().setAlpha((int) ((1 - v) * 255));
-                toolBarContainer.getBackground().setAlpha((int) ((1 - v) * 255));
+                nowPlayingFragment.hideBottomControl(v);
+
+//                toolbar.getBackground().setAlpha((int) ((1 - v) * 255));
             }
 
             @Override

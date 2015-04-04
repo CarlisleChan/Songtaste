@@ -4,18 +4,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.carlisle.songtaste.cmpts.events.PauseEvent;
-import com.carlisle.songtaste.cmpts.events.PlayEvent;
 import com.carlisle.songtaste.cmpts.events.ProgressEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToNextEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToPrevEvent;
@@ -32,22 +33,19 @@ import de.greenrobot.event.EventBus;
  * Created by carlisle on 4/3/15.
  */
 public class NowPlayingFragment extends BaseFragment {
-    @InjectView(R.id.background_image)
-    ImageView backgroundImage;
+
+    @InjectView(R.id.toolbar_container)
+    View toolbarContainer;
     @InjectView(R.id.tv_song_name)
     TextView songName;
     @InjectView(R.id.tv_singer_name)
     TextView singerName;
-    @InjectView(R.id.tv_start_time)
-    TextView startTime;
     @InjectView(R.id.seekbar)
     SeekBar seekbar;
-    @InjectView(R.id.tv_end_time)
-    TextView endTime;
     @InjectView(R.id.im_prev)
     ImageView prevButton;
-    @InjectView(R.id.cb_play_pause)
-    CheckBox playOrPause;
+//    @InjectView(R.id.cb_play_pause)
+//    CheckBox playOrPause;
     @InjectView(R.id.im_next)
     ImageView nextButton;
     @InjectView(R.id.progressBar)
@@ -95,13 +93,13 @@ public class NowPlayingFragment extends BaseFragment {
             case R.id.im_prev:
                 EventBus.getDefault().post(new SkipToPrevEvent());
                 break;
-            case R.id.cb_play_pause:
-                if (!((CheckBox)view).isChecked()) {
-                    EventBus.getDefault().post(new PlayEvent());
-                } else {
-                    EventBus.getDefault().post(new PauseEvent());
-                }
-                break;
+//            case R.id.cb_play_pause:
+//                if (!((CheckBox)view).isChecked()) {
+//                    EventBus.getDefault().post(new PlayEvent());
+//                } else {
+//                    EventBus.getDefault().post(new PauseEvent());
+//                }
+//                break;
             case R.id.im_next:
                 EventBus.getDefault().post(new SkipToNextEvent());
                 break;
@@ -111,17 +109,17 @@ public class NowPlayingFragment extends BaseFragment {
     public void onEvent(UpdateUIEvent event) {
         switch (event.state) {
             case Playback.STATE_PAUSED:
-                playOrPause.setChecked(true);
+//                playOrPause.setChecked(true);
                 break;
             case Playback.STATE_STOPPED:
-                playOrPause.setChecked(false);
+//                playOrPause.setChecked(false);
                 break;
             default:
                 if (event.songDetailInfo != null) {
                     songDetailInfo = event.songDetailInfo;
                     songName.setText(songDetailInfo.getSong_name());
                     singerName.setText(songDetailInfo.getSinger_name());
-                    playOrPause.setChecked(false);
+//                    playOrPause.setChecked(false);
                 }
                 break;
         }
@@ -141,13 +139,26 @@ public class NowPlayingFragment extends BaseFragment {
         seekbar.setMax(progressEvent.maxPosition);
     }
 
+    public void hideBottomControl(float v) {
+        bottonControl.setAlpha(1-v);
+        toolbarContainer.setAlpha(v);
+    }
+
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
-    public void hideBottomControl(float v) {
-        bottonControl.setAlpha(v);
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_local, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Toast.makeText(getActivity(), "index is"  + " && menu text is " + item.getTitle(), Toast.LENGTH_SHORT).show();
+        return super.onOptionsItemSelected(item);
     }
 }

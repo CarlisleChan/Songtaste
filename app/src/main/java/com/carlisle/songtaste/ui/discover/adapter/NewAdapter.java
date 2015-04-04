@@ -81,7 +81,7 @@ public class NewAdapter extends LoadMoreAdapter {
 
             Picasso.with(context)
                     .load(((SongInfo) getItem(position)).getUpUIcon())
-                    .placeholder(R.drawable.ic_account_circle_grey600_24dp)
+                    .placeholder(R.drawable.default_artist)
                     .into(upUserAvatar);
 
             rootView.setOnClickListener(new View.OnClickListener() {
