@@ -5,16 +5,16 @@
 
     <ImageButton
         android:id="@+id/ib_album_art"
-        android:layout_width="68dp"
-        android:layout_height="68dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignParentLeft="true"
         android:background="@drawable/album_art_default"
         android:scaleType="center" />
 
     <ImageButton
         android:id="@+id/ib_pause_btn"
-        android:layout_width="68dp"
-        android:layout_height="68dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignParentLeft="true"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_btn_play_white" />

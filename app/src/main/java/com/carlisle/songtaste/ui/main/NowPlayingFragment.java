@@ -44,7 +44,7 @@ public class NowPlayingFragment extends BaseFragment {
     @InjectView(R.id.tv_singer_name)
     TextView singerName;
     @InjectView(R.id.seekbar)
-    SeekBar seekbar;
+    SeekBar seekBar;
     @InjectView(R.id.im_prev)
     ImageView prevButton;
     @InjectView(R.id.cb_play_pause)
@@ -152,8 +152,8 @@ public class NowPlayingFragment extends BaseFragment {
             position = progressEvent.currentPosition;
         }
 
-        seekbar.setProgress(progressEvent.currentPosition);
-        seekbar.setMax(progressEvent.maxPosition);
+        seekBar.setProgress(progressEvent.currentPosition);
+        seekBar.setMax(progressEvent.maxPosition);
     }
 
     public void hideBottomControl(float v) {

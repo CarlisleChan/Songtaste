@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingTop="16dp">
+    android:paddingTop="14dp">
 
     <ImageView
         android:id="@+id/dot"
@@ -22,7 +22,7 @@
         android:layout_height="56dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="14dp"
         android:layout_marginLeft="16dp"
         android:scaleType="centerCrop"
         android:src="@drawable/default_artist"
@@ -33,11 +33,10 @@
     <LinearLayout
         android:id="@+id/ll_song_info"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="68dp"
         android:layout_marginLeft="16dp"
         android:layout_toLeftOf="@+id/tv_rate_date_time"
         android:layout_toRightOf="@+id/iv_up_user_avatar"
-        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
@@ -54,8 +53,10 @@
             android:id="@+id/tv_song_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
             android:singleLine="true"
+            android:textColor="@android:color/black"
             android:text="song nameeeeeeeeeeeeeeee"
             android:textSize="18sp" />
 

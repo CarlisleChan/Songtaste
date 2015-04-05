@@ -10,6 +10,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Nothing here."
+        android:contentDescription="nothing here."
         android:textAppearance="?android:attr/textAppearanceMedium" />
 </RelativeLayout>

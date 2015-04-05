@@ -2,12 +2,14 @@ package com.carlisle.songtaste.ui.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +17,7 @@ import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.cmpts.events.PauseEvent;
 import com.carlisle.songtaste.cmpts.events.PlayEvent;
+import com.carlisle.songtaste.cmpts.events.ProgressEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToNextEvent;
 import com.carlisle.songtaste.cmpts.events.UpdateUIEvent;
 import com.carlisle.songtaste.cmpts.modle.Result;
@@ -54,6 +57,8 @@ public class BottomControlsFragment extends BaseFragment {
     RelativeLayout container;
     @InjectView(R.id.cb_play_pause)
     CheckBox playOrPause;
+    @InjectView(R.id.seekbar)
+    SeekBar seekBar;
 
     SongDetailInfo songDetailInfo;
     Subscription subscription;
@@ -125,6 +130,20 @@ public class BottomControlsFragment extends BaseFragment {
                 break;
         }
 
+    }
+
+    public int position = 0;
+    public void onEvent(ProgressEvent progressEvent) {
+        if (progressEvent.trackTouch) return;
+        if (progressEvent.currentPosition == position) {
+            // loading, show progress
+            Log.d("loading=====>", "=====");
+        } else {
+            position = progressEvent.currentPosition;
+        }
+
+        seekBar.setProgress(progressEvent.currentPosition);
+        seekBar.setMax(progressEvent.maxPosition);
     }
 
     public void setAlbumArt(SongDetailInfo songDetailInfo) {

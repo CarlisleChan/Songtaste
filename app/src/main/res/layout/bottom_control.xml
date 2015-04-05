@@ -2,54 +2,61 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="68dp"
+    android:layout_height="64dp"
     android:background="@android:color/white">
 
     <ImageButton
         android:id="@+id/im_album_art"
-        android:layout_width="68dp"
-        android:layout_height="68dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignParentLeft="true"
-        android:scaleType="fitCenter"
-        android:background="@drawable/album_art_default" />
+        android:layout_alignParentTop="true"
+        android:background="@drawable/album_art_default"
+        android:scaleType="fitCenter" />
 
     <CheckBox
         android:id="@+id/cb_play_pause"
-        android:layout_width="68dp"
-        android:layout_height="68dp"
-        android:gravity="center"
-        android:scaleType="center"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignParentLeft="true"
-        android:button="@drawable/bottom_play_pause"/>
+        android:layout_alignParentTop="true"
+        android:button="@drawable/bottom_play_pause"
+        android:gravity="center"
+        android:scaleType="center" />
 
     <LinearLayout
         android:id="@+id/ll_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
-        android:layout_margin="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/im_favorite"
         android:layout_toRightOf="@+id/im_album_art"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_song_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="The Best Music EVAH1111 THE BEST"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/black"
-            android:text="The Best Music EVAH1111 THE BEST" />
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/tv_singer_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="John Doe and Band" />
+            android:text="John Doe and Band"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </LinearLayout>
 
@@ -59,9 +66,9 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:paddingRight="20dp"
-        android:paddingLeft="10dp"
         android:background="@android:color/transparent"
+        android:paddingLeft="10dp"
+        android:paddingRight="20dp"
         android:src="@drawable/ic_btn_next_white"
         android:tintMode="src_in" />
 
@@ -71,10 +78,20 @@
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/im_next"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
         android:background="@android:color/transparent"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:src="@drawable/ic_btn_love"
         android:tintMode="src_in" />
+
+    <SeekBar
+        android:id="@+id/seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="-2dp"
+        android:paddingRight="-2dp"
+        android:progressDrawable="@drawable/bottom_seekbar_progress"
+        android:thumb="@null" />
 
 </RelativeLayout>

@@ -19,7 +19,7 @@
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
             android:scaleType="center"
-            android:src="@drawable/ic_btn_left" />
+            android:src="@drawable/ic_btn_down" />
 
         <TextView
             android:id="@+id/title"

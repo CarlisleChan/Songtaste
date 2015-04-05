@@ -58,6 +58,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                     EventBus.getDefault().post(new SkipToPrevEvent());
                     break;
                 case Common.Notification.NOTIFICATION_CLOSE:
+                    EventBus.getDefault().post(new PauseEvent());
                     clearNotification();
                     break;
             }
