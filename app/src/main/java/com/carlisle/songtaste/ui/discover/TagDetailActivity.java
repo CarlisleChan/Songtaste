@@ -25,6 +25,7 @@ import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.TagDetailAdapter;
 import com.carlisle.songtaste.ui.view.BottomScrollView;
 import com.carlisle.songtaste.utils.Common;
+import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
@@ -146,7 +147,7 @@ public class TagDetailActivity extends BaseActivity {
 
     public void setSongtasteQueue(String songId) {
         new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
-                .songUrl(songId, "")
+                .songUrl(songId, PreferencesHelper.getInstance(this).getUID(), "")
                 .subscribe(new Observer<SongDetailInfo>() {
                     @Override
                     public void onCompleted() {

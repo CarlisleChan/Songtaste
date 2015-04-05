@@ -154,7 +154,7 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
 
     public void setSongtasteQueue(String songId) {
         new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
-                .songUrl(songId, "")
+                .songUrl(songId, PreferencesHelper.getInstance(getActivity()).getUID(), "")
                 .subscribe(new Observer<SongDetailInfo>() {
                     @Override
                     public void onCompleted() {

@@ -50,7 +50,7 @@ public interface SongtasteApi {
     public Observable<User> isDMBind(@Query("id") String id, @Query("format") String format);
 
     @GET("/songurl.php")
-    public Observable<SongDetailInfo> songUrl(@Query("songid") String songid, @Query("version") String version);
+    public Observable<SongDetailInfo> songUrl(@Query("songid") String songid, @Query("uid") String uid, @Query("version") String version);
 
     @GET("/collection.php")
     public Observable<Result> collection(@Query("uid") String uid, @Query("songid") String songid, @Query("format") String format);

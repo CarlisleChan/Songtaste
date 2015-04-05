@@ -26,6 +26,7 @@ import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.NewAdapter;
 import com.carlisle.songtaste.ui.view.ProgressWheel;
 import com.carlisle.songtaste.utils.Common;
+import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.carlisle.songtaste.utils.QueueHelper;
 import com.github.stephanenicolas.loglifecycle.LogLifeCycle;
 
@@ -50,6 +51,7 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
 
     private NewAdapter adapter;
     private Subscription subscription;
+    private boolean getQueueDone = true;
 
     private int currentPage = 1;
     private String songsNumber = "20";
@@ -70,7 +72,12 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
     public void onResume() {
         super.onResume();
         if (adapter.isEmpty()) {
-            fetchData(currentPage, true);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fetchData(currentPage, true);
+                }
+            }, 2000);
         }
     }
 
@@ -144,7 +151,9 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
 
     @Override
     public void onMoreAsked(int totalCount, int currentPosition) {
-        fetchData(++currentPage, false);
+        if (getQueueDone) {
+            fetchData(++currentPage, false);
+        }
     }
 
     private void fetchData(int page, final boolean reset) {
@@ -159,13 +168,44 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
                 .subscribe(new Observer<FMNewResult>() {
                     @Override
                     public void onCompleted() {
-                        onLoadingFinished(true);
-                        progressBar.setVisibility(View.GONE);
-
                         Common.SONG_NUMBER = 0;
                         SongInfo songInfo = (SongInfo) adapter.getData().get(Common.SONG_NUMBER);
                         QueueHelper.getInstance().getNewQueue().clear();
                         setSongtasteQueue(songInfo.getID());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+//                        onLoadingFinished(false);
+//                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onNext(FMNewResult songListResult) {
+                        if (reset) {
+                            adapter.refresh(songListResult.getData());
+                        } else {
+                            adapter.add(songListResult.getData());
+                        }
+                        getQueueDone = false;
+                    }
+                });
+    }
+
+    public void setSongtasteQueue(final String songId) {
+        new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
+                .songUrl(songId, PreferencesHelper.getInstance(getActivity()).getUID(), "")
+                .subscribe(new Observer<SongDetailInfo>() {
+                    @Override
+                    public void onCompleted() {
+                        if (++Common.SONG_NUMBER < adapter.getData().size()) {
+                            setSongtasteQueue(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getID());
+                        } else if (Common.SONG_NUMBER == adapter.getData().size()) {
+                            onLoadingFinished(true);
+                            progressBar.setVisibility(View.GONE);
+                            getQueueDone = true;
+                        }
                     }
 
                     @Override
@@ -176,36 +216,10 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
                     }
 
                     @Override
-                    public void onNext(FMNewResult songListResult) {
-                        if (reset) {
-                            adapter.refresh(songListResult.getData());
-                        } else {
-                            adapter.add(songListResult.getData());
-                        }
-                    }
-                });
-    }
-
-    public void setSongtasteQueue(final String songId) {
-        new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
-                .songUrl(songId, "")
-                .subscribe(new Observer<SongDetailInfo>() {
-                    @Override
-                    public void onCompleted() {
-                        if (++Common.SONG_NUMBER < adapter.getData().size()) {
-                            setSongtasteQueue(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getID());
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
                     public void onNext(SongDetailInfo songDetailInfo) {
                         SongDetailInfo songDetailInfo1 = songDetailInfo;
                         songDetailInfo1.setAlbumArt(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getUpUIcon());
+                        songDetailInfo1.setMediaId(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getID());
                         QueueHelper.getInstance().getNewQueue().add(songDetailInfo);
                     }
                 });

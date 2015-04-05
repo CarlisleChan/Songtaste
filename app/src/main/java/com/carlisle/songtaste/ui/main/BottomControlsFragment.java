@@ -13,6 +13,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.cmpts.events.PauseEvent;
@@ -77,6 +78,7 @@ public class BottomControlsFragment extends BaseFragment {
 
     @OnClick(R.id.im_favorite)
     public void onFavoriteClick(View view) {
+
         subscription = AndroidObservable.bindFragment(this, new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.COLLECTION))
                 .collection(PreferencesHelper.getInstance(getActivity()).getUID(), songDetailInfo.getMediaId(), "xml"))
                 .subscribe(new Observer<Result>() {
@@ -92,8 +94,16 @@ public class BottomControlsFragment extends BaseFragment {
 
                     @Override
                     public void onNext(Result result) {
+                        Log.d("result====>", JSON.toJSONString(result));
+                        Log.d("songDetailInfo====>", JSON.toJSONString(songDetailInfo));
+
                         if (result.code == 1) {
-//                    view.setBackground(getActivity().getResources().getDrawable());
+                            songDetailInfo.setIscollection("1");
+                            favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
+                            Toast.makeText(getActivity(), result.msg, Toast.LENGTH_SHORT).show();
+                        } else if (result.code == 2) {
+                            songDetailInfo.setIscollection("0");
+                            favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love));
                             Toast.makeText(getActivity(), result.msg, Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -126,6 +136,18 @@ public class BottomControlsFragment extends BaseFragment {
                     singerName.setText(songDetailInfo.getSinger_name());
                     playOrPause.setChecked(false);
                     setAlbumArt(songDetailInfo);
+
+                    if (songDetailInfo.getIscollection().equals("1")) {
+                        favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
+                    } else {
+                        favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love));
+                    }
+
+                    if (songDetailInfo.getSongType() == SongDetailInfo.SongType.LOCAL_SONG) {
+                        favorite.setVisibility(View.INVISIBLE);
+                    } else {
+                        favorite.setVisibility(View.VISIBLE);
+                    }
                 }
                 break;
         }
@@ -133,6 +155,7 @@ public class BottomControlsFragment extends BaseFragment {
     }
 
     public int position = 0;
+
     public void onEvent(ProgressEvent progressEvent) {
         if (progressEvent.trackTouch) return;
         if (progressEvent.currentPosition == position) {

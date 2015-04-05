@@ -27,6 +27,7 @@ import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.HotAdapter;
 import com.carlisle.songtaste.ui.view.ProgressWheel;
 import com.carlisle.songtaste.utils.Common;
+import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
@@ -186,7 +187,7 @@ public class HotFragment extends BaseFragment implements OnMoreListener {
 
     public void setSongtasteQueue(String songId) {
         new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
-                .songUrl(songId, "")
+                .songUrl(songId, PreferencesHelper.getInstance(getActivity()).getUID(), "")
                 .subscribe(new Observer<SongDetailInfo>() {
                     @Override
                     public void onCompleted() {
