@@ -12,7 +12,7 @@ import android.media.RemoteControlClient;
 import android.util.Log;
 
 import com.carlisle.songtaste.cmpts.events.ScreenOnEvent;
-import com.carlisle.songtaste.cmpts.events.UpdateUIEvent;
+import com.carlisle.songtaste.cmpts.events.UpdatePlaybackEvent;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.cmpts.services.Playback;
 import com.carlisle.songtaste.utils.Common;
@@ -62,7 +62,7 @@ public class ScreenOnReceiver extends BroadcastReceiver {
         EventBus.getDefault().unregister(this);
     }
 
-    public void onEvent(UpdateUIEvent event) {
+    public void onEvent(UpdatePlaybackEvent event) {
         if (event.songDetailInfo != null) {
             state = Playback.STATE_PLAYING;
             singerName = event.songDetailInfo.getSinger_name();

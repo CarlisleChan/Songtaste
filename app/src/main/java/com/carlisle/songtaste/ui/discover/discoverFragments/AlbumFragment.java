@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.carlisle.songtaste.cmpts.events.RefreshEvent;
+import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.modle.FMAlbumResult;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
@@ -64,7 +64,7 @@ public class AlbumFragment extends BaseFragment {
         }
     }
 
-    public void onEvent(RefreshEvent event) {
+    public void onEvent(RefreshDataEvent event) {
         if (event.position == 2) {
             superRecyclerView.getSwipeToRefresh().setRefreshing(true);
             superRecyclerView.getRecyclerView().smoothScrollToPosition(0);

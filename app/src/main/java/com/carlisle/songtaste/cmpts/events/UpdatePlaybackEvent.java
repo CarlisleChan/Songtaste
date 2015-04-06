@@ -5,21 +5,21 @@ import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 /**
  * Created by carlisle on 3/22/15.
  */
-public class UpdateUIEvent {
-    private static final String TAG = UpdateUIEvent.class.getSimpleName();
+public class UpdatePlaybackEvent {
+    private static final String TAG = UpdatePlaybackEvent.class.getSimpleName();
 
     public SongDetailInfo songDetailInfo;
     public int state;
 
-    public UpdateUIEvent() {
+    public UpdatePlaybackEvent() {
 
     }
 
-    public UpdateUIEvent(int state) {
+    public UpdatePlaybackEvent(int state) {
         this.state = state;
     }
 
-    public UpdateUIEvent(SongDetailInfo songDetailInfo) {
+    public UpdatePlaybackEvent(SongDetailInfo songDetailInfo) {
         this.songDetailInfo = songDetailInfo;
     }
 }

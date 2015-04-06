@@ -16,7 +16,7 @@ import com.baidao.superrecyclerview.OnMoreListener;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.carlisle.songtaste.cmpts.events.RefreshEvent;
+import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.modle.FMNewResult;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
@@ -81,7 +81,7 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
         }
     }
 
-    public void onEvent(RefreshEvent event) {
+    public void onEvent(RefreshDataEvent event) {
         if (event.position == 0) {
             superRecyclerView.getSwipeToRefresh().setRefreshing(true);
             superRecyclerView.getRecyclerView().smoothScrollToPosition(0);

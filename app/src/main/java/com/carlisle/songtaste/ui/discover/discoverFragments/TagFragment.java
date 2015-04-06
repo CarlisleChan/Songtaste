@@ -12,7 +12,7 @@ import android.widget.ScrollView;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.carlisle.songtaste.cmpts.events.RefreshEvent;
+import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.modle.FMTagResult;
 import com.carlisle.songtaste.cmpts.modle.TagInfo;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
@@ -77,7 +77,7 @@ public class TagFragment extends BaseFragment {
         }
     }
 
-    public void onEvent(RefreshEvent event) {
+    public void onEvent(RefreshDataEvent event) {
         if (event.position == 3) {
             swipeLayout.setRefreshing(true);
             scrollView.fullScroll(ScrollView.FOCUS_UP);

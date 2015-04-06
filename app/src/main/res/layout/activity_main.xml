@@ -31,7 +31,8 @@
         <FrameLayout
             android:id="@+id/fl_playback_control"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:clickable="false" />
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 

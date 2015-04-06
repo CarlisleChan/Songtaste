@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.carlisle.songtaste.cmpts.events.ProgressEvent;
-import com.carlisle.songtaste.cmpts.events.UpdateUIEvent;
+import com.carlisle.songtaste.cmpts.events.UpdatePlaybackEvent;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 
 import de.greenrobot.event.EventBus;
@@ -126,7 +126,7 @@ public class AudioPlayback implements Playback, AudioManager.OnAudioFocusChangeL
         }
 
         handler.removeCallbacks(null);
-        EventBus.getDefault().post(new UpdateUIEvent(state));
+        EventBus.getDefault().post(new UpdatePlaybackEvent(state));
     }
 
     @Override

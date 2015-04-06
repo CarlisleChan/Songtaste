@@ -12,7 +12,7 @@ import com.carlisle.songtaste.cmpts.events.PlayEvent;
 import com.carlisle.songtaste.cmpts.events.ScreenOnEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToNextEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToPrevEvent;
-import com.carlisle.songtaste.cmpts.events.UpdateUIEvent;
+import com.carlisle.songtaste.cmpts.events.UpdatePlaybackEvent;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.reveiver.HeadsetPlugReceiver;
 import com.carlisle.songtaste.cmpts.reveiver.NotificationReceiver;
@@ -85,7 +85,7 @@ public class MusicService extends Service implements Playback.Callback {
     public void onEvent(ScreenOnEvent screenOnEvent) {
         Log.d("showRemoteControl===","service");
         SongDetailInfo songDetailInfo = QueueHelper.getInstance().getCurrentQueue().get(currentIndexOnQueue);
-        EventBus.getDefault().post(new UpdateUIEvent(songDetailInfo));
+        EventBus.getDefault().post(new UpdatePlaybackEvent(songDetailInfo));
     }
 
     public void onEvent(PlayEvent event) {
@@ -154,18 +154,18 @@ public class MusicService extends Service implements Playback.Callback {
         if (QueueHelper.getInstance().isIndexPlayable(currentIndexOnQueue)) {
             SongDetailInfo songDetailInfo = QueueHelper.getInstance().getCurrentQueue().get(currentIndexOnQueue);
             playback.play(songDetailInfo);
-            EventBus.getDefault().post(new UpdateUIEvent(songDetailInfo));
+            EventBus.getDefault().post(new UpdatePlaybackEvent(songDetailInfo));
         }
     }
 
     private void handlePauseRequest() {
         playback.pause();
-        EventBus.getDefault().post(new UpdateUIEvent(playback.getState()));
+        EventBus.getDefault().post(new UpdatePlaybackEvent(playback.getState()));
     }
 
     private void handleStopRequest() {
         playback.stop(true);
-        EventBus.getDefault().post(new UpdateUIEvent(playback.getState()));
+        EventBus.getDefault().post(new UpdatePlaybackEvent(playback.getState()));
     }
 
     @Override
@@ -192,5 +192,6 @@ public class MusicService extends Service implements Playback.Callback {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        notificationReceiver.unRegister();
     }
 }

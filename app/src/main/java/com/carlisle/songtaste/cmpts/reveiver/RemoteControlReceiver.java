@@ -13,7 +13,7 @@ import com.carlisle.songtaste.cmpts.events.PlayEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToNextEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToPrevEvent;
 import com.carlisle.songtaste.cmpts.events.StopEvent;
-import com.carlisle.songtaste.cmpts.events.UpdateUIEvent;
+import com.carlisle.songtaste.cmpts.events.UpdatePlaybackEvent;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.cmpts.services.Playback;
 import com.carlisle.songtaste.utils.Common;
@@ -94,7 +94,7 @@ public class RemoteControlReceiver extends BroadcastReceiver {
         EventBus.getDefault().unregister(this);
     }
 
-    public void onEvent(UpdateUIEvent event) {
+    public void onEvent(UpdatePlaybackEvent event) {
         if (event.songDetailInfo != null) {
             this.state = Playback.STATE_BUFFERING;
         } else {

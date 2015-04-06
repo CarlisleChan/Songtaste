@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.astuetz.PagerSlidingTabStrip;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.carlisle.songtaste.cmpts.events.RefreshEvent;
+import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class ViewPagerHelper {
         tabStrip.setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
             @Override
             public void onTabReselected(int i) {
-                EventBus.getDefault().post(new RefreshEvent(i));
+                EventBus.getDefault().post(new RefreshDataEvent(i));
             }
         });
         tabStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

@@ -11,11 +11,11 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.carlisle.songtaste.R;
+import com.carlisle.songtaste.cmpts.events.FavoriteEvent;
 import com.carlisle.songtaste.cmpts.events.PauseEvent;
 import com.carlisle.songtaste.cmpts.events.PlayEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToNextEvent;
-import com.carlisle.songtaste.cmpts.events.SkipToPrevEvent;
-import com.carlisle.songtaste.cmpts.events.UpdateUIEvent;
+import com.carlisle.songtaste.cmpts.events.UpdatePlaybackEvent;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.cmpts.services.Playback;
@@ -33,7 +33,10 @@ public class NotificationReceiver extends BroadcastReceiver {
     private Typeface typeFace;
     private static int state = Playback.STATE_NONE;
 
+    private SongDetailInfo songDetailInfo;
+
     public NotificationReceiver() {
+
     }
 
     @Override
@@ -54,8 +57,9 @@ public class NotificationReceiver extends BroadcastReceiver {
                         EventBus.getDefault().post(new PauseEvent());
                     }
                     break;
-                case Common.Notification.NOTIFICATION_PREV:
-                    EventBus.getDefault().post(new SkipToPrevEvent());
+                case Common.Notification.NOTIFICATION_FAVORITE:
+                    boolean isCollection = songDetailInfo.getIscollection().equals("1") ? false : true;
+                    EventBus.getDefault().post(new FavoriteEvent(isCollection));
                     break;
                 case Common.Notification.NOTIFICATION_CLOSE:
                     EventBus.getDefault().post(new PauseEvent());
@@ -93,7 +97,17 @@ public class NotificationReceiver extends BroadcastReceiver {
         }
     }
 
-    public void onEvent(UpdateUIEvent event) {
+    public void onEvent(FavoriteEvent event) {
+        if (event.isCollection) {
+            remoteViews.setImageViewResource(R.id.ib_favorite, R.drawable.ic_btn_loved);
+        } else {
+            remoteViews.setImageViewResource(R.id.ib_favorite, R.drawable.ic_btn_love_white);
+        }
+        songDetailInfo.setIscollection(event.isCollection ? "1" : "0");
+        showNotification();
+    }
+
+    public void onEvent(UpdatePlaybackEvent event) {
         state = event.state;
         switch (event.state) {
             case Playback.STATE_PAUSED:
@@ -108,10 +122,24 @@ public class NotificationReceiver extends BroadcastReceiver {
         }
 
         if (event.songDetailInfo != null) {
-            setAlbumArt(event.songDetailInfo);
-            remoteViews.setTextViewText(R.id.ib_song_name, event.songDetailInfo.getSong_name());
+            songDetailInfo = event.songDetailInfo;
+            setAlbumArt(songDetailInfo);
+            remoteViews.setTextViewText(R.id.ib_song_name, songDetailInfo.getSong_name());
             typeFace = Typeface.createFromAsset(musicService.getAssets(), "fonts/Roboto-Thin.ttf");
-            remoteViews.setTextViewText(R.id.ib_singer_name, event.songDetailInfo.getSinger_name());
+            remoteViews.setTextViewText(R.id.ib_singer_name, songDetailInfo.getSinger_name());
+
+            if (songDetailInfo.getIscollection().equals("1")) {
+                remoteViews.setImageViewResource(R.id.ib_favorite, R.drawable.ic_btn_loved);
+            } else {
+                remoteViews.setImageViewResource(R.id.ib_favorite, R.drawable.ic_btn_love_white);
+            }
+
+            if (songDetailInfo.getSongType() == SongDetailInfo.SongType.LOCAL_SONG) {
+
+            } else {
+
+            }
+
         }
 
         showNotification();
