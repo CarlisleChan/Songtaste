@@ -16,11 +16,14 @@
         android:text="1.0.0"
         android:textSize="18sp" />
 
-    <TextView
+    <com.carlisle.applicationtest.SecretTextView
         android:id="@+id/tv_about"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_marginTop="50dp"
         android:text="um.. this is a client of songtaste\n develop by carlisle"
+        android:textColor="@android:color/black"
         android:textSize="18sp" />
+
 </LinearLayout>
