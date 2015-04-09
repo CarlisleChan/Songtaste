@@ -50,6 +50,8 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name=".ui.discover.AlbumDetailActivity"/>
+
     </application>
 
 </manifest>

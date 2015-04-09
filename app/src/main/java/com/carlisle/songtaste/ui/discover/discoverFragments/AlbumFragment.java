@@ -1,5 +1,6 @@
 package com.carlisle.songtaste.ui.discover.discoverFragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -16,7 +17,9 @@ import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.modle.FMAlbumResult;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
+import com.carlisle.songtaste.ui.discover.AlbumDetailActivity;
 import com.carlisle.songtaste.ui.discover.adapter.AlbumAdapter;
+import com.carlisle.songtaste.ui.discover.listener.RecyclerItemClickListener;
 import com.carlisle.songtaste.ui.view.ProgressWheel;
 
 import butterknife.ButterKnife;
@@ -96,6 +99,22 @@ public class AlbumFragment extends BaseFragment {
                 }, 3000);
             }
         });
+
+        superRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+//                        AlbumDetailFragment albumDetailFragment = new AlbumDetailFragment();
+//                        Bundle bundle = new Bundle();
+//                        bundle.putString(AlbumDetailFragment.ALBUM_ID, ((AlbumInfo) adapter.getData().get(position)).getAid());
+//                        albumDetailFragment.setArguments(bundle);
+//                        ((BaseActivity) getActivity()).pushFragment(albumDetailFragment, AlbumDetailFragment.class.getSimpleName());
+
+                        startActivity(new Intent(getActivity(), AlbumDetailActivity.class));
+                    }
+                })
+        );
+
     }
 
     private void fetchData() {

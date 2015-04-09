@@ -17,10 +17,9 @@ public class BaseActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().setBackgroundDrawable(null);
         super.onCreate(savedInstanceState);
-
     }
 
-    protected void replaceFragment(BaseFragment fragment, String tag) {
+    public void pushFragment(BaseFragment fragment, String tag) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -28,7 +27,7 @@ public class BaseActivity extends ActionBarActivity {
         ft.commitAllowingStateLoss();
     }
 
-    protected int setStatusBarColor() {
+    public int setStatusBarColor() {
         return getResources().getColor(android.R.color.transparent);
     }
 

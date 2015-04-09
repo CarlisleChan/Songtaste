@@ -23,6 +23,7 @@ import de.greenrobot.event.EventBus;
 public class AlbumDetailAdapter extends BaseAdapter {
 
     private Context context;
+
     public AlbumDetailAdapter(Context context) {
         this.context = context;
     }
@@ -43,8 +44,6 @@ public class AlbumDetailAdapter extends BaseAdapter {
 
         @InjectView(R.id.tv_song_name)
         TextView songName;
-        @InjectView(R.id.tv_singer_name)
-        TextView singerName;
 
         public AlbumDetailVH(View view) {
             super(view);
@@ -54,7 +53,6 @@ public class AlbumDetailAdapter extends BaseAdapter {
 
         public void bindView(final int position) {
             songName.setText(((SongDetailInfo) getItem(position)).getSongname());
-            singerName.setText(((SongDetailInfo) getItem(position)).getSingername());
 
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
