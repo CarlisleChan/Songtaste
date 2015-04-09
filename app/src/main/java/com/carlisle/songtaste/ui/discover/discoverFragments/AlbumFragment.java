@@ -80,7 +80,7 @@ public class AlbumFragment extends BaseFragment {
 
     private void initRecyclerView() {
         adapter = new AlbumAdapter(getActivity());
-        layoutManager = new GridLayoutManager(getActivity(), 3);
+        layoutManager = new GridLayoutManager(getActivity(), 2);
 
         superRecyclerView.setLayoutManager(layoutManager);
         superRecyclerView.setAdapter(adapter);

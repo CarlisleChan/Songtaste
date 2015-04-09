@@ -1,12 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <View
         android:id="@+id/blank"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="64dp"
         android:layout_alignParentBottom="true"
         android:visibility="gone" />
 
@@ -19,8 +18,7 @@
         android:background="@android:color/white"
         app:layout_empty="@layout/empty_view"
         app:mainLayoutId="@layout/layout_recyclerview_verticalscroll"
-        app:recyclerClipToPadding="true"
-        app:scrollbarStyle="insideInset" />
+        app:recyclerClipToPadding="true"/>
 
     <include layout="@layout/progress_wheel" />
 
