@@ -21,8 +21,7 @@ import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
-import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
-import com.carlisle.songtaste.utils.Common;
+import com.carlisle.songtaste.ui.view.ProgressWheel;
 import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.carlisle.songtaste.utils.QueueHelper;
 
@@ -39,10 +38,14 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
 
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
+    @InjectView(R.id.progressBar)
+    ProgressWheel progressBar;
     ProgressDialog progressDialog;
 
     private FavoriteAdapter adapter;
     private Subscription subscription;
+    private boolean getQueueDone = true;
+    private int currentIndex = -1;
 
     private int currentPage = 1;
     private int songsNumber = 20;
@@ -125,7 +128,7 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
         fetchData(PreferencesHelper.getInstance(getActivity()).getUID(), currentPage, songsNumber);
     }
 
-    private void fetchData(String uid, int currentPage, int songsNumber) {
+    private void fetchData(String uid, final int currentPage, int songsNumber) {
         subscription = AndroidObservable.bindActivity(getActivity(), new ApiFactory()
                 .getSongtasteApi(new JsonConverter(JsonConverter.ConverterType.COLLECTION_RESULT))
                 .collectionSong(uid, String.valueOf(currentPage), String.valueOf(songsNumber), tmp, callBack, code))
@@ -133,8 +136,7 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
                     @Override
                     public void onCompleted() {
                         onLoadingFinished(true);
-                        Common.SONG_NUMBER = 0;
-                        SongInfo songInfo = (SongInfo) adapter.getData().get(Common.SONG_NUMBER);
+                        SongInfo songInfo = (SongInfo) adapter.getData().get(currentIndex);
                         QueueHelper.getInstance().getFavoriteQueue().clear();
                         setSongtasteQueue(songInfo.getSongid());
                     }
@@ -147,32 +149,36 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
 
                     @Override
                     public void onNext(CollectionResult collectionResult) {
+                        currentIndex = 0;
                         adapter.refresh(collectionResult.getData());
                     }
                 });
     }
 
-    public void setSongtasteQueue(String songId) {
-        new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
-                .songUrl(songId, PreferencesHelper.getInstance(getActivity()).getUID(), "")
-                .subscribe(new Observer<SongDetailInfo>() {
-                    @Override
-                    public void onCompleted() {
-                        if ((++Common.SONG_NUMBER) < adapter.getData().size()) {
-                            setSongtasteQueue(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getSongid());
-                        }
-                    }
+    @Override
+    public void onAnalysisCompleted() {
+        if (++currentIndex < adapter.getData().size()) {
+            setSongtasteQueue(((SongInfo) adapter.getData().get(currentIndex)).getID());
+        } else if (currentIndex == adapter.getData().size()) {
+            getQueueDone = true;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onLoadingFinished(true);
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
 
-                    @Override
-                    public void onError(Throwable e) {
+    @Override
+    public void onAnalysisNext(SongDetailInfo songDetailInfo) {
+        QueueHelper.getInstance().getFavoriteQueue().add(songDetailInfo);
+    }
 
-                    }
+    @Override
+    public void onAnalysisError(Throwable e) {
 
-                    @Override
-                    public void onNext(SongDetailInfo songDetailInfo) {
-                        QueueHelper.getInstance().getFavoriteQueue().add(songDetailInfo);
-                    }
-                });
     }
 
     @Override

@@ -22,11 +22,8 @@ import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
-import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.NewAdapter;
 import com.carlisle.songtaste.ui.view.ProgressWheel;
-import com.carlisle.songtaste.utils.Common;
-import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.carlisle.songtaste.utils.QueueHelper;
 import com.github.stephanenicolas.loglifecycle.LogLifeCycle;
 
@@ -52,6 +49,7 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
     private NewAdapter adapter;
     private Subscription subscription;
     private boolean getQueueDone = true;
+    private int currentIndex = -1;
 
     private int currentPage = 1;
     private String songsNumber = "20";
@@ -168,44 +166,9 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
                 .subscribe(new Observer<FMNewResult>() {
                     @Override
                     public void onCompleted() {
-                        Common.SONG_NUMBER = 0;
-                        SongInfo songInfo = (SongInfo) adapter.getData().get(Common.SONG_NUMBER);
+                        SongInfo songInfo = (SongInfo) adapter.getData().get(currentIndex);
                         QueueHelper.getInstance().getNewQueue().clear();
                         setSongtasteQueue(songInfo.getID());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-//                        onLoadingFinished(false);
-//                        progressBar.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onNext(FMNewResult songListResult) {
-                        if (reset) {
-                            adapter.refresh(songListResult.getData());
-                        } else {
-                            adapter.add(songListResult.getData());
-                        }
-                        getQueueDone = false;
-                    }
-                });
-    }
-
-    public void setSongtasteQueue(final String songId) {
-        new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
-                .songUrl(songId, PreferencesHelper.getInstance(getActivity()).getUID(), "")
-                .subscribe(new Observer<SongDetailInfo>() {
-                    @Override
-                    public void onCompleted() {
-                        if (++Common.SONG_NUMBER < adapter.getData().size()) {
-                            setSongtasteQueue(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getID());
-                        } else if (Common.SONG_NUMBER == adapter.getData().size()) {
-                            onLoadingFinished(true);
-                            progressBar.setVisibility(View.GONE);
-                            getQueueDone = true;
-                        }
                     }
 
                     @Override
@@ -216,13 +179,47 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
                     }
 
                     @Override
-                    public void onNext(SongDetailInfo songDetailInfo) {
-                        SongDetailInfo songDetailInfo1 = songDetailInfo;
-                        songDetailInfo1.setAlbumArt(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getUpUIcon());
-                        songDetailInfo1.setMediaId(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getID());
-                        QueueHelper.getInstance().getNewQueue().add(songDetailInfo);
+                    public void onNext(FMNewResult songListResult) {
+                        if (reset) {
+                            currentIndex = 0;
+                            adapter.refresh(songListResult.getData());
+                        } else {
+                            adapter.add(songListResult.getData());
+                        }
+                        getQueueDone = false;
                     }
                 });
+    }
+
+    @Override
+    public void onAnalysisCompleted() {
+        if (++currentIndex < adapter.getData().size()) {
+            setSongtasteQueue(((SongInfo) adapter.getData().get(currentIndex)).getID());
+        } else if (currentIndex == adapter.getData().size()){
+            getQueueDone = true;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onLoadingFinished(true);
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onAnalysisNext(SongDetailInfo songDetailInfo) {
+        SongDetailInfo songDetailInfo1 = songDetailInfo;
+        songDetailInfo1.setAlbumArt(((SongInfo) adapter.getData().get(currentIndex)).getUpUIcon());
+        songDetailInfo1.setMediaId(((SongInfo) adapter.getData().get(currentIndex)).getID());
+        QueueHelper.getInstance().getNewQueue().add(songDetailInfo);
+    }
+
+    @Override
+    public void onAnalysisError(Throwable e) {
+        e.printStackTrace();
+        onLoadingFinished(false);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
