@@ -22,7 +22,6 @@ import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
 import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.AlbumDetailAdapter;
-import com.carlisle.songtaste.utils.Common;
 import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.carlisle.songtaste.utils.QueueHelper;
 
@@ -50,6 +49,8 @@ public class AlbumDetailActivity extends BaseActivity {
     private MyLayoutManager layoutManager;
     private AlbumDetailAdapter adapter;
     private Subscription subscription;
+    private boolean getQueueDone = true;
+    private int currentIndex = -1;
 
     private String aid = "31926";
     private int currentPage = 1;
@@ -64,7 +65,6 @@ public class AlbumDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_album_detail);
         ButterKnife.inject(this);
 
-//        initStatusBar();
         toolbar.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
         toolbarContainer.setBackgroundColor(this.getResources().getColor(android.R.color.transparent));
         setSupportActionBar(toolbar);
@@ -133,8 +133,16 @@ public class AlbumDetailActivity extends BaseActivity {
                 .subscribe(new Observer<SongDetailInfo>() {
                     @Override
                     public void onCompleted() {
-                        if (++Common.SONG_NUMBER < adapter.getData().size()) {
-                            setSongtasteQueue(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getID());
+                        if (++currentIndex < adapter.getData().size()) {
+                            setSongtasteQueue(((SongInfo) adapter.getData().get(currentIndex)).getID());
+                        } else if (currentIndex == adapter.getData().size()){
+                            getQueueDone = true;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    onLoadingFinished(true);
+                                }
+                            });
                         }
                     }
 
@@ -157,9 +165,7 @@ public class AlbumDetailActivity extends BaseActivity {
                 .subscribe(new Observer<AlbumDetailInfo>() {
                     @Override
                     public void onCompleted() {
-                        onLoadingFinished(true);
-                        Common.SONG_NUMBER = 0;
-                        SongInfo songInfo = (SongInfo) adapter.getData().get(Common.SONG_NUMBER);
+                        SongInfo songInfo = (SongInfo) adapter.getData().get(currentIndex);
                         QueueHelper.getInstance().getAlbumDetailQueue().clear();
                         setSongtasteQueue(songInfo.getID());
                     }
@@ -172,6 +178,7 @@ public class AlbumDetailActivity extends BaseActivity {
 
                     @Override
                     public void onNext(AlbumDetailInfo albumDetailInfo) {
+                        currentIndex = 0;
                         adapter.refresh(albumDetailInfo.getData());
                     }
                 });

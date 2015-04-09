@@ -24,7 +24,6 @@ import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
 import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.TagDetailAdapter;
 import com.carlisle.songtaste.ui.view.BottomScrollView;
-import com.carlisle.songtaste.utils.Common;
 import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.carlisle.songtaste.utils.QueueHelper;
 
@@ -57,6 +56,8 @@ public class TagDetailActivity extends BaseActivity {
     private MyLayoutManager layoutManager;
     private TagDetailAdapter adapter;
     private Subscription subscription;
+    private boolean getQueueDone = true;
+    private int currentIndex = -1;
     private int lastY = -1;
 
     private String key = "纯音乐";
@@ -151,8 +152,16 @@ public class TagDetailActivity extends BaseActivity {
                 .subscribe(new Observer<SongDetailInfo>() {
                     @Override
                     public void onCompleted() {
-                        if (++Common.SONG_NUMBER < adapter.getData().size()) {
-                            setSongtasteQueue(((SongInfo) adapter.getData().get(Common.SONG_NUMBER)).getID());
+                        if (++currentIndex < adapter.getData().size()) {
+                            setSongtasteQueue(((SongInfo) adapter.getData().get(currentIndex)).getID());
+                        } else if (currentIndex == adapter.getData().size()) {
+                            getQueueDone = true;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    onLoadingFinished(true);
+                                }
+                            });
                         }
                     }
 
@@ -175,10 +184,7 @@ public class TagDetailActivity extends BaseActivity {
                 .subscribe(new Observer<TagDetailResult>() {
                     @Override
                     public void onCompleted() {
-                        onLoadingFinished(true);
-
-                        Common.SONG_NUMBER = 0;
-                        SongInfo songInfo = (SongInfo) adapter.getData().get(Common.SONG_NUMBER);
+                        SongInfo songInfo = (SongInfo) adapter.getData().get(currentIndex);
                         QueueHelper.getInstance().getTagDetailQueue().clear();
                         setSongtasteQueue(songInfo.getID());
                     }
@@ -191,6 +197,7 @@ public class TagDetailActivity extends BaseActivity {
 
                     @Override
                     public void onNext(TagDetailResult tagDetailResult) {
+                        currentIndex = 0;
                         adapter.add(tagDetailResult.getData());
                     }
                 });
