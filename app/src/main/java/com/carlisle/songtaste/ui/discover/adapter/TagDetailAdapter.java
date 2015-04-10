@@ -30,7 +30,7 @@ public class TagDetailAdapter extends LoadMoreAdapter {
 
     @Override
     protected RecyclerView.ViewHolder onCreateMyHolder(ViewGroup parent, int viewType) {
-        TagDetailVH tagDetailVH = new TagDetailVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tag_detail, parent, false));
+        TagDetailVH tagDetailVH = new TagDetailVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_song, parent, false));
         return tagDetailVH;
     }
 

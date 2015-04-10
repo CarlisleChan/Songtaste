@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingTop="14dp">
+    android:paddingTop="16dp">
 
     <ImageView
         android:id="@+id/dot"

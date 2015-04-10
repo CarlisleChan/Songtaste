@@ -35,7 +35,7 @@ public class LocalSongAdapter extends BaseAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LocalSongVH localSongVH = new LocalSongVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_local_song, parent, false));
+        LocalSongVH localSongVH = new LocalSongVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_song, parent, false));
         return localSongVH;
     }
 

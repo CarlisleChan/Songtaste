@@ -43,7 +43,7 @@ public class TagFragment extends BaseFragment {
     SwipeRefreshLayout swipeLayout;
     @InjectView(R.id.scroll_view)
     ScrollView scrollView;
-    @InjectView(R.id.progressBar)
+    @InjectView(R.id.progress_bar)
     ProgressWheel progressBar;
 
     private LinearLayoutManager layoutManager;

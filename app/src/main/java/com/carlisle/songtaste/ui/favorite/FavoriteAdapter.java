@@ -29,7 +29,7 @@ public class FavoriteAdapter extends BaseAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        FavoriteViewHolder favoriteViewHolder = new FavoriteViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_favorite, parent, false));
+        FavoriteViewHolder favoriteViewHolder = new FavoriteViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_song, parent, false));
         return favoriteViewHolder;
     }
 

@@ -31,7 +31,7 @@ public class OfflineAdapter extends BaseAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        OfflineViewHloder offlineViewHloder = new OfflineViewHloder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_offline, parent, false));
+        OfflineViewHloder offlineViewHloder = new OfflineViewHloder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_song, parent, false));
         return offlineViewHloder;
     }
 

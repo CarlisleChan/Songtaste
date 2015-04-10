@@ -42,7 +42,7 @@ public class TagDetailFragment extends BaseFragment implements OnMoreListener {
 
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
-    @InjectView(R.id.progressBar)
+    @InjectView(R.id.progress_bar)
     ProgressWheel progressBar;
     ProgressDialog progressDialog;
 

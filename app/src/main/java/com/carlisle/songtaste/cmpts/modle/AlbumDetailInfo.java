@@ -1,7 +1,5 @@
 package com.carlisle.songtaste.cmpts.modle;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 
 /**
@@ -9,7 +7,6 @@ import java.util.ArrayList;
  */
 public class AlbumDetailInfo {
     public int code;
-    @SerializedName("p")
     public int p;
     public String total;
     public int n;

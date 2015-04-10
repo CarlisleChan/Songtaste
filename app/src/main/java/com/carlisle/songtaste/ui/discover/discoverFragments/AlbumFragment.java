@@ -38,7 +38,7 @@ public class AlbumFragment extends BaseFragment {
     SuperRecyclerView superRecyclerView;
     @InjectView(R.id.blank)
     View blank;
-    @InjectView(R.id.progressBar)
+    @InjectView(R.id.progress_bar)
     ProgressWheel progressBar;
 
     private android.support.v7.widget.GridLayoutManager layoutManager;

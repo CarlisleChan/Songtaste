@@ -13,6 +13,7 @@ import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
+import com.carlisle.songtaste.ui.view.ProgressWheel;
 import com.carlisle.songtaste.utils.LocalSongHelper;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class LocalFragment extends BaseFragment {
 
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
+    @InjectView(R.id.progress_bar)
+    ProgressWheel progressBar;
 
     private LinearLayoutManager layoutManager;
     public LocalSongAdapter adapter;
@@ -45,6 +48,7 @@ public class LocalFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        progressBar.setVisibility(View.GONE);
         if (adapter.isEmpty()) {
             refreshData();
         }

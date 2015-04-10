@@ -36,7 +36,7 @@ public class AlbumDetailAdapter extends LoadMoreAdapter {
 
     @Override
     protected RecyclerView.ViewHolder onCreateMyHolder(ViewGroup parent, int viewType) {
-        AlbumDetailVH albumDetailVH = new AlbumDetailVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album_detail, parent, false));
+        AlbumDetailVH albumDetailVH = new AlbumDetailVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_song, parent, false));
         return albumDetailVH;
     }
 

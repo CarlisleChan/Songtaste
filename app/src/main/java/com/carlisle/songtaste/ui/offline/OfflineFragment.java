@@ -13,6 +13,7 @@ import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
+import com.carlisle.songtaste.ui.view.ProgressWheel;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,8 @@ public class OfflineFragment extends BaseFragment {
 
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
+    @InjectView(R.id.progress_bar)
+    ProgressWheel progressBar;
 
     private LinearLayoutManager layoutManager;
     public OfflineAdapter adapter;
@@ -37,6 +40,7 @@ public class OfflineFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
 
+        progressBar.setVisibility(View.GONE);
         songsList = new ArrayList();
         SongInfo songInfo = new SongInfo();
         for (int i = 0; i < 7; i++) {

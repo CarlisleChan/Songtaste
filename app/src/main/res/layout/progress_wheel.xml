@@ -6,7 +6,7 @@
 
     <com.carlisle.songtaste.ui.view.ProgressWheel xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:wheel="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/progressBar"
+        android:id="@+id/progress_bar"
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:layout_centerInParent="true"
