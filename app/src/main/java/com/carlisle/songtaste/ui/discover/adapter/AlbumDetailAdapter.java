@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.baidao.superrecyclerview.adapter.BaseAdapter;
+import com.baidao.superrecyclerview.adapter.LoadMoreAdapter;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.cmpts.events.PlayEvent;
-import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
+import com.carlisle.songtaste.cmpts.modle.SongInfo;
 import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
@@ -20,22 +20,28 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by carlisle on 3/7/15.
  */
-public class AlbumDetailAdapter extends BaseAdapter {
+public class AlbumDetailAdapter extends LoadMoreAdapter {
 
     private Context context;
 
     public AlbumDetailAdapter(Context context) {
+        super(context);
         this.context = context;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-        AlbumDetailVH albumDetailVH = new AlbumDetailVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_songtaste_song, parent, false));
+    protected int getMyItemViewType(int position) {
+        return 0;
+    }
+
+    @Override
+    protected RecyclerView.ViewHolder onCreateMyHolder(ViewGroup parent, int viewType) {
+        AlbumDetailVH albumDetailVH = new AlbumDetailVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_album_detail, parent, false));
         return albumDetailVH;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    protected void onBindMyViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((AlbumDetailVH) holder).bindView(position);
     }
 
@@ -44,6 +50,8 @@ public class AlbumDetailAdapter extends BaseAdapter {
 
         @InjectView(R.id.tv_song_name)
         TextView songName;
+        @InjectView(R.id.tv_singer_name)
+        TextView singerName;
 
         public AlbumDetailVH(View view) {
             super(view);
@@ -52,7 +60,8 @@ public class AlbumDetailAdapter extends BaseAdapter {
         }
 
         public void bindView(final int position) {
-            songName.setText(((SongDetailInfo) getItem(position)).getSongname());
+            songName.setText(((SongInfo) getItem(position)).getSongname());
+            singerName.setText(((SongInfo) getItem(position)).getSingername());
 
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.ui.discover.listener;
+package com.baidao.superrecyclerview;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

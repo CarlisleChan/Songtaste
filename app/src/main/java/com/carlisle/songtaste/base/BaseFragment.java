@@ -24,6 +24,10 @@ public class BaseFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    public String getName() {
+        return this.getClass().getName() + this.hashCode();
+    }
+
     public void setSongtasteQueue(String songId) {
         new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
                 .songUrl(songId, PreferencesHelper.getInstance(getActivity()).getUID(), "")

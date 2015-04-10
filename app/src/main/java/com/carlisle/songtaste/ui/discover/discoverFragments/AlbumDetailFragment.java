@@ -3,17 +3,17 @@ package com.carlisle.songtaste.ui.discover.discoverFragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.baidao.superrecyclerview.OnMoreListener;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
@@ -22,11 +22,12 @@ import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
-import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.ui.discover.adapter.AlbumDetailAdapter;
-import com.carlisle.songtaste.utils.PreferencesHelper;
+import com.carlisle.songtaste.ui.main.MainActivity;
+import com.carlisle.songtaste.ui.view.ProgressWheel;
 import com.carlisle.songtaste.utils.QueueHelper;
 
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 import rx.Observer;
 import rx.Subscription;
@@ -35,28 +36,24 @@ import rx.android.observables.AndroidObservable;
 /**
  * Created by carlisle on 4/9/15.
  */
-public class AlbumDetailFragment extends BaseFragment {
+public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
     private static final String TAG = AlbumDetailFragment.class.getSimpleName();
-    public static String ALBUM_ID = "position";
+    public static String ALBUM_ID = "album_id";
+    public static String ALBUM_NAME = "album_name";
 
-    @InjectView(R.id.toolbar_container)
-    RelativeLayout toolbarContainer;
-    @InjectView(R.id.toolbar)
-    Toolbar toolbar;
-    @InjectView(R.id.album_bg)
-    ImageView albumBg;
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
+    @InjectView(R.id.progressBar)
+    ProgressWheel progressBar;
     ProgressDialog progressDialog;
 
-    private MyLayoutManager layoutManager;
     private AlbumDetailAdapter adapter;
     private Subscription subscription;
     private String albumId;
+    private String albumName;
     private boolean getQueueDone = true;
     private int currentIndex = -1;
 
-    private String aid = "31926";
     private int currentPage = 1;
     private int songsNumber = 20;
     private String tmp = "0";
@@ -65,20 +62,61 @@ public class AlbumDetailFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_album_detail, container, false);
-
+        View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
+        ButterKnife.inject(this, view);
         Bundle bundle = getArguments();
         if (bundle != null) {
             albumId = bundle.getString(ALBUM_ID);
+            albumName = bundle.getString(ALBUM_NAME);
         }
 
-        adapter = new AlbumDetailAdapter(getActivity());
-        layoutManager = new MyLayoutManager(getActivity());
-        superRecyclerView.setLayoutManager(layoutManager);
-        superRecyclerView.setAdapter(adapter);
-        fetchData(albumId, currentPage, songsNumber);
+        ((MainActivity)getActivity()).setToolbarTitleAndIcon(albumName, R.drawable.ic_btn_left);
+        setupSuperRecyclerView();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter.isEmpty()) {
+            fetchData(albumId, currentPage, songsNumber, true);
+        }
+    }
+
+    private void setupSuperRecyclerView() {
+        adapter = new AlbumDetailAdapter(getActivity());
+        adapter.setOnLoadMoreClickListener(this);
+
+        superRecyclerView.setAdapter(adapter);
+        superRecyclerView.setMoreListener(this);
+        superRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()) {
+            @Override
+            protected int getExtraLayoutSpace(RecyclerView.State state) {
+                return 300;
+            }
+        });
+
+        superRecyclerView.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        superRecyclerView.getSwipeToRefresh().setRefreshing(false);
+                        fetchData(albumId, currentPage, songsNumber, true);
+                    }
+                }, 3000);
+            }
+        });
+
+    }
+
+    @Override
+    public void onMoreAsked(int totalCount, int currentPosition) {
+        if (getQueueDone) {
+            fetchData(albumId, ++currentPage, songsNumber, false);
+        }
     }
 
     public class MyLayoutManager extends LinearLayoutManager {
@@ -120,41 +158,42 @@ public class AlbumDetailFragment extends BaseFragment {
         }
     }
 
-    public void setSongtasteQueue(String songId) {
-        new ApiFactory().getSongtasteApi(new XmlConverter(XmlConverter.ConvterType.SONG))
-                .songUrl(songId, PreferencesHelper.getInstance(getActivity()).getUID(), "")
-                .subscribe(new Observer<SongDetailInfo>() {
-                    @Override
-                    public void onCompleted() {
-                        if (++currentIndex < adapter.getData().size()) {
-                            setSongtasteQueue(((SongInfo) adapter.getData().get(currentIndex)).getID());
-                        } else if (currentIndex == adapter.getData().size()){
-                            getQueueDone = true;
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    onLoadingFinished(true);
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(SongDetailInfo songDetailInfo) {
-                        QueueHelper.getInstance().getAlbumDetailQueue().add(songDetailInfo);
-                    }
-                });
+    @Override
+    public void onAnalysisCompleted() {
+        if (++currentIndex < adapter.getData().size()) {
+            setSongtasteQueue(((SongInfo) adapter.getData().get(currentIndex)).getID());
+        } else if (currentIndex == adapter.getData().size()){
+            getQueueDone = true;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onLoadingFinished(true);
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
-    private void fetchData(String aid, int currentPage, int songsNumber) {
+    @Override
+    public void onAnalysisNext(SongDetailInfo songDetailInfo) {
+        QueueHelper.getInstance().getAlbumDetailQueue().add(songDetailInfo);
+    }
+
+    @Override
+    public void onAnalysisError(Throwable e) {
+        e.printStackTrace();
+        onLoadingFinished(false);
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void fetchData(String aid, int page, int songsNumber,final boolean reset) {
+        if (reset) {
+            currentPage = page = 1;
+        }
+
         subscription = AndroidObservable.bindActivity(getActivity(), new ApiFactory()
                 .getSongtasteApi(new JsonConverter(JsonConverter.ConverterType.ALBUM_DETAIL))
-                .albumSong(aid, String.valueOf(currentPage), String.valueOf(songsNumber), tmp, callback, code))
+                .albumSong(aid, String.valueOf(page), String.valueOf(songsNumber), tmp, callback, code))
                 .subscribe(new Observer<AlbumDetailInfo>() {
                     @Override
                     public void onCompleted() {
@@ -167,12 +206,19 @@ public class AlbumDetailFragment extends BaseFragment {
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         onLoadingFinished(false);
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onNext(AlbumDetailInfo albumDetailInfo) {
                         currentIndex = 0;
-                        adapter.refresh(albumDetailInfo.getData());
+                        if (reset) {
+                            currentIndex = 0;
+                            adapter.refresh(albumDetailInfo.getData());
+                        } else {
+                            adapter.add(albumDetailInfo.getData());
+                        }
+                        getQueueDone = false;
                     }
                 });
     }

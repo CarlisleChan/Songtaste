@@ -14,6 +14,7 @@ import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
+import com.carlisle.songtaste.ui.discover.discoverFragments.AlbumDetailFragment;
 import com.carlisle.songtaste.ui.favorite.FavoriteFragment;
 import com.carlisle.songtaste.ui.local.LocalFragment;
 import com.carlisle.songtaste.ui.offline.OfflineFragment;
@@ -58,6 +59,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
 
+        startService(new Intent(this, MusicService.class));
         if (savedInstanceState == null) {
             createAddFragment();
         } else {
@@ -65,15 +67,14 @@ public class MainActivity extends BaseActivity {
                     .findFragmentByTag(NowPlayingFragment.class.getSimpleName());
         }
 
+        initToolbar();
         initFragmentSwitcher();
         initSlidingUpPanel();
+        initMenu();
+        initNavigationDrawer(savedInstanceState);
+    }
 
-        startService(new Intent(this, MusicService.class));
-
-        MENU_TYPE = R.menu.menu_local;
-
-        setSupportActionBar(toolbar);
-
+    private void initNavigationDrawer(Bundle savedInstanceState) {
         final IProfile profile = new ProfileDrawerItem().withName("登录").withIcon(getResources().getDrawable(R.drawable.default_artist));
         headerResult = new AccountHeader()
                 .withActivity(this)
@@ -101,7 +102,6 @@ public class MainActivity extends BaseActivity {
         //first create the main drawer (this one will be used to add the second drawer on the other side)
         result = new Drawer()
                 .withActivity(this)
-                .withToolbar(toolbar)
                 .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_discover).withIcon(FontAwesome.Icon.faw_compass).withIdentifier(0),
@@ -140,7 +140,26 @@ public class MainActivity extends BaseActivity {
                     }
                 })
                 .build();
+    }
 
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!getCurrentFragment().getClass().getSimpleName().equals(AlbumDetailFragment.class.getSimpleName())) {
+                    result.openDrawer();
+                } else {
+                    handleBack();
+                    setToolbarTitleAndIcon("Songtaste", R.drawable.ic_menu);
+                }
+            }
+        });
+    }
+
+    private void initMenu() {
+        MENU_TYPE = R.menu.menu_local;
     }
 
     private void createAddFragment() {
@@ -198,18 +217,17 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         //handle the back press :D close the drawer first and if the drawer is closed close the activity
-
-        if (slidingUpPanelLayout != null
+        if (result != null && result.isDrawerOpen()) {
+            result.closeDrawer();
+        } else if (slidingUpPanelLayout != null
                 && (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
                 || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         } else {
-            if (result != null && result.isDrawerOpen()) {
-                result.closeDrawer();
-            } else {
-                finish();
-            }
+            handleBack();
+            setToolbarTitleAndIcon("Songtaste", R.drawable.ic_menu);
         }
+
     }
 
     private void setToolBarTitle(int position) {
@@ -227,6 +245,11 @@ public class MainActivity extends BaseActivity {
                 getSupportActionBar().setTitle("本地音乐");
                 break;
         }
+    }
+
+    public void setToolbarTitleAndIcon(String title, int icon) {
+        getSupportActionBar().setTitle(title);
+        toolbar.setNavigationIcon(getResources().getDrawable(icon));
     }
 
     @Override

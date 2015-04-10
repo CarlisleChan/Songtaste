@@ -160,7 +160,9 @@ public class TagFragment extends BaseFragment {
     @Override
     public void onStop() {
         super.onStop();
-        subscription.unsubscribe();
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
         EventBus.getDefault().unregister(this);
     }
 

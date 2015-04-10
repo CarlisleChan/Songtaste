@@ -53,10 +53,10 @@ public class AlbumAdapter extends BaseAdapter {
         }
 
         public void bindView(int position) {
-            albumName.setText(((AlbumInfo) getItem(position)).getAlbum_name());
+            albumName.setText(((AlbumInfo) getItem(position)).getAlbumName());
 
             Picasso.with(context)
-                    .load(((AlbumInfo) getItem(position)).getAlbum_icon())
+                    .load(((AlbumInfo) getItem(position)).getAlbumIcon())
                     .placeholder(R.drawable.default_artist)
                     .into(albumIcon);
 

@@ -1,6 +1,5 @@
 package com.carlisle.songtaste.ui.discover.discoverFragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -10,16 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.baidao.superrecyclerview.RecyclerItemClickListener;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
+import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
+import com.carlisle.songtaste.cmpts.modle.AlbumInfo;
 import com.carlisle.songtaste.cmpts.modle.FMAlbumResult;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
-import com.carlisle.songtaste.ui.discover.AlbumDetailActivity;
 import com.carlisle.songtaste.ui.discover.adapter.AlbumAdapter;
-import com.carlisle.songtaste.ui.discover.listener.RecyclerItemClickListener;
 import com.carlisle.songtaste.ui.view.ProgressWheel;
 
 import butterknife.ButterKnife;
@@ -104,13 +104,12 @@ public class AlbumFragment extends BaseFragment {
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-//                        AlbumDetailFragment albumDetailFragment = new AlbumDetailFragment();
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString(AlbumDetailFragment.ALBUM_ID, ((AlbumInfo) adapter.getData().get(position)).getAid());
-//                        albumDetailFragment.setArguments(bundle);
-//                        ((BaseActivity) getActivity()).pushFragment(albumDetailFragment, AlbumDetailFragment.class.getSimpleName());
-
-                        startActivity(new Intent(getActivity(), AlbumDetailActivity.class));
+                        AlbumDetailFragment albumDetailFragment = new AlbumDetailFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(AlbumDetailFragment.ALBUM_ID, ((AlbumInfo) adapter.getData().get(position)).getAlbumId());
+                        bundle.putString(AlbumDetailFragment.ALBUM_NAME, ((AlbumInfo) adapter.getData().get(position)).getAlbumName());
+                        albumDetailFragment.setArguments(bundle);
+                        ((BaseActivity) getActivity()).pushFragment(albumDetailFragment, AlbumDetailFragment.class.getSimpleName());
                     }
                 })
         );
@@ -142,7 +141,9 @@ public class AlbumFragment extends BaseFragment {
     @Override
     public void onStop() {
         super.onStop();
-        subscription.unsubscribe();
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
         EventBus.getDefault().unregister(this);
     }
 

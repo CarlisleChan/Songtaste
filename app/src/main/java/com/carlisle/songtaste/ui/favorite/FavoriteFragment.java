@@ -118,7 +118,7 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && superRecyclerView != null) {
+        if (isVisibleToUser && superRecyclerView != null && subscription != null) {
             subscription.unsubscribe();
         }
     }
@@ -184,6 +184,8 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
     @Override
     public void onStop() {
         super.onStop();
-        subscription.unsubscribe();
+        if (subscription != null) {
+            subscription.unsubscribe();
+        }
     }
 }
