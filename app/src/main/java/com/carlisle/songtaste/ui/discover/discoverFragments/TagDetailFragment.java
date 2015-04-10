@@ -1,7 +1,6 @@
 package com.carlisle.songtaste.ui.discover.discoverFragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -17,6 +16,7 @@ import com.baidao.superrecyclerview.OnMoreListener;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
 import com.carlisle.songtaste.cmpts.modle.TagDetailResult;
@@ -29,6 +29,7 @@ import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.observables.AndroidObservable;
@@ -63,15 +64,31 @@ public class TagDetailFragment extends BaseFragment implements OnMoreListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
+        EventBus.getDefault().register(this);
+
         Bundle bundle = getArguments();
         if (bundle != null) {
             tagKey = bundle.getString(TAG_KEY);
         }
 
-        ((MainActivity) getActivity()).setToolbarTitleAndIcon(tagKey, R.drawable.ic_btn_left);
+        ((MainActivity) getActivity()).resetToolbarTitleAndIcon(tagKey, R.drawable.ic_btn_left);
         setupSuperRecyclerView();
 
         return view;
+    }
+
+    public void onEvent(RefreshDataEvent event) {
+        if (getUserVisibleHint()) {
+            superRecyclerView.getSwipeToRefresh().setRefreshing(true);
+            superRecyclerView.getRecyclerView().smoothScrollToPosition(0);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    superRecyclerView.getSwipeToRefresh().setRefreshing(false);
+                    fetchData(tagKey, currentPage, songsNumber, true);
+                }
+            }, 3000);
+        }
     }
 
     @Override
@@ -115,30 +132,6 @@ public class TagDetailFragment extends BaseFragment implements OnMoreListener {
         if (getQueueDone) {
             fetchData(tagKey, ++currentPage, songsNumber, false);
         }
-    }
-
-    public class MyLayoutManager extends LinearLayoutManager {
-
-        public MyLayoutManager(Context context) {
-            super(context);
-        }
-
-        @Override
-        public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
-            if (adapter.getItemCount() <= 0) {
-                super.onMeasure(recycler, state, widthSpec, heightSpec);
-                return;
-            }
-
-            View view = recycler.getViewForPosition(0);
-            if (view != null) {
-                measureChild(view, widthSpec, heightSpec);
-                int measuredWidth = View.MeasureSpec.getSize(widthSpec);
-                int measuredHeight = view.getMeasuredHeight();
-                setMeasuredDimension(measuredWidth, measuredHeight * adapter.getItemCount());
-            }
-        }
-
     }
 
     protected final void onLoadingFinished(boolean success) {
@@ -226,5 +219,6 @@ public class TagDetailFragment extends BaseFragment implements OnMoreListener {
         if (subscription != null) {
             subscription.unsubscribe();
         }
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.baidao.superrecyclerview.OnMoreListener;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.modle.AlbumDetailInfo;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
@@ -29,6 +31,7 @@ import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.observables.AndroidObservable;
@@ -64,16 +67,33 @@ public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
+        EventBus.getDefault().register(this);
+
         Bundle bundle = getArguments();
         if (bundle != null) {
             albumId = bundle.getString(ALBUM_ID);
             albumName = bundle.getString(ALBUM_NAME);
         }
 
-        ((MainActivity)getActivity()).setToolbarTitleAndIcon(albumName, R.drawable.ic_btn_left);
+        ((MainActivity)getActivity()).resetToolbarTitleAndIcon(albumName, R.drawable.ic_btn_left);
         setupSuperRecyclerView();
 
         return view;
+    }
+
+    public void onEvent(RefreshDataEvent event) {
+        Log.d("toolbar==>","AlbumDetailFragment");
+        if (getUserVisibleHint()) {
+            superRecyclerView.getSwipeToRefresh().setRefreshing(true);
+            superRecyclerView.getRecyclerView().smoothScrollToPosition(0);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    superRecyclerView.getSwipeToRefresh().setRefreshing(false);
+                    fetchData(albumId, currentPage, songsNumber, true);
+                }
+            }, 3000);
+        }
     }
 
     @Override
@@ -114,7 +134,10 @@ public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
 
     @Override
     public void onMoreAsked(int totalCount, int currentPosition) {
-        if (getQueueDone) {
+        Log.d("total===>","" + totalCount);
+        if (totalCount <20) {
+            onLoadingFinished(true);
+        } else if (getQueueDone){
             fetchData(albumId, ++currentPage, songsNumber, false);
         }
     }
@@ -229,5 +252,6 @@ public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
         if (subscription != null) {
             subscription.unsubscribe();
         }
+        EventBus.getDefault().unregister(this);
     }
 }

@@ -72,7 +72,7 @@ public class HotFragment extends BaseFragment implements OnMoreListener {
     }
 
     public void onEvent(RefreshDataEvent event) {
-        if (event.position == 1) {
+        if (getUserVisibleHint()) {
             superRecyclerView.getSwipeToRefresh().setRefreshing(true);
             superRecyclerView.getRecyclerView().smoothScrollToPosition(0);
             new Handler().postDelayed(new Runnable() {

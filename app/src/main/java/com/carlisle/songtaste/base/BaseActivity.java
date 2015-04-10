@@ -16,6 +16,8 @@ import com.carlisle.songtaste.R;
  */
 public class BaseActivity extends ActionBarActivity {
 
+    protected DoucleClick doucleClick = new DoucleClick();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().setBackgroundDrawable(null);
@@ -69,6 +71,24 @@ public class BaseActivity extends ActionBarActivity {
         }
     }
 
+    public class DoucleClick {
+        private static final int TIME_GAP = 5000;
+        private long lastBackEventTime;
+
+        public boolean requestDoubleClick() {
+            long currentTime = System.currentTimeMillis();
+            if (lastBackEventTime == 0 || currentTime <= lastBackEventTime || (currentTime - lastBackEventTime) >= TIME_GAP) {
+                lastBackEventTime = currentTime;
+                return false;
+            }
+
+            try {
+                return true;
+            } finally {
+                lastBackEventTime = 0;
+            }
+        }
+    }
     public int setStatusBarColor() {
         return getResources().getColor(android.R.color.transparent);
     }
@@ -90,4 +110,5 @@ public class BaseActivity extends ActionBarActivity {
         super.startActivity(intent);
         overridePendingTransition(R.anim.push_left_in_no_alpha, R.anim.push_left_out_no_alpha);
     }
+
 }

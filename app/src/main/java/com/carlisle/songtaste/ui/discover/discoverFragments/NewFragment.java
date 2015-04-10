@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +63,7 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
         EventBus.getDefault().register(this);
+
         setupSuperRecyclerView();
         return view;
     }
@@ -80,7 +82,7 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
     }
 
     public void onEvent(RefreshDataEvent event) {
-        if (event.position == 0) {
+        if (getUserVisibleHint()) {
             superRecyclerView.getSwipeToRefresh().setRefreshing(true);
             superRecyclerView.getRecyclerView().smoothScrollToPosition(0);
             new Handler().postDelayed(new Runnable() {
@@ -149,6 +151,7 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
 
     @Override
     public void onMoreAsked(int totalCount, int currentPosition) {
+        Log.d("onMoreAsked===>", "" + totalCount);
         if (getQueueDone) {
             fetchData(++currentPage, false);
         }

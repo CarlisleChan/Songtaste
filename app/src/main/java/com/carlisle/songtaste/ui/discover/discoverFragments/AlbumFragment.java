@@ -68,7 +68,7 @@ public class AlbumFragment extends BaseFragment {
     }
 
     public void onEvent(RefreshDataEvent event) {
-        if (event.position == 2) {
+        if (getUserVisibleHint()) {
             superRecyclerView.getSwipeToRefresh().setRefreshing(true);
             superRecyclerView.getRecyclerView().smoothScrollToPosition(0);
             new Handler().postDelayed(new Runnable() {

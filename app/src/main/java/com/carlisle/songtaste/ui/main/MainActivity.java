@@ -3,6 +3,7 @@ package com.carlisle.songtaste.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,10 +12,12 @@ import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
+import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
 import com.carlisle.songtaste.ui.discover.discoverFragments.AlbumDetailFragment;
+import com.carlisle.songtaste.ui.discover.discoverFragments.TagDetailFragment;
 import com.carlisle.songtaste.ui.favorite.FavoriteFragment;
 import com.carlisle.songtaste.ui.local.LocalFragment;
 import com.carlisle.songtaste.ui.offline.OfflineFragment;
@@ -33,6 +36,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 
 public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -72,6 +76,7 @@ public class MainActivity extends BaseActivity {
         initSlidingUpPanel();
         initMenu();
         initNavigationDrawer(savedInstanceState);
+
     }
 
     private void initNavigationDrawer(Bundle savedInstanceState) {
@@ -145,14 +150,26 @@ public class MainActivity extends BaseActivity {
     private void initToolbar() {
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu));
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("onClick","one");
+                if (doucleClick.requestDoubleClick()) {
+                    Log.d("onClick","two");
+                    EventBus.getDefault().post(new RefreshDataEvent());
+                }
+            }
+        });
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!getCurrentFragment().getClass().getSimpleName().equals(AlbumDetailFragment.class.getSimpleName())) {
+                String className = getCurrentFragment().getClass().getSimpleName();
+                if (!className.equals(AlbumDetailFragment.class.getSimpleName())
+                        && !className.equals(TagDetailFragment.class.getSimpleName())) {
                     result.openDrawer();
                 } else {
                     handleBack();
-                    setToolbarTitleAndIcon("Songtaste", R.drawable.ic_menu);
+                    resetToolbarTitleAndIcon("Songtaste", R.drawable.ic_menu);
                 }
             }
         });
@@ -188,8 +205,6 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPanelSlide(View view, float v) {
                 nowPlayingFragment.hideBottomControl(v);
-
-//                toolbar.getBackground().setAlpha((int) ((1 - v) * 255));
             }
 
             @Override
@@ -225,7 +240,7 @@ public class MainActivity extends BaseActivity {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         } else {
             handleBack();
-            setToolbarTitleAndIcon("Songtaste", R.drawable.ic_menu);
+            resetToolbarTitleAndIcon("Songtaste", R.drawable.ic_menu);
         }
 
     }
@@ -247,7 +262,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    public void setToolbarTitleAndIcon(String title, int icon) {
+    public void resetToolbarTitleAndIcon(String title, int icon) {
         getSupportActionBar().setTitle(title);
         toolbar.setNavigationIcon(getResources().getDrawable(icon));
     }

@@ -74,7 +74,7 @@ public class TagFragment extends BaseFragment {
     }
 
     public void onEvent(RefreshDataEvent event) {
-        if (event.position == 3) {
+        if (getUserVisibleHint()) {
             swipeLayout.setRefreshing(true);
             scrollView.fullScroll(ScrollView.FOCUS_UP);
             new Handler().postDelayed(new Runnable() {
