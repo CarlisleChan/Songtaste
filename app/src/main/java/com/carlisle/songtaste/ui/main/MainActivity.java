@@ -20,6 +20,7 @@ import com.carlisle.songtaste.ui.discover.discoverFragments.AlbumDetailFragment;
 import com.carlisle.songtaste.ui.discover.discoverFragments.TagDetailFragment;
 import com.carlisle.songtaste.ui.favorite.FavoriteFragment;
 import com.carlisle.songtaste.ui.local.LocalFragment;
+import com.carlisle.songtaste.ui.login.LoginActicity;
 import com.carlisle.songtaste.ui.offline.OfflineFragment;
 import com.carlisle.songtaste.ui.setting.SettingActivity;
 import com.carlisle.songtaste.utils.FragmentSwitcher;
@@ -89,7 +90,7 @@ public class MainActivity extends BaseActivity {
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-
+                        startActivity(new Intent(MainActivity.this, LoginActicity.class));
                         if (profile instanceof IDrawerItem && ((IDrawerItem) profile).getIdentifier() == PROFILE_SETTING) {
                             IProfile newProfile = new ProfileDrawerItem().withNameShown(true).withName("Batman").withEmail("batman@gmail.com").withIcon(getResources().getDrawable(R.drawable.default_artist));
                             if (headerResult.getProfiles() != null) {

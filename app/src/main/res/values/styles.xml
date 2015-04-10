@@ -1,8 +1,10 @@
 <resources>
 
     <style name="AppTheme" parent="MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus">
-        <item name="android:windowIsTranslucent">true</item>	// 避免 activity 切换间隙出现黑屏
-        <item name="android:windowBackground">@android:color/white</item>	// 修改 app 启动时默认背景
+        <!--避免 activity 切换间隙出现黑屏-->
+        <item name="android:windowIsTranslucent">true</item>
+        <!--修改 app 启动时默认背景-->
+        <item name="android:windowBackground">@android:color/white</item>
         
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
