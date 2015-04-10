@@ -6,8 +6,7 @@
         android:id="@+id/blank"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone" />
+        android:layout_alignParentBottom="true"/>
 
     <com.baidao.superrecyclerview.SuperRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"

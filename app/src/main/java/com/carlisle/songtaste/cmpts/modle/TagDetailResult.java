@@ -9,7 +9,7 @@ public class TagDetailResult {
     public int code;
     public String total;
     public int n;
-    public ArrayList<SongDetailInfo> data;
+    public ArrayList<SongInfo> data;
 
     public int getCode() {
         return code;
@@ -35,11 +35,11 @@ public class TagDetailResult {
         this.n = n;
     }
 
-    public ArrayList<SongDetailInfo> getData() {
+    public ArrayList<SongInfo> getData() {
         return data;
     }
 
-    public void setData(ArrayList<SongDetailInfo> data) {
+    public void setData(ArrayList<SongInfo> data) {
         this.data = data;
     }
 }

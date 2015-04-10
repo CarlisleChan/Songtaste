@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import com.carlisle.songtaste.R;
+import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.modle.FMTagResult;
@@ -68,12 +69,7 @@ public class TagFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (adapter.isEmpty()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    fetchData();
-                }
-            }, 2000);
+            fetchData();
         }
     }
 
@@ -97,18 +93,17 @@ public class TagFragment extends BaseFragment {
         tagGroup.setOnTagGroupListener(new OnTagGroupCLickListener() {
             @Override
             public void onClick(View view) {
-                String text = ((TagGroup.TagView) view).getText().toString();
-                startTagDetailActivity(text);
+                String tagKey = ((TagGroup.TagView) view).getText().toString();
+
+                TagDetailFragment tagDetailFragment = new TagDetailFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(TagDetailFragment.TAG_KEY, tagKey);
+                tagDetailFragment.setArguments(bundle);
+                ((BaseActivity) getActivity()).pushFragment(tagDetailFragment, AlbumDetailFragment.class.getSimpleName());
             }
         });
 
         tagGroup.setBrightColor(getActivity().getResources().getColor(android.R.color.black));
-    }
-
-    private void startTagDetailActivity(String key) {
-//        Intent intent = new Intent(getActivity(), TagDetailActivity.class);
-//        intent.putExtra(TagDetailActivity.TAG_KEY, key);
-//        startActivity(intent);
     }
 
     private void initSwipeRefreshLayout() {

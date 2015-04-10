@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.baidao.superrecyclerview.adapter.LoadMoreAdapter;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.cmpts.events.PlayEvent;
-import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
+import com.carlisle.songtaste.cmpts.modle.SongInfo;
 import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
@@ -30,7 +30,7 @@ public class TagDetailAdapter extends LoadMoreAdapter {
 
     @Override
     protected RecyclerView.ViewHolder onCreateMyHolder(ViewGroup parent, int viewType) {
-        TagDetailVH tagDetailVH = new TagDetailVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_songtaste_song, parent, false));
+        TagDetailVH tagDetailVH = new TagDetailVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tag_detail, parent, false));
         return tagDetailVH;
     }
 
@@ -59,8 +59,8 @@ public class TagDetailAdapter extends LoadMoreAdapter {
         }
 
         public void bindView(final int position) {
-            songName.setText(((SongDetailInfo) getItem(position)).getSongname());
-            singerName.setText(((SongDetailInfo) getItem(position)).getSingername());
+            songName.setText(((SongInfo) getItem(position)).getSongname());
+            singerName.setText(((SongInfo) getItem(position)).getSingername());
 
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
