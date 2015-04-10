@@ -1,15 +1,14 @@
 package com.carlisle.songtaste.ui.about;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.carlisle.songtaste.BuildConfig;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
-import com.carlisle.songtaste.ui.view.SecretTextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -22,7 +21,7 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
  */
 public class AboutActivity extends BaseActivity implements SwipeBackActivityBase {
     @InjectView(R.id.tv_about)
-    SecretTextView about;
+    TextView about;
     @InjectView(R.id.tv_app_version)
     TextView appVersion;
     @InjectView(R.id.toolbar)
@@ -41,19 +40,11 @@ public class AboutActivity extends BaseActivity implements SwipeBackActivityBase
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("关于");
 
-        appVersion.setText("anyway.. it's 1.0.0");
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
 
-
-        about.setDuration(3000);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                about.toggle();
-            }
-        }, 2000);
-
+        appVersion.setText("Version " + BuildConfig.VERSION_NAME);
+        about.setText("Developed by CarlisleChan");
     }
 
     @Override

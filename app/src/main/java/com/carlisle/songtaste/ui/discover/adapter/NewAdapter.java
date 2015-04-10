@@ -2,7 +2,6 @@ package com.carlisle.songtaste.ui.discover.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +71,6 @@ public class NewAdapter extends LoadMoreAdapter {
         }
 
         public void bindView(final int position) {
-            Log.d("bindView===>", "" + position);
             upUserName.setText(((SongInfo) getItem(position)).getUpUName());
             songName.setText(((SongInfo) getItem(position)).getName());
             rateDateTime.setText(((SongInfo) getItem(position)).getRateDT());

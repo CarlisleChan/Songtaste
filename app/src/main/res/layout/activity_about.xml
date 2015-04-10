@@ -8,21 +8,30 @@
 
     <include layout="@layout/toolbar" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/ic_launcher" />
+
     <TextView
         android:id="@+id/tv_app_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="1.0.0"
+        android:alpha="0.7"
+        android:text="Version 1.0.0"
+        android:textColor="@android:color/black"
         android:textSize="18sp" />
 
-    <com.carlisle.applicationtest.SecretTextView
+    <TextView
         android:id="@+id/tv_about"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginTop="50dp"
-        android:text="um.. this is a client of songtaste\n develop by carlisle"
+        android:alpha="0.7"
+        android:text="Developed by CarlisleChan"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
