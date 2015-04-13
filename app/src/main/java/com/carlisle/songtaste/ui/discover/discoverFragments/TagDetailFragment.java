@@ -189,7 +189,6 @@ public class TagDetailFragment extends BaseFragment implements OnMoreListener {
                     @Override
                     public void onCompleted() {
                         SongInfo songInfo = (SongInfo) adapter.getData().get(currentIndex);
-                        QueueHelper.getInstance().getTagDetailQueue().clear();
                         setSongtasteQueue(songInfo.getID());
                     }
 
@@ -204,6 +203,7 @@ public class TagDetailFragment extends BaseFragment implements OnMoreListener {
                     public void onNext(TagDetailResult tagDetailResult) {
                         if (reset) {
                             currentIndex = 0;
+                            QueueHelper.getInstance().getTagDetailQueue().clear();
                             adapter.refresh(tagDetailResult.getData());
                         } else {
                             adapter.add(tagDetailResult.getData());

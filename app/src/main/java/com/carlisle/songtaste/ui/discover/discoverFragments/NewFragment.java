@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,7 +136,6 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
                     Toast.makeText(getActivity(), "刷新失败，请再试一次", Toast.LENGTH_SHORT).show();
                 }
             });
-
         }
     }
 
@@ -151,7 +149,6 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
 
     @Override
     public void onMoreAsked(int totalCount, int currentPosition) {
-        Log.d("onMoreAsked===>", "" + totalCount);
         if (getQueueDone) {
             fetchData(++currentPage, false);
         }
@@ -170,7 +167,6 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
                     @Override
                     public void onCompleted() {
                         SongInfo songInfo = (SongInfo) adapter.getData().get(currentIndex);
-                        QueueHelper.getInstance().getNewQueue().clear();
                         setSongtasteQueue(songInfo.getID());
                     }
 
@@ -185,6 +181,7 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
                     public void onNext(FMNewResult songListResult) {
                         if (reset) {
                             currentIndex = 0;
+                            QueueHelper.getInstance().getNewQueue().clear();
                             adapter.refresh(songListResult.getData());
                         } else {
                             adapter.add(songListResult.getData());

@@ -158,7 +158,6 @@ public class HotFragment extends BaseFragment implements OnMoreListener {
                     @Override
                     public void onCompleted() {
                         SongInfo songInfo = (SongInfo) adapter.getData().get(currentIndex);
-                        QueueHelper.getInstance().getHotQueue().clear();
                         setSongtasteQueue(songInfo.getID());
                     }
 
@@ -173,6 +172,7 @@ public class HotFragment extends BaseFragment implements OnMoreListener {
                     public void onNext(FMHotResult fmHotResult) {
                         if (reset) {
                             currentIndex = 0;
+                            QueueHelper.getInstance().getHotQueue().clear();
                             adapter.refresh(fmHotResult.getData());
                         } else {
                             adapter.add(fmHotResult.getData());

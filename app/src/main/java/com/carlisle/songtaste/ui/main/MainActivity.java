@@ -2,6 +2,7 @@ package com.carlisle.songtaste.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
+import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
@@ -20,10 +22,10 @@ import com.carlisle.songtaste.ui.discover.discoverFragments.AlbumDetailFragment;
 import com.carlisle.songtaste.ui.discover.discoverFragments.TagDetailFragment;
 import com.carlisle.songtaste.ui.favorite.FavoriteFragment;
 import com.carlisle.songtaste.ui.local.LocalFragment;
-import com.carlisle.songtaste.ui.login.LoginActicity;
 import com.carlisle.songtaste.ui.offline.OfflineFragment;
 import com.carlisle.songtaste.ui.setting.SettingActivity;
 import com.carlisle.songtaste.utils.FragmentSwitcher;
+import com.carlisle.songtaste.utils.QueueHelper;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
@@ -57,7 +59,7 @@ public class MainActivity extends BaseActivity {
     private Drawer.Result result = null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         //supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         super.onCreate(savedInstanceState);
@@ -90,15 +92,17 @@ public class MainActivity extends BaseActivity {
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-                        startActivity(new Intent(MainActivity.this, LoginActicity.class));
-                        if (profile instanceof IDrawerItem && ((IDrawerItem) profile).getIdentifier() == PROFILE_SETTING) {
-                            IProfile newProfile = new ProfileDrawerItem().withNameShown(true).withName("Batman").withEmail("batman@gmail.com").withIcon(getResources().getDrawable(R.drawable.default_artist));
-                            if (headerResult.getProfiles() != null) {
-                                headerResult.addProfile(newProfile, headerResult.getProfiles().size() - 2);
-                            } else {
-                                headerResult.addProfiles(newProfile);
+//                        startActivity(new Intent(MainActivity.this, LoginActicity.class));
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                int i = 0;
+                                for (SongDetailInfo songDetailInfo: QueueHelper.getInstance().getNewQueue()) {
+                                    Log.d("Url===>", (++i) + ":" + songDetailInfo.getUrl());
+                                }
                             }
-                        }
+                        }, 2000);
                         return false;
                     }
                 })

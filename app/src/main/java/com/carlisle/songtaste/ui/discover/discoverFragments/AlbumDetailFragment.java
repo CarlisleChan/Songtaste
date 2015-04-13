@@ -221,7 +221,6 @@ public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
                     @Override
                     public void onCompleted() {
                         SongInfo songInfo = (SongInfo) adapter.getData().get(currentIndex);
-                        QueueHelper.getInstance().getAlbumDetailQueue().clear();
                         setSongtasteQueue(songInfo.getID());
                     }
 
@@ -237,6 +236,7 @@ public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
                         currentIndex = 0;
                         if (reset) {
                             currentIndex = 0;
+                            QueueHelper.getInstance().getAlbumDetailQueue().clear();
                             adapter.refresh(albumDetailInfo.getData());
                         } else {
                             adapter.add(albumDetailInfo.getData());
