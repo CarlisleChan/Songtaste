@@ -95,7 +95,6 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
     }
 
     private void setupSuperRecyclerView() {
-
         adapter = new NewAdapter(getActivity());
         adapter.setOnLoadMoreClickListener(this);
 

@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.baidao.superrecyclerview.adapter.BaseAdapter;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.cmpts.events.PlayEvent;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
+import com.carlisle.songtaste.ui.discover.adapter.SongtasteLoadMoreAdapter;
 import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
@@ -20,21 +20,27 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by carlisle on 3/7/15.
  */
-public class FavoriteAdapter extends BaseAdapter {
+public class FavoriteAdapter extends SongtasteLoadMoreAdapter {
     private Context context;
 
     public FavoriteAdapter(Context context) {
+        super(context);
         this.context = context;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+    protected int getMyItemViewType(int position) {
+        return 0;
+    }
+
+    @Override
+    protected RecyclerView.ViewHolder onCreateMyHolder(ViewGroup parent, int viewType) {
         FavoriteViewHolder favoriteViewHolder = new FavoriteViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_song, parent, false));
         return favoriteViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    protected void onBindMyViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((FavoriteViewHolder)holder).bindView(position);
     }
 

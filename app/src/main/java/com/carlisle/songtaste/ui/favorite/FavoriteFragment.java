@@ -16,6 +16,7 @@ import com.baidao.superrecyclerview.OnMoreListener;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.modle.CollectionResult;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
@@ -27,6 +28,7 @@ import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.observables.AndroidObservable;
@@ -69,9 +71,23 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
         }
     }
 
+    public void onEvent(RefreshDataEvent event) {
+        if (getUserVisibleHint()) {
+            superRecyclerView.getSwipeToRefresh().setRefreshing(true);
+            superRecyclerView.getRecyclerView().smoothScrollToPosition(0);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    superRecyclerView.getSwipeToRefresh().setRefreshing(false);
+                    fetchData(PreferencesHelper.getInstance(getActivity()).getUID(), currentPage, songsNumber, true);
+                }
+            }, 3000);
+        }
+    }
+
     private void setupSuperRecyclerView() {
         adapter = new FavoriteAdapter(getActivity());
-//        adapter.setOnLoadMoreClickListener(this);
+        adapter.setOnLoadMoreClickListener(this);
 
         superRecyclerView.setAdapter(adapter);
         superRecyclerView.setMoreListener(this);
@@ -125,17 +141,22 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
 
     @Override
     public void onMoreAsked(int totalCount, int currentPosition) {
-        fetchData(PreferencesHelper.getInstance(getActivity()).getUID(), currentPage, songsNumber, false);
+        if (getQueueDone) {
+            fetchData(PreferencesHelper.getInstance(getActivity()).getUID(), ++currentPage, songsNumber, false);
+        }
     }
 
-    private void fetchData(String uid, final int currentPage, int songsNumber, final boolean reset) {
+    private void fetchData(String uid, int page, int songsNumber, final boolean reset) {
+        if (reset) {
+            currentPage = page = 1;
+        }
+
         subscription = AndroidObservable.bindActivity(getActivity(), new ApiFactory()
                 .getSongtasteApi(new JsonConverter(JsonConverter.ConverterType.COLLECTION_RESULT))
                 .collectionSong(uid, String.valueOf(currentPage), String.valueOf(songsNumber), tmp, callBack, code))
                 .subscribe(new Observer<CollectionResult>() {
                     @Override
                     public void onCompleted() {
-                        onLoadingFinished(true);
                         SongInfo songInfo = (SongInfo) adapter.getData().get(currentIndex);
                         setSongtasteQueue(songInfo.getSongid());
                     }
@@ -144,6 +165,7 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         onLoadingFinished(false);
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -153,8 +175,9 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
                             QueueHelper.getInstance().getFavoriteQueue().clear();
                             adapter.refresh(collectionResult.getData());
                         } else {
-//                            adapter.add(collectionResult.getData());
+                            adapter.add(collectionResult.getData());
                         }
+                        getQueueDone = false;
                     }
                 });
     }
@@ -177,12 +200,17 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
 
     @Override
     public void onAnalysisNext(SongDetailInfo songDetailInfo) {
-        QueueHelper.getInstance().getFavoriteQueue().add(songDetailInfo);
+        SongDetailInfo songDetailInfo1 = songDetailInfo;
+        songDetailInfo1.setAlbumArt(((SongInfo) adapter.getData().get(currentIndex)).getUpUIcon());
+        songDetailInfo1.setMediaId(((SongInfo) adapter.getData().get(currentIndex)).getID());
+        QueueHelper.getInstance().getNewQueue().add(songDetailInfo);
     }
 
     @Override
     public void onAnalysisError(Throwable e) {
-
+        e.printStackTrace();
+        onLoadingFinished(false);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -191,5 +219,7 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
         if (subscription != null) {
             subscription.unsubscribe();
         }
+        EventBus.getDefault().unregister(this);
     }
+
 }

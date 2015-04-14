@@ -2,7 +2,6 @@ package com.carlisle.songtaste.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
-import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
@@ -22,10 +20,10 @@ import com.carlisle.songtaste.ui.discover.discoverFragments.AlbumDetailFragment;
 import com.carlisle.songtaste.ui.discover.discoverFragments.TagDetailFragment;
 import com.carlisle.songtaste.ui.favorite.FavoriteFragment;
 import com.carlisle.songtaste.ui.local.LocalFragment;
+import com.carlisle.songtaste.ui.login.LoginActicity;
 import com.carlisle.songtaste.ui.offline.OfflineFragment;
 import com.carlisle.songtaste.ui.setting.SettingActivity;
 import com.carlisle.songtaste.utils.FragmentSwitcher;
-import com.carlisle.songtaste.utils.QueueHelper;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
@@ -60,8 +58,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        //supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
@@ -92,27 +88,16 @@ public class MainActivity extends BaseActivity {
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-//                        startActivity(new Intent(MainActivity.this, LoginActicity.class));
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                int i = 0;
-                                for (SongDetailInfo songDetailInfo: QueueHelper.getInstance().getNewQueue()) {
-                                    Log.d("Url===>", (++i) + ":" + songDetailInfo.getUrl());
-                                }
-                            }
-                        }, 2000);
+                        startActivity(new Intent(MainActivity.this, LoginActicity.class));
                         return false;
                     }
                 })
                 .withSavedInstance(savedInstanceState)
                 .build();
 
-        //first create the main drawer (this one will be used to add the second drawer on the other side)
         result = new Drawer()
                 .withActivity(this)
-                .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
+                .withAccountHeader(headerResult)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_discover).withIcon(FontAwesome.Icon.faw_compass).withIdentifier(0),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_favorite).withIcon(FontAwesome.Icon.faw_heart).withIdentifier(1),

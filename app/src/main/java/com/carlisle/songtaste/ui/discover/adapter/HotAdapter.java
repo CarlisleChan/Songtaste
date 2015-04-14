@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.baidao.superrecyclerview.adapter.LoadMoreAdapter;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.cmpts.events.PlayEvent;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
@@ -22,7 +21,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by chengxin on 12/25/14.
  */
-public class HotAdapter extends LoadMoreAdapter {
+public class HotAdapter extends SongtasteLoadMoreAdapter {
 
     private Context context;
 

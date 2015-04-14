@@ -21,6 +21,7 @@ import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
 import com.carlisle.songtaste.ui.discover.adapter.AlbumAdapter;
 import com.carlisle.songtaste.ui.view.ProgressWheel;
+import com.github.stephanenicolas.loglifecycle.LogLifeCycle;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -32,6 +33,7 @@ import rx.android.observables.AndroidObservable;
 /**
  * Created by chengxin on 2/25/15.
  */
+@LogLifeCycle
 public class AlbumFragment extends BaseFragment {
 
     @InjectView(R.id.recyclerView)
