@@ -2,6 +2,8 @@ package com.carlisle.songtaste.base;
 
 import android.app.Application;
 
+import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVObject;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.facebook.stetho.Stetho;
 
@@ -30,6 +32,11 @@ public class BaseApplication extends Application {
                         .enableWebKitInspector(
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
+
+        AVOSCloud.initialize(this, "{{jvv9g0dd7mo59jkwtqmtxp9s4777bd9m4la2fkzzgc8mhb6p}}", "{{w4e9u2h85n0q73j9i9r7m7f0fr6rdhvr4nrhf05liazbqbgp}}");
+        AVObject testObject = new AVObject("TestObject");
+        testObject.put("foo", "bar");
+        testObject.saveInBackground();
     }
 
     public boolean isServiceRunning() {

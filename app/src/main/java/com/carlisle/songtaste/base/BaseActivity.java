@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.carlisle.songtaste.R;
 
 /**
@@ -22,6 +23,7 @@ public class BaseActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().setBackgroundDrawable(null);
         super.onCreate(savedInstanceState);
+        AVAnalytics.trackAppOpened(getIntent());
     }
 
     public void pushFragment(BaseFragment fragment, String tag) {

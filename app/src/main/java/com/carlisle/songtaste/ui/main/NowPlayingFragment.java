@@ -1,5 +1,6 @@
 package com.carlisle.songtaste.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -140,6 +141,15 @@ public class NowPlayingFragment extends BaseFragment {
                 EventBus.getDefault().post(new SkipToNextEvent());
                 break;
         }
+    }
+
+    @OnClick(R.id.im_share)
+    public void onShareClick() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     }
 
     public void onEvent(UpdatePlaybackEvent event) {
