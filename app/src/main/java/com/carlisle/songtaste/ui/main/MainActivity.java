@@ -10,11 +10,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVAnalytics;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVInstallation;
+import com.avos.avoscloud.PushService;
+import com.avos.avoscloud.SaveCallback;
+import com.carlisle.songtaste.BuildConfig;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.ui.about.AboutActivity;
+import com.carlisle.songtaste.ui.debug.DebugActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
 import com.carlisle.songtaste.ui.discover.discoverFragments.AlbumDetailFragment;
 import com.carlisle.songtaste.ui.discover.discoverFragments.TagDetailFragment;
@@ -75,7 +82,31 @@ public class MainActivity extends BaseActivity {
         initSlidingUpPanel();
         initMenu();
         initNavigationDrawer(savedInstanceState);
+        initLeanCloudPush();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = getIntent();
+        AVAnalytics.trackAppOpened(intent);
+    }
+
+    private void initLeanCloudPush() {
+        PushService.setDefaultPushCallback(this, MainActivity.class);
+        PushService.subscribe(this, "public", MainActivity.class);
+        PushService.subscribe(this, "protected", MainActivity.class);
+        if (BuildConfig.DEBUG) {
+            PushService.subscribe(this, "private", DebugActivity.class);
+        }
+
+        AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                Log.d("这个设备的 id: ", AVInstallation.getCurrentInstallation().getInstallationId());
+                AVInstallation.getCurrentInstallation().saveInBackground();
+            }
+        });
     }
 
     private void initNavigationDrawer(Bundle savedInstanceState) {
