@@ -13,6 +13,7 @@ public class PreferencesHelper {
 
     public static final String KEY_USER = User.class.getSimpleName();
     public static final String PLAY_ONLY_WIFI = "play_only_wifi";
+    public static final String DEVELOPER_OPTIONS = "developer_options";
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;

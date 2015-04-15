@@ -21,7 +21,7 @@ import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.ui.about.AboutActivity;
-import com.carlisle.songtaste.ui.debug.DebugActivity;
+import com.carlisle.songtaste.ui.develop.DeveloperOptionsActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
 import com.carlisle.songtaste.ui.discover.discoverFragments.AlbumDetailFragment;
 import com.carlisle.songtaste.ui.discover.discoverFragments.TagDetailFragment;
@@ -97,7 +97,7 @@ public class MainActivity extends BaseActivity {
         PushService.subscribe(this, "public", MainActivity.class);
         PushService.subscribe(this, "protected", MainActivity.class);
         if (BuildConfig.DEBUG) {
-            PushService.subscribe(this, "private", DebugActivity.class);
+            PushService.subscribe(this, "private", DeveloperOptionsActivity.class);
         }
 
         AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {

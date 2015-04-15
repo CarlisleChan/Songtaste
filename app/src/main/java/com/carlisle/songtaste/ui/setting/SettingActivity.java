@@ -12,12 +12,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
+import com.carlisle.songtaste.ui.develop.DeveloperOptionsActivity;
 import com.carlisle.songtaste.ui.view.PickerView;
 import com.carlisle.songtaste.utils.LeancloudEventIDS;
 import com.carlisle.songtaste.utils.PreferencesHelper;
@@ -43,6 +45,8 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
     CheckBox useGprsCheckBox;
     @InjectView(R.id.tv_cache_values)
     TextView cacheValues;
+    @InjectView(R.id.rl_developer_options)
+    RelativeLayout developerOptions;
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -62,6 +66,14 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
 
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (PreferencesHelper.getInstance(this).getBoolean(PreferencesHelper.DEVELOPER_OPTIONS, false)) {
+            developerOptions.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -167,6 +179,11 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
             }
         });
 
+    }
+
+    @OnClick(R.id.rl_developer_options)
+    public void onDevelopClick() {
+        startActivity(new Intent(this, DeveloperOptionsActivity.class));
     }
 
     private void clearCache() {

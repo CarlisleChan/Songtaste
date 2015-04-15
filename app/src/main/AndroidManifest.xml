@@ -19,7 +19,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_LOGS"/>
+    <uses-permission android:name="android.permission.READ_LOGS" />
 
     <application
         android:name=".base.BaseApplication"
@@ -57,7 +57,7 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".cmpts.reveiver.LeanCloudReceiver" >
+        <receiver android:name=".cmpts.reveiver.LeanCloudReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
@@ -66,12 +66,21 @@
                 <action android:name="com.songtaste.push.action" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".cmpts.reveiver.SecretReceiver">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SECRET_CODE"/>
+                <data android:scheme="android_secret_code" android:host="9527"/>
+            </intent-filter>
+        </receiver>
 
-        <activity android:name=".ui.main.MainActivity"
-            android:launchMode="singleTop"/>
+
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:launchMode="singleTop" />
         <activity android:name=".ui.setting.SettingActivity" />
         <activity android:name=".ui.about.AboutActivity" />
         <activity android:name=".ui.login.LoginActicity" />
+        <activity android:name=".ui.develop.DeveloperOptionsActivity" />
 
     </application>
 
