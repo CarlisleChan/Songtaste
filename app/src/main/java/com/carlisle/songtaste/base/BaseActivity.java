@@ -26,6 +26,16 @@ public class BaseActivity extends ActionBarActivity {
         AVAnalytics.trackAppOpened(getIntent());
     }
 
+    protected void onPause() {
+        super.onPause();
+        AVAnalytics.onPause(this);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        AVAnalytics.onResume(this);
+    }
+
     public void pushFragment(BaseFragment fragment, String tag) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();

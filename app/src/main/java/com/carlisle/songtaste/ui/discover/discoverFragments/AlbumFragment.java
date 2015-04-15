@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.baidao.superrecyclerview.RecyclerItemClickListener;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
@@ -35,6 +36,7 @@ import rx.android.observables.AndroidObservable;
  */
 @LogLifeCycle
 public class AlbumFragment extends BaseFragment {
+    private static final String TAG = AlbumFragment.class.getSimpleName();
 
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
@@ -64,9 +66,16 @@ public class AlbumFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        AVAnalytics.onFragmentEnd(TAG);
         if (adapter.isEmpty()) {
             fetchData();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AVAnalytics.onFragmentEnd(TAG);
     }
 
     public void onEvent(RefreshDataEvent event) {

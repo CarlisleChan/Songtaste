@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
@@ -25,6 +26,7 @@ import butterknife.InjectView;
  * Created by chengxin on 2/25/15.
  */
 public class LocalFragment extends BaseFragment {
+    private static final String TAG = LocalFragment.class.getSimpleName();
 
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
@@ -48,10 +50,17 @@ public class LocalFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        AVAnalytics.onFragmentEnd(TAG);
         progressBar.setVisibility(View.GONE);
         if (adapter.isEmpty()) {
             refreshData();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AVAnalytics.onFragmentEnd(TAG);
     }
 
     private void initRecyclerView() {

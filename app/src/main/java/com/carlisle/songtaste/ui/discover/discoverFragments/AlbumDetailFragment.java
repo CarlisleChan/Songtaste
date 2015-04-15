@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.baidao.superrecyclerview.OnMoreListener;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
@@ -39,7 +40,7 @@ import rx.android.observables.AndroidObservable;
 /**
  * Created by carlisle on 4/9/15.
  */
-public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
+public class AlbumDetailFragment extends BaseFragment implements OnMoreListener {
     private static final String TAG = AlbumDetailFragment.class.getSimpleName();
     public static String ALBUM_ID = "album_id";
     public static String ALBUM_NAME = "album_name";
@@ -75,14 +76,14 @@ public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
             albumName = bundle.getString(ALBUM_NAME);
         }
 
-        ((MainActivity)getActivity()).resetToolbarTitleAndIcon(albumName, R.drawable.ic_btn_left);
+        ((MainActivity) getActivity()).resetToolbarTitleAndIcon(albumName, R.drawable.ic_btn_left);
         setupSuperRecyclerView();
 
         return view;
     }
 
     public void onEvent(RefreshDataEvent event) {
-        Log.d("toolbar==>","AlbumDetailFragment");
+        Log.d("toolbar==>", "AlbumDetailFragment");
         if (getUserVisibleHint()) {
             superRecyclerView.getSwipeToRefresh().setRefreshing(true);
             superRecyclerView.getRecyclerView().smoothScrollToPosition(0);
@@ -99,9 +100,16 @@ public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
     @Override
     public void onResume() {
         super.onResume();
+        AVAnalytics.onFragmentStart(TAG);
         if (adapter.isEmpty()) {
             fetchData(albumId, currentPage, songsNumber, true);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AVAnalytics.onFragmentEnd(TAG);
     }
 
     private void setupSuperRecyclerView() {
@@ -134,10 +142,10 @@ public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
 
     @Override
     public void onMoreAsked(int totalCount, int currentPosition) {
-        Log.d("total===>","" + totalCount);
-        if (totalCount <20) {
+        Log.d("total===>", "" + totalCount);
+        if (totalCount < 20) {
             onLoadingFinished(true);
-        } else if (getQueueDone){
+        } else if (getQueueDone) {
             fetchData(albumId, ++currentPage, songsNumber, false);
         }
     }
@@ -149,14 +157,14 @@ public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
         }
 
         @Override
-        public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec,int heightSpec) {
+        public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
             if (adapter.getItemCount() <= 0) {
                 super.onMeasure(recycler, state, widthSpec, heightSpec);
                 return;
             }
 
             View view = recycler.getViewForPosition(0);
-            if(view != null){
+            if (view != null) {
                 measureChild(view, widthSpec, heightSpec);
                 int measuredWidth = View.MeasureSpec.getSize(widthSpec);
                 int measuredHeight = view.getMeasuredHeight();
@@ -185,7 +193,7 @@ public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
     public void onAnalysisCompleted() {
         if (++currentIndex < adapter.getData().size()) {
             setSongtasteQueue(((SongInfo) adapter.getData().get(currentIndex)).getID());
-        } else if (currentIndex == adapter.getData().size()){
+        } else if (currentIndex == adapter.getData().size()) {
             getQueueDone = true;
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -209,7 +217,7 @@ public class AlbumDetailFragment extends BaseFragment implements OnMoreListener{
         progressBar.setVisibility(View.GONE);
     }
 
-    private void fetchData(String aid, int page, int songsNumber,final boolean reset) {
+    private void fetchData(String aid, int page, int songsNumber, final boolean reset) {
         if (reset) {
             currentPage = page = 1;
         }

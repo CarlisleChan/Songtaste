@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.baidao.superrecyclerview.OnMoreListener;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
@@ -94,9 +95,16 @@ public class TagDetailFragment extends BaseFragment implements OnMoreListener {
     @Override
     public void onResume() {
         super.onResume();
+        AVAnalytics.onFragmentEnd(TAG);
         if (adapter.isEmpty()) {
             fetchData(tagKey, currentPage, songsNumber, true);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AVAnalytics.onFragmentEnd(TAG);
     }
 
     private void setupSuperRecyclerView() {

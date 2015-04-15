@@ -15,9 +15,11 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.ui.view.PickerView;
+import com.carlisle.songtaste.utils.LeancloudEventIDS;
 import com.carlisle.songtaste.utils.PreferencesHelper;
 
 import org.joda.time.LocalTime;
@@ -77,6 +79,8 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
 
     @OnClick(R.id.rl_use_gprs)
     protected void onUseGPRSClick() {
+        AVAnalytics.onEvent(this, LeancloudEventIDS.GPRS_CLICK);
+
         if (useGprsCheckBox.isChecked()) {
             useGprsCheckBox.setChecked(false);
         } else {
@@ -87,7 +91,6 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
 
     @OnClick(R.id.tv_timer)
     protected void onTimerClick() {
-
         View view = View.inflate(this, R.layout.dialog_timer, null);
         PickerView pickerView = (PickerView) view.findViewById(R.id.picker);
         final List<String> data = new ArrayList<String>();
@@ -115,6 +118,7 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        AVAnalytics.onEvent(SettingActivity.this, LeancloudEventIDS.TIMER_CLICK, data.get(3).toString());
                         setAlarm();
                         Toast.makeText(SettingActivity.this, data.get(3).toString() + "后将停止播放" , Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
@@ -138,6 +142,7 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
 
     @OnClick(R.id.rl_clear_cache)
     protected void onClearCacheClick() {
+        AVAnalytics.onEvent(this, LeancloudEventIDS.CLEAR_CACHE_CLICK);
 
         View view = View.inflate(this, R.layout.dialog_clear_cache, null);
         TextView cancleButton = (TextView)view.findViewById(R.id.cancle);

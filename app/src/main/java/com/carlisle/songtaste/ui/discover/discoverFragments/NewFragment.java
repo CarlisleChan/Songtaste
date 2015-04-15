@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.baidao.superrecyclerview.OnMoreListener;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
@@ -40,6 +41,8 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 @LogLifeCycle
 public class NewFragment extends BaseFragment implements OnMoreListener {
+    private static final String TAG = NewFragment.class.getSimpleName();
+
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
     @InjectView(R.id.progress_bar)
@@ -70,6 +73,7 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
     @Override
     public void onResume() {
         super.onResume();
+        AVAnalytics.onFragmentEnd(TAG);
         if (adapter.isEmpty()) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -78,6 +82,12 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
                 }
             }, 2000);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AVAnalytics.onFragmentEnd(TAG);
     }
 
     public void onEvent(RefreshDataEvent event) {

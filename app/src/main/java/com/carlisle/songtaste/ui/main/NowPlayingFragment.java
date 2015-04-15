@@ -18,6 +18,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.cmpts.events.FavoriteEvent;
@@ -48,6 +49,7 @@ import rx.android.observables.AndroidObservable;
  * Created by carlisle on 4/3/15.
  */
 public class NowPlayingFragment extends BaseFragment {
+    private static final String TAG = NowPlayingFragment.class.getSimpleName();
 
     @InjectView(R.id.im_bottom_album_art)
     ImageButton bottomAlbumArt;
@@ -120,6 +122,18 @@ public class NowPlayingFragment extends BaseFragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AVAnalytics.onFragmentStart(TAG);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AVAnalytics.onFragmentEnd(TAG);
     }
 
     @OnClick({R.id.im_prev, R.id.cb_play_pause, R.id.cb_bottom_play_pause, R.id.im_next, R.id.im_bottom_next})

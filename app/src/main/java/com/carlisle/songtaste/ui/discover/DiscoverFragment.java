@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.avos.avoscloud.AVAnalytics;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.ui.discover.discoverFragments.AlbumFragment;
@@ -23,6 +24,7 @@ import butterknife.InjectView;
  * Created by chengxin on 3/5/15.
  */
 public class DiscoverFragment extends BaseFragment {
+    private static final String TAG = DiscoverFragment.class.getSimpleName();
 
     @InjectView(R.id.tabs)
     PagerSlidingTabStrip tabs;
@@ -44,6 +46,18 @@ public class DiscoverFragment extends BaseFragment {
         viewPagerHelper.init();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AVAnalytics.onFragmentEnd(TAG);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AVAnalytics.onFragmentEnd(TAG);
     }
 
 }

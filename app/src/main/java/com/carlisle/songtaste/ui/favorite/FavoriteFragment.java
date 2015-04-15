@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.baidao.superrecyclerview.OnMoreListener;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
@@ -37,6 +38,7 @@ import rx.android.observables.AndroidObservable;
  * Created by chengxin on 2/25/15.
  */
 public class FavoriteFragment extends BaseFragment implements OnMoreListener {
+    private static final String TAG = FavoriteFragment.class.getSimpleName();
 
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
@@ -66,9 +68,16 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
     @Override
     public void onResume() {
         super.onResume();
+        AVAnalytics.onFragmentEnd(TAG);
         if (adapter.isEmpty()) {
             fetchData(PreferencesHelper.getInstance(getActivity()).getUID(), currentPage, songsNumber, true);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AVAnalytics.onFragmentEnd(TAG);
     }
 
     public void onEvent(RefreshDataEvent event) {

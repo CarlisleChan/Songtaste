@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.base.BaseFragment;
@@ -37,6 +38,8 @@ import rx.android.schedulers.AndroidSchedulers;
  * Created by chengxin on 2/25/15.
  */
 public class TagFragment extends BaseFragment {
+    private static final String TAG = TagFragment.class.getSimpleName();
+
     @InjectView(R.id.tag_group)
     TagGroup tagGroup;
     @InjectView(R.id.swipe_layout)
@@ -68,9 +71,16 @@ public class TagFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        AVAnalytics.onFragmentEnd(TAG);
         if (adapter.isEmpty()) {
             fetchData();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AVAnalytics.onFragmentEnd(TAG);
     }
 
     public void onEvent(RefreshDataEvent event) {
