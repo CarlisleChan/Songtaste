@@ -132,13 +132,20 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
                     public void onClick(DialogInterface dialog, int which) {
                         AVAnalytics.onEvent(SettingActivity.this, LeancloudEventIDS.TIMER_CLICK, data.get(3).toString());
                         setAlarm();
-                        Toast.makeText(SettingActivity.this, data.get(3).toString() + "后将停止播放" , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SettingActivity.this, data.get(3).toString() + "后将停止播放", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 })
                 .setView(view)
                 .create();
 
+//        Window window = dialog.getWindow();
+//        // 设置显示动画
+//        window.setWindowAnimations(R.style.main_menu_animstyle);
+//        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        window.setGravity(Gravity.CENTER);
+//        // 设置点击外围解散
+//        dialog.setCanceledOnTouchOutside(true);
         dialog.show();
     }
 
@@ -157,8 +164,8 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
         AVAnalytics.onEvent(this, LeancloudEventIDS.CLEAR_CACHE_CLICK);
 
         View view = View.inflate(this, R.layout.dialog_clear_cache, null);
-        TextView cancleButton = (TextView)view.findViewById(R.id.cancle);
-        TextView confirmButton = (TextView)view.findViewById(R.id.confirm);
+        TextView cancleButton = (TextView) view.findViewById(R.id.cancle);
+        TextView confirmButton = (TextView) view.findViewById(R.id.confirm);
 
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(view)
@@ -184,6 +191,7 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
     @OnClick(R.id.rl_developer_options)
     public void onDevelopClick() {
         startActivity(new Intent(this, DeveloperOptionsActivity.class));
+        String path = "http://m6.songtaste.com/201504130944/79b79d30240bc212d2e07d5f16315e67/6/65/65cba0d85e2beaa6a654c2a0ded6d1d7.mp3";
     }
 
     private void clearCache() {

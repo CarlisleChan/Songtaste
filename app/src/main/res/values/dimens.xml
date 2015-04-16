@@ -2,4 +2,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="audiocontroller_seekbar_offset">27.0dip</dimen>
+    <dimen name="audiocontroller_seekbar_padding">0.0dip</dimen>
+    <dimen name="audiocontroller_seekbar_padding_x">7.0dip</dimen>
+    <dimen name="audiocontroller_seekbar_line_height">2.0dip</dimen>
+    <dimen name="audiocontroller_time_width">50.0dip</dimen>
 </resources>
