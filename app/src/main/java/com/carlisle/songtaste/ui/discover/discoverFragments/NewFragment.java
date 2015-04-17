@@ -23,6 +23,7 @@ import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
+import com.carlisle.songtaste.fm.DataAccessor;
 import com.carlisle.songtaste.ui.discover.adapter.NewAdapter;
 import com.carlisle.songtaste.ui.view.ProgressWheel;
 import com.carlisle.songtaste.utils.QueueHelper;
@@ -206,9 +207,11 @@ public class NewFragment extends BaseFragment implements OnMoreListener {
             setSongtasteQueue(((SongInfo) adapter.getData().get(currentIndex)).getID());
         } else if (currentIndex == adapter.getData().size()){
             getQueueDone = true;
+
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    DataAccessor.SINGLE_INSTANCE.shot(getActivity(), QueueHelper.getInstance().getNewQueue());
                     onLoadingFinished(true);
                     progressBar.setVisibility(View.GONE);
                 }

@@ -54,6 +54,8 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
     compile 'io.reactivex:rxandroid:0.22.0'
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
+    compile 'javazoom:jlayer:1.0.1'
+    compile 'org.jetbrains:annotations:13.0'
     // UI
     compile 'com.actionbarsherlock:viewpagerindicator:2.4.1'
     compile 'com.sothree.slidinguppanel:library:3.0.0'

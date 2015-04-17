@@ -6,7 +6,6 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -42,6 +41,7 @@
             android:enabled="true" />
         <service android:name=".ui.setting.StopPlaybackService" />
         <service android:name="com.avos.avoscloud.PushService" />
+        <service android:name=".fm.YueduService"/>
 
         <receiver
             android:name="com.carlisle.songtaste.cmpts.reveiver.RemoteControlReceiver"
@@ -68,8 +68,10 @@
         </receiver>
         <receiver android:name=".cmpts.reveiver.SecretReceiver">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SECRET_CODE"/>
-                <data android:scheme="android_secret_code" android:host="9527"/>
+                <action android:name="android.provider.Telephony.SECRET_CODE" />
+                <data
+                    android:host="9527"
+                    android:scheme="android_secret_code" />
             </intent-filter>
         </receiver>
 

@@ -20,6 +20,7 @@ import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.services.MusicService;
+import com.carlisle.songtaste.fm.YueduService;
 import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.develop.DeveloperOptionsActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
@@ -321,7 +322,7 @@ public class MainActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_exit:
-                finish();
+                quit();
                 return true;
             case R.id.action_scan_again:
                 MENU_TYPE = R.menu.menu_offline;
@@ -335,6 +336,12 @@ public class MainActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void quit() {
+        this.stopService(new Intent(this.getApplicationContext(), YueduService.class));
+        this.finish();
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     @Override
