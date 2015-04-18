@@ -113,6 +113,7 @@ public class MusicService extends IntentService {
     }
 
     public void onEvent(NetworkTypeChangedEvent networkType) {
+        Log.d("NetworkTypeChangedEvent","receive" + networkType.type);
         switch (networkType.type) {
             case ConnectivityManager.TYPE_MOBILE:
                 if (PreferencesHelper.getInstance(this).isPlayOnlyWifi()) {
@@ -129,9 +130,11 @@ public class MusicService extends IntentService {
 
     private void playCache() {
         if (!SongDetailInfo.getAll().isEmpty()) {
+            getmPlayer().reset();
             DataAccessor.SINGLE_INSTANCE.shot(this, QueueHelper.getInstance().getCacheQueue());
             DataAccessor.SINGLE_INSTANCE.playSongAtIndex(0);
-            play();
+            String path = DataAccessor.SINGLE_INSTANCE.getPlayingSong().getUrl();
+            tryToPrepareForPath(path);
             Toast.makeText(this, "正在播放离线文件", Toast.LENGTH_SHORT).show();
         }
     }

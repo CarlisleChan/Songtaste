@@ -99,6 +99,7 @@ public class QueueHelper {
     }
 
     public List<SongDetailInfo> getCacheQueue() {
+        cacheQueue = SongDetailInfo.getAll();
         return cacheQueue;
     }
 
