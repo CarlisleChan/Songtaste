@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
+import com.carlisle.songtaste.cmpts.crash.CrashHandler;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.facebook.stetho.Stetho;
 
@@ -39,6 +40,10 @@ public class BaseApplication extends Application {
 
         AVOSCloud.initialize(this, "jvv9g0dd7mo59jkwtqmtxp9s4777bd9m4la2fkzzgc8mhb6p", "w4e9u2h85n0q73j9i9r7m7f0fr6rdhvr4nrhf05liazbqbgp");
         AVAnalytics.enableCrashReport(this, true);
+
+        // collect crash
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(getApplicationContext());
 
     }
 
