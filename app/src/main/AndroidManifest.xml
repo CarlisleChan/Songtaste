@@ -36,6 +36,17 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:launchMode="singleTop" />
+        <activity android:name=".ui.setting.SettingActivity" />
+        <activity android:name=".ui.about.AboutActivity" />
+        <activity android:name=".ui.login.LoginActicity" />
+        <activity android:name=".ui.develop.DeveloperOptionsActivity" />
+
+        <meta-data android:name="AA_DB_NAME" android:value="Songtaste.db" />
+        <meta-data android:name="AA_DB_VERSION" android:value="1" />
+
         <service android:name=".ui.setting.StopPlaybackService" />
         <service android:name="com.avos.avoscloud.PushService" />
         <service android:name=".cmpts.services.MusicService"/>
@@ -71,14 +82,6 @@
                     android:scheme="android_secret_code" />
             </intent-filter>
         </receiver>
-
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:launchMode="singleTop" />
-        <activity android:name=".ui.setting.SettingActivity" />
-        <activity android:name=".ui.about.AboutActivity" />
-        <activity android:name=".ui.login.LoginActicity" />
-        <activity android:name=".ui.develop.DeveloperOptionsActivity" />
 
     </application>
 

@@ -97,6 +97,7 @@ public class QueueHelper {
     public List<SongDetailInfo> getOfflineQueue() {
         return offlineQueue;
     }
+
     public List<SongDetailInfo> getCacheQueue() {
         return cacheQueue;
     }

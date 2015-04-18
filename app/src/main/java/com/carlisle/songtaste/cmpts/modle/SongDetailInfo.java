@@ -3,38 +3,63 @@ package com.carlisle.songtaste.cmpts.modle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+
+import java.util.List;
 
 /**
  * Created by chengxin on 2/26/15.
  */
 @ParcelablePlease
-public class SongDetailInfo implements Parcelable {
+@Table(name = "Songs")
+public class SongDetailInfo extends Model implements Parcelable {
     public enum SongType {
         LOCAL_SONG,
         SONGTASTE_SONG
     }
 
+    @Column
     public SongType songType = SongType.SONGTASTE_SONG;
 
+    @Column
     public int code;
+    @Column
     public String singer_name;
+    @Column
     public String song_name;
+    @Column
     public String url;
+    @Column
     public String Mlength;
+    @Column
     public String Msize;
+    @Column
     public String Mbitrate;
+    @Column
     public String iscollection;
+    @Column
     public String mediaId;
 
     // songtaste
+    @Column
     public String songname;
+    @Column
     public String singername;
+    @Column
     public String albumArt;
 
     // local
+    @Column
     public String album;
+    @Column
     public String albumid;
+    @Column
     public String size;
 
     public SongType getSongType() {
@@ -186,4 +211,19 @@ public class SongDetailInfo implements Parcelable {
             return new SongDetailInfo[size];
         }
     };
+
+    public static List<SongDetailInfo> getAll() {
+        return new Select()
+                .all()
+                .from(SongDetailInfo.class)
+                .execute();
+    }
+
+    public static void deleteAll() {
+        new Delete()
+                .from(SongDetailInfo.class)
+                .execute();
+
+        ActiveAndroid.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = 'Songs'");
+    }
 }

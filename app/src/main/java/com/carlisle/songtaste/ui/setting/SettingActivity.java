@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVAnalytics;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
+import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.ui.develop.DeveloperOptionsActivity;
 import com.carlisle.songtaste.ui.view.PickerView;
 import com.carlisle.songtaste.utils.FileUtils;
@@ -212,6 +213,7 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
                 try {
                     FileUtils.deleteFolderFile(getExternalCacheDir().getPath(), true);
                     cacheValues.setText(String.valueOf(FileUtils.getFolderSize(getExternalCacheDir()) + "MB"));
+                    SongDetailInfo.deleteAll();
                     progressDialog.dismiss();
                     Toast.makeText(SettingActivity.this, "已清除", Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {

@@ -216,6 +216,8 @@ public class MusicService extends IntentService {
                         getmScheduler().purge();
                         getmScheduler().pause();
                     }
+
+                    DataAccessor.SINGLE_INSTANCE.getPlayingSong().save();
                     QueueHelper.getInstance().getCacheQueue().add(DataAccessor.SINGLE_INSTANCE.getPlayingSong());
                     DataAccessor.SINGLE_INSTANCE.playNextSong();
                     prepareForPath(DataAccessor.SINGLE_INSTANCE.getPlayingSong().getUrl());
