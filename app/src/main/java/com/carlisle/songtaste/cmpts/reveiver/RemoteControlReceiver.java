@@ -8,11 +8,10 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.view.KeyEvent;
 
-import com.carlisle.songtaste.cmpts.events.SkipToNextEvent;
-import com.carlisle.songtaste.cmpts.events.SkipToPrevEvent;
-import com.carlisle.songtaste.cmpts.events.StopEvent;
-import com.carlisle.songtaste.cmpts.events.UpdatePlaybackEvent;
+import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
+import com.carlisle.songtaste.cmpts.events.PlayerSendingEvent;
 import com.carlisle.songtaste.cmpts.services.MusicService;
+import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.utils.Common;
 
 import de.greenrobot.event.EventBus;
@@ -21,6 +20,8 @@ public class RemoteControlReceiver extends BroadcastReceiver {
     private MusicService musicService;
     private AudioManager audioManager;
     private ComponentName componentName;
+
+    private boolean isPlaying;
 
     public RemoteControlReceiver() {
 
@@ -38,36 +39,21 @@ public class RemoteControlReceiver extends BroadcastReceiver {
         switch (keyCode) {
             case KeyEvent.KEYCODE_MEDIA_NEXT:
                 if (keyAction == KeyEvent.ACTION_UP)
-                    EventBus.getDefault().post(new SkipToNextEvent());
+                    DataAccessor.SINGLE_INSTANCE.playNextSong();
+                EventBus.getDefault().post(new PlayerReceivingEvent(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_PLAY));
                 break;
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                 if (keyAction == KeyEvent.ACTION_UP) {
-//                    if (state == Playback.STATE_PAUSED) {
-//                        EventBus.getDefault().post(new PlayEvent());
-//                    } else if (state == Playback.STATE_NONE) {
-//
-//                    } else {
-//                        EventBus.getDefault().post(new PauseEvent());
-//                    }
+                    EventBus.getDefault().post(new PlayerReceivingEvent(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_SWITCH_PLAYSTATE));
                 }
-                break;
-            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                if (keyAction == KeyEvent.ACTION_UP)
-                    EventBus.getDefault().post(new SkipToPrevEvent());
                 break;
             case KeyEvent.KEYCODE_MEDIA_STOP:
                 if (keyAction == KeyEvent.ACTION_UP)
-                    EventBus.getDefault().post(new StopEvent());
+
                 break;
             case KeyEvent.KEYCODE_HEADSETHOOK:
                 if (keyAction == KeyEvent.ACTION_UP) {
-//                    if (state == Playback.STATE_PAUSED) {
-//                        EventBus.getDefault().post(new PlayEvent());
-//                    } else if (state == Playback.STATE_NONE) {
-//
-//                    } else {
-//                        EventBus.getDefault().post(new PauseEvent());
-//                    }
+                    EventBus.getDefault().post(new PlayerReceivingEvent(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_SWITCH_PLAYSTATE));
                 }
                 break;
         }
@@ -90,11 +76,12 @@ public class RemoteControlReceiver extends BroadcastReceiver {
         EventBus.getDefault().unregister(this);
     }
 
-    public void onEvent(UpdatePlaybackEvent event) {
-        if (event.songDetailInfo != null) {
-//            this.state = Playback.STATE_BUFFERING;
-//        } else {
-//            this.state = event.state;
+    public void onEvent(PlayerSendingEvent playerSendingEvent) {
+        switch (playerSendingEvent.serviceCanSend) {
+            case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_STATE_REPORT:
+                this.isPlaying = playerSendingEvent.playStateKey;
+                break;
         }
     }
+
 }

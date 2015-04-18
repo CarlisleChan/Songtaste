@@ -103,7 +103,6 @@ public class MainActivity extends BaseActivity {
         AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
-                Log.d("这个设备的 id: ", AVInstallation.getCurrentInstallation().getInstallationId());
                 AVInstallation.getCurrentInstallation().saveInBackground();
             }
         });

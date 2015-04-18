@@ -19,7 +19,8 @@ public class QueueHelper {
         TAG_DEAIL_QUEUE,
         FAVORITE_QUEUE,
         OFFLINE_QUEUE,
-        LOCAL_QUEUE
+        LOCAL_QUEUE,
+        CACHE_QUEUE
     }
 
     private List<SongDetailInfo> newQueue = new ArrayList<>();
@@ -29,6 +30,7 @@ public class QueueHelper {
     private List<SongDetailInfo> favoriteQueue = new ArrayList<>();
     private List<SongDetailInfo> offlineQueue = new ArrayList<>();
     private List<SongDetailInfo> localQueue = new ArrayList<>();
+    private List<SongDetailInfo> cacheQueue = new ArrayList<>();
 
     public static QueueHelper getInstance() {
         if (queueHelper == null) {
@@ -41,7 +43,7 @@ public class QueueHelper {
         this.queueType = queueType;
     }
 
-    public List<SongDetailInfo> getCurrentQueue() {
+    public List<SongDetailInfo> getCurrentQueue(QueueType queueType) {
         switch (queueType) {
             case NEW_QUEUE:
                 return getNewQueue();
@@ -57,6 +59,8 @@ public class QueueHelper {
                 return getOfflineQueue();
             case LOCAL_QUEUE:
                 return getLocalQueue();
+            case CACHE_QUEUE:
+                return getCacheQueue();
         }
         return null;
     }
@@ -93,9 +97,8 @@ public class QueueHelper {
     public List<SongDetailInfo> getOfflineQueue() {
         return offlineQueue;
     }
-
-    public boolean isIndexPlayable(int index) {
-        return (getCurrentQueue() != null && index >= 0 && index < getCurrentQueue().size());
+    public List<SongDetailInfo> getCacheQueue() {
+        return cacheQueue;
     }
 
 }

@@ -6,17 +6,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Typeface;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.cmpts.events.FavoriteEvent;
-import com.carlisle.songtaste.cmpts.events.PauseEvent;
-import com.carlisle.songtaste.cmpts.events.SkipToNextEvent;
-import com.carlisle.songtaste.cmpts.events.UpdatePlaybackEvent;
+import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
+import com.carlisle.songtaste.cmpts.events.PlayerSendingEvent;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.services.MusicService;
+import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.ui.main.MainActivity;
 import com.carlisle.songtaste.utils.Common;
 import com.carlisle.songtaste.utils.LocalSongHelper;
@@ -28,9 +27,9 @@ public class NotificationReceiver extends BroadcastReceiver {
     private RemoteViews remoteViews;
     private Notification notification;
     private NotificationCompat.Builder builder;
-    private Typeface typeFace;
 
     private SongDetailInfo songDetailInfo;
+    private String playStatus = "";
 
     public NotificationReceiver() {
 
@@ -45,21 +44,18 @@ public class NotificationReceiver extends BroadcastReceiver {
                     Common.Notification.INTENT_BUTTONID_TAG, 0);
             switch (buttonId) {
                 case Common.Notification.NOTIFICATION_NEXT:
-                    EventBus.getDefault().post(new SkipToNextEvent());
+                    DataAccessor.SINGLE_INSTANCE.playNextSong();
+                    EventBus.getDefault().post(new PlayerReceivingEvent(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_PLAY));
                     break;
                 case Common.Notification.NOTIFICATION_PAUSE:
-//                    if (state == Playback.STATE_PAUSED) {
-//                        EventBus.getDefault().post(new PlayEvent());
-//                    } else {
-//                        EventBus.getDefault().post(new PauseEvent());
-//                    }
+                    EventBus.getDefault().post(new PlayerReceivingEvent(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_SWITCH_PLAYSTATE));
                     break;
                 case Common.Notification.NOTIFICATION_FAVORITE:
                     boolean isCollection = songDetailInfo.getIscollection().equals("1") ? false : true;
                     EventBus.getDefault().post(new FavoriteEvent(isCollection));
                     break;
                 case Common.Notification.NOTIFICATION_CLOSE:
-                    EventBus.getDefault().post(new PauseEvent());
+                    EventBus.getDefault().post(new PlayerReceivingEvent(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_PAUSE));
                     clearNotification();
                     break;
             }
@@ -89,7 +85,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         } else {
 //            Picasso.with(musicService.getApplicationContext())
 //                    .load(songDetailInfo.getAlbumArt())
-//                    .placeholder(R.drawable.ic_account_circle_grey600_24dp)
+//                    .placeholder(R.drawable.ic_media_status)
 //                    .into(remoteViews, R.id.song_icon, 1000, notification);
         }
     }
@@ -104,38 +100,38 @@ public class NotificationReceiver extends BroadcastReceiver {
         showNotification();
     }
 
-    public void onEvent(UpdatePlaybackEvent event) {
-//        state = event.state;
-//        switch (event.state) {
-//            case Playback.STATE_PAUSED:
-//                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.bottom_btn_play);
-//                break;
-//            case Playback.STATE_STOPPED:
-//                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.bottom_btn_play);
-//                break;
-//            default:
-//                remoteViews.setImageViewResource(R.id.ib_pause_btn, android.R.color.transparent);
-//                break;
-//        }
+    public void onEvent(PlayerSendingEvent playerSendingEvent) {
+        if (playStatus.equals(playerSendingEvent.serviceCanSend)) {
+            return;
+        } else {
+            playStatus = playerSendingEvent.serviceCanSend;
+        }
+        switch (playerSendingEvent.serviceCanSend) {
+            case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_PLAYING:
+                remoteViews.setImageViewResource(R.id.ib_pause_btn, android.R.color.transparent);
+                break;
+            case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_PAUSED:
+                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.bottom_btn_play);
+                break;
+            case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_ERROR_OCCURRED:
+                clearNotification();
+                break;
+        }
 
-        if (event.songDetailInfo != null) {
-            songDetailInfo = event.songDetailInfo;
-            setAlbumArt(songDetailInfo);
-            remoteViews.setTextViewText(R.id.ib_song_name, songDetailInfo.getSong_name());
-            typeFace = Typeface.createFromAsset(musicService.getAssets(), "fonts/Roboto-Thin.ttf");
-            remoteViews.setTextViewText(R.id.ib_singer_name, songDetailInfo.getSinger_name());
+        songDetailInfo = DataAccessor.SINGLE_INSTANCE.getPlayingSong();
+        setAlbumArt(songDetailInfo);
+        remoteViews.setTextViewText(R.id.ib_song_name, songDetailInfo.getSong_name());
+        remoteViews.setTextViewText(R.id.ib_singer_name, songDetailInfo.getSinger_name());
 
-            if (songDetailInfo.getIscollection().equals("1")) {
-                remoteViews.setImageViewResource(R.id.ib_favorite, R.drawable.ic_btn_loved);
-            } else {
-                remoteViews.setImageViewResource(R.id.ib_favorite, R.drawable.ic_btn_love_white);
-            }
+        if (songDetailInfo.getIscollection().equals("1")) {
+            remoteViews.setImageViewResource(R.id.ib_favorite, R.drawable.ic_btn_loved);
+        } else {
+            remoteViews.setImageViewResource(R.id.ib_favorite, R.drawable.ic_btn_love_white);
+        }
 
-            if (songDetailInfo.getSongType() == SongDetailInfo.SongType.LOCAL_SONG) {
+        if (songDetailInfo.getSongType() == SongDetailInfo.SongType.LOCAL_SONG) {
 
-            } else {
-
-            }
+        } else {
 
         }
 

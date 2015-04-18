@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
-import com.carlisle.songtaste.fm.DataAccessor;
+import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.utils.Common;
 import com.carlisle.songtaste.utils.QueueHelper;
 import com.makeramen.RoundedImageView;

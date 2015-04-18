@@ -8,8 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.cmpts.events.PlayEvent;
+import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
+import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
@@ -65,7 +66,8 @@ public class TagDetailAdapter extends SongtasteLoadMoreAdapter {
                 @Override
                 public void onClick(View v) {
                     QueueHelper.getInstance().setCurrentQueue(QueueHelper.QueueType.TAG_DEAIL_QUEUE);
-                    EventBus.getDefault().post(new PlayEvent(position));
+                    DataAccessor.SINGLE_INSTANCE.playSongAtIndex(position);
+                    EventBus.getDefault().post(new PlayerReceivingEvent(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_PLAY));
                 }
             });
         }

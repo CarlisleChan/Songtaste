@@ -1,15 +1,9 @@
 package com.carlisle.songtaste.ui.main;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,13 +26,12 @@ import com.carlisle.songtaste.cmpts.events.DownloadFailedEvent;
 import com.carlisle.songtaste.cmpts.events.FavoriteEvent;
 import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
 import com.carlisle.songtaste.cmpts.events.PlayerSendingEvent;
-import com.carlisle.songtaste.cmpts.events.ProgressEvent;
 import com.carlisle.songtaste.cmpts.modle.Result;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.cmpts.services.MusicService;
-import com.carlisle.songtaste.fm.DataAccessor;
+import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.utils.LocalSongHelper;
 import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.squareup.picasso.Picasso;
@@ -110,35 +103,12 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
 
         Intent intent = new Intent(getActivity().getApplicationContext(), MusicService.class);
         getActivity().startService(intent);
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        getActivity().registerReceiver(mNetworkStateReceiver, filter);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_full_player, container, false);
         ButterKnife.inject(this, view);
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (fromUser == true) {
-                    EventBus.getDefault().post(new ProgressEvent(progress, seekBar.getMax(), true));
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
         return view;
     }
 
@@ -162,11 +132,9 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
                 break;
             case R.id.cb_bottom_play_pause:
             case R.id.cb_play_pause:
-                if (playButtonIsPlayingState()) {
-                    setPlayButtonPlaying(false);
+                if (((CheckBox) view).isChecked()) {
                     pausePlay();
                 } else {
-                    setPlayButtonPlaying(true);
                     play();
                 }
                 break;
@@ -236,104 +204,85 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
                 setCurrentPosition((int) currentPosition, (int) length);
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_WILL_PREPARE:
-                Log.d("yuedu", "media player will prepare!!!!");
-                playOrPause.setChecked(false);
-                bottomPlayOrPause.setChecked(false);
+                Log.d("songtaste", "media player will prepare!!!!");
+                setPlayButtonPlaying(true);
                 updateCover();
                 updateListViewSelection();
                 showLoading();
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_PREPARED:
-                Log.d("yuedu", "media player prepared!!!!");
+                Log.d("songtaste", "media player prepared!!!!");
                 hideLoading();
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_WILL_PLAY:
-                Log.d("yuedu", "media player will play!!!!");
+                Log.d("songtaste", "media player will play!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_PLAYING:
-                playOrPause.setChecked(false);
-                bottomPlayOrPause.setChecked(false);
-                Log.d("yuedu", "media player is playing!!!!");
+                setPlayButtonPlaying(true);
+                Log.d("songtaste", "media player is playing!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_WILL_PAUSE:
-                Log.d("yuedu", "media player will pause!!!!");
+                Log.d("songtaste", "media player will pause!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_PAUSED:
-                playOrPause.setChecked(true);
-                bottomPlayOrPause.setChecked(true);
-                Log.d("yuedu", "media player is paused!!!!");
+                setPlayButtonPlaying(false);
+                Log.d("songtaste", "media player is paused!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_WILL_STOP:
-                Log.d("yuedu", "media player will stop!!!!");
+                Log.d("songtaste", "media player will stop!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_STOPPED:
-                playOrPause.setChecked(true);
-                bottomPlayOrPause.setChecked(true);
-                Log.d("yuedu", "media player is stopped!!!!");
+                setPlayButtonPlaying(false);
+                Log.d("songtaste", "media player is stopped!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_ERROR_OCCURRED:
-                playOrPause.setChecked(true);
-                bottomPlayOrPause.setChecked(true);
+                setPlayButtonPlaying(false);
                 hideLoading();
                 Toast.makeText(getActivity().getApplicationContext(), playerSendingEvent.errorKey, Toast.LENGTH_LONG).show();
-                Log.d("yuedu", "media player error occurred!!!!");
+                Log.d("songtaste", "media player error occurred!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_COMPLETE:
-                Log.d("yuedu", "media player complete!!!!");
+                Log.d("songtaste", "media player complete!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_STATE_REPORT:
                 boolean isPlaying = playerSendingEvent.playStateKey;
-                Log.d("yuedu", "media player state report " + isPlaying + " !!!!");
+                Log.d("songtaste", "media player state report " + isPlaying + " !!!!");
                 setPlayButtonPlaying(isPlaying);
                 break;
         }
     }
 
     public void onEvent(DownloadCompleteEvent downloadCompleteEvent) {
-        Log.d("yuedu", "data list download complete!!!!");
-        updateUI();
+        Log.d("songtaste", "data list download complete!!!!");
     }
 
     public void onEvent(DownloadFailedEvent downloadFailedEvent) {
-        Log.d("yuedu", "data list download failed!!!!");
+        Log.d("songtaste", "data list download failed!!!!");
     }
 
     private void showLoading() {
-        Log.d("yuedu", "set progress bar indeterminate!!!!");
-//        mProgressBar.setIndeterminate(true);
-        //do not show progressbar progress animation 2013/09/23
+        Log.d("songtaste", "set progress bar indeterminate!!!!");
+        seekBar.setIndeterminate(true);
     }
 
     private void hideLoading() {
-        Log.d("yuedu", "set progress bar determinate!!!!");
-//        mProgressBar.setIndeterminate(false);
-        //do not show progressbar progress animation 2013/09/23
+        Log.d("songtaste", "set progress bar determinate!!!!");
+        seekBar.setIndeterminate(false);
     }
 
     private void setCurrentPosition(final int currentPosition, final int length) {
-        Log.d("88888",currentPosition + "//" + length);
         seekBar.setProgress(currentPosition);
         seekBar.setMax(length);
         bottomSeekBar.setProgress(currentPosition);
         bottomSeekBar.setMax(length);
     }
 
-    private int getCurrentPlayingTuneDuration() {
-        SongDetailInfo tune = DataAccessor.SINGLE_INSTANCE.getPlayingSong();
-//        int min = tune.min;
-//        int sec = tune.sec;
-//        return (min * 60 + sec) * 1000;
-        return 1;
-    }
-
     private void updateCover() {
         songDetailInfo = DataAccessor.SINGLE_INSTANCE.getPlayingSong();
         songName.setText(songDetailInfo.getSong_name());
         singerName.setText(songDetailInfo.getSinger_name());
-        playOrPause.setChecked(false);
         bottomSongName.setText(songDetailInfo.getSong_name());
         bottomSingerName.setText(songDetailInfo.getSinger_name());
-        bottomPlayOrPause.setChecked(false);
         setAlbumArt(songDetailInfo);
 
         if (songDetailInfo.getIscollection().equals("1")) {
@@ -371,10 +320,6 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
 //        mListView.setItemChecked(playingIndex, true);
     }
 
-    private void updateUI() {
-        updateCover();
-    }
-
     @Override
     public void onSuccess(JSONObject jsonObject) {
 //        hideGreetingView();
@@ -385,17 +330,13 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
         Toast.makeText(getActivity(), "获取数据失败", Toast.LENGTH_SHORT).show();
     }
 
-    private boolean playButtonIsPlayingState() {
-        return playOrPause.isSelected();
-    }
-
     private void setPlayButtonPlaying(boolean isPlaying) {
-        playOrPause.setSelected(isPlaying);
+        playOrPause.setChecked(!isPlaying);
+        bottomPlayOrPause.setChecked(!isPlaying);
     }
 
     private void play() {
         EventBus.getDefault().post(new PlayerReceivingEvent(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_PLAY));
-        setPlayButtonPlaying(true);
     }
 
     private void pausePlay() {
@@ -416,45 +357,6 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
         DataAccessor.SINGLE_INSTANCE.playSongAtIndex(index);
         play();
     }
-
-    public class RemoteControlReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Intent.ACTION_MEDIA_BUTTON.equals(intent.getAction())) {
-                KeyEvent event = intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-                switch (event.getKeyCode()) {
-                    case KeyEvent.KEYCODE_MEDIA_PLAY:
-                        play();
-                        break;
-                    case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                        pausePlay();
-                        break;
-                    case KeyEvent.KEYCODE_MEDIA_NEXT:
-                        playNextTune();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-
-    private BroadcastReceiver mNetworkStateReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
-            NetworkInfo info = cm.getActiveNetworkInfo();
-            Log.w("yuedu", "Network Type Changed " + info);
-            if (info != null && info.getType() == ConnectivityManager.TYPE_WIFI && info.getState() == NetworkInfo.State.CONNECTED) {
-                Log.d("yuedu", "wifi is connected");
-            } else {
-                Log.w("yuedu", "wifi is disconnected");
-                Log.d("yuedu", "pause playing");
-                pausePlay();
-            }
-        }
-    };
 
     public void hideBottomControl(float v) {
         bottomContainer.setAlpha(1 - v);

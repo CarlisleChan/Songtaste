@@ -17,9 +17,12 @@ import android.util.Log;
 import com.carlisle.songtaste.cmpts.events.DownloadCompleteEvent;
 import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
 import com.carlisle.songtaste.cmpts.events.PlayerSendingEvent;
-import com.carlisle.songtaste.fm.DataAccessor;
-import com.carlisle.songtaste.fm.StreamingDownloadMediaPlayer;
-import com.carlisle.songtaste.fm.YueduNotificationManager;
+import com.carlisle.songtaste.cmpts.events.ScreenOnEvent;
+import com.carlisle.songtaste.cmpts.reveiver.HeadsetPlugReceiver;
+import com.carlisle.songtaste.cmpts.reveiver.NotificationReceiver;
+import com.carlisle.songtaste.cmpts.reveiver.RemoteControlReceiver;
+import com.carlisle.songtaste.cmpts.reveiver.ScreenOnReceiver;
+import com.carlisle.songtaste.utils.QueueHelper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -85,6 +88,11 @@ public class MusicService extends IntentService {
     public static final String PLAYER_SENDING_BROADCAST_ACTION = "player_sending_broadcast";
     public static final String PLAYER_RECEIVING_BROADCAST_ACTION = "player_receiving_broadcast";
 
+    private HeadsetPlugReceiver headsetPlugReceiver = new HeadsetPlugReceiver();
+    private NotificationReceiver notificationReceiver = new NotificationReceiver();
+    private ScreenOnReceiver screenOnReceiver = new ScreenOnReceiver();
+    private RemoteControlReceiver remoteControlReceiver = new RemoteControlReceiver();
+
     private AudioManager mAudioManager;
     private TelephonyManager mTelephonyManager;
     private StreamingDownloadMediaPlayer mPlayer;
@@ -94,7 +102,11 @@ public class MusicService extends IntentService {
     private NoisyAudioStreamReceiver mNoisyAudioStreamReceiver;
 
     public void onEvent(DownloadCompleteEvent downloadCompleteEvent) {
-        YueduNotificationManager.SINGLE_INSTANCE.showForegroundNotification(MusicService.this);
+//        YueduNotificationManager.SINGLE_INSTANCE.showForegroundNotification(MusicService.this);
+    }
+
+    public void onEvent(ScreenOnEvent screenOnEvent) {
+        sendPlayingBroadcast();
     }
 
     public void onEvent(PlayerReceivingEvent playerReceivingEvent) {
@@ -148,7 +160,6 @@ public class MusicService extends IntentService {
                 sendWillStopBroadcast();
                 getmPlayer().stop();
                 sendStoppedBroadcast();
-                YueduNotificationManager.SINGLE_INSTANCE.setPlayButtonPlaying(this, false);
             }
             setTunePath(path);
             prepareToPlay();
@@ -205,6 +216,7 @@ public class MusicService extends IntentService {
                         getmScheduler().purge();
                         getmScheduler().pause();
                     }
+                    QueueHelper.getInstance().getCacheQueue().add(DataAccessor.SINGLE_INSTANCE.getPlayingSong());
                     DataAccessor.SINGLE_INSTANCE.playNextSong();
                     prepareForPath(DataAccessor.SINGLE_INSTANCE.getPlayingSong().getUrl());
                     sendCompletionBroadcast();
@@ -224,7 +236,6 @@ public class MusicService extends IntentService {
                         error = e.getLocalizedMessage();
                     }
                     sendErrorOccurredBroadcast(error);
-                    YueduNotificationManager.SINGLE_INSTANCE.setPlayButtonPlaying(MusicService.this, false);
                 }
             });
         }
@@ -347,6 +358,11 @@ public class MusicService extends IntentService {
         super.onCreate();
         EventBus.getDefault().register(this);
 
+        headsetPlugReceiver.register(this);
+        screenOnReceiver.register(this);
+        notificationReceiver.register(this);
+        remoteControlReceiver.register(this);
+
         TelephonyManager telMgr = getmTelephonyManager();
         if (telMgr != null) {
             Log.d("yuedu", "start listen phone state");
@@ -364,7 +380,6 @@ public class MusicService extends IntentService {
         sendWillPlayBroadcast();
         getmPlayer().start();
         sendPlayingBroadcast();
-        YueduNotificationManager.SINGLE_INSTANCE.setPlayButtonPlaying(this, true);
     }
 
     private boolean prepareToPlay() {
@@ -375,7 +390,6 @@ public class MusicService extends IntentService {
                 StreamingDownloadMediaPlayer player = getmPlayer();
                 try {
                     sendWillPrepareBroadcast();
-                    YueduNotificationManager.SINGLE_INSTANCE.updateTitle(MusicService.this);
                     player.prepareAsync();
                     return true;
                 } catch (Exception e) {
@@ -405,7 +419,6 @@ public class MusicService extends IntentService {
             sendWillPauseBroadcast();
             getmPlayer().pause();
             sendPausedBroadcast();
-            YueduNotificationManager.SINGLE_INSTANCE.setPlayButtonPlaying(this, false);
             return true;
         }
         return false;
@@ -446,10 +459,29 @@ public class MusicService extends IntentService {
     public void onDestroy() {
         super.onDestroy();
         stop();
+
+        if (headsetPlugReceiver != null) {
+            headsetPlugReceiver.unRegister();
+        }
+
+        if (notificationReceiver != null) {
+            notificationReceiver.unRegister();
+        }
+
+        if (screenOnReceiver != null) {
+            screenOnReceiver.unRegister();
+        }
+
+        if (remoteControlReceiver != null) {
+            remoteControlReceiver.unRegister();
+        }
+
         if (mPlayer != null) {
             mPlayer.release();
         }
-        YueduNotificationManager.SINGLE_INSTANCE.stopForeground(this);
+
+        EventBus.getDefault().unregister(this);
+        this.stopForeground(true);
     }
 
     static class PausableThreadPoolExecutor extends ScheduledThreadPoolExecutor {

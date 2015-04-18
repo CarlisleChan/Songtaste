@@ -9,8 +9,9 @@ import android.widget.TextView;
 
 import com.baidao.superrecyclerview.adapter.BaseAdapter;
 import com.carlisle.songtaste.R;
-import com.carlisle.songtaste.cmpts.events.PlayEvent;
+import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
+import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.utils.LocalSongHelper;
 import com.carlisle.songtaste.utils.QueueHelper;
 
@@ -62,7 +63,8 @@ public class LocalSongAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     QueueHelper.getInstance().setLocalSongQueue(LocalSongHelper.getSongList(context));
                     QueueHelper.getInstance().setCurrentQueue(QueueHelper.QueueType.LOCAL_QUEUE);
-                    EventBus.getDefault().post(new PlayEvent(position));
+                    DataAccessor.SINGLE_INSTANCE.playSongAtIndex(position);
+                    EventBus.getDefault().post(new PlayerReceivingEvent(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_PLAY));
                 }
             });
         }
