@@ -72,7 +72,6 @@
             </intent-filter>
         </receiver>
 
-
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTop" />

@@ -3,10 +3,12 @@ package com.carlisle.songtaste.ui.setting;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,11 +23,14 @@ import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.ui.develop.DeveloperOptionsActivity;
 import com.carlisle.songtaste.ui.view.PickerView;
+import com.carlisle.songtaste.utils.FileUtils;
 import com.carlisle.songtaste.utils.LeancloudEventIDS;
 import com.carlisle.songtaste.utils.PreferencesHelper;
 
 import org.joda.time.LocalTime;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +55,7 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
 
+    private ProgressDialog progressDialog;
     private Double time;
     private SwipeBackActivityHelper mHelper;
 
@@ -66,6 +72,11 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
 
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
+        try {
+            cacheValues.setText(String.valueOf(FileUtils.getFolderSize(new File(getExternalCacheDir(), "audio"))) + "MB");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -175,13 +186,13 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
         cancleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearCache();
                 dialog.dismiss();
             }
         });
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clearCache();
                 dialog.dismiss();
             }
         });
@@ -191,11 +202,25 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
     @OnClick(R.id.rl_developer_options)
     public void onDevelopClick() {
         startActivity(new Intent(this, DeveloperOptionsActivity.class));
-        String path = "http://m6.songtaste.com/201504130944/79b79d30240bc212d2e07d5f16315e67/6/65/65cba0d85e2beaa6a654c2a0ded6d1d7.mp3";
     }
 
     private void clearCache() {
-
+        progressDialog = ProgressDialog.show(this, "", "正在清除中, 请稍后..");
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FileUtils.deleteFolderFile(getExternalCacheDir().getPath(), true);
+                    cacheValues.setText(String.valueOf(FileUtils.getFolderSize(getExternalCacheDir()) + "MB"));
+                    progressDialog.dismiss();
+                    Toast.makeText(SettingActivity.this, "已清除", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
