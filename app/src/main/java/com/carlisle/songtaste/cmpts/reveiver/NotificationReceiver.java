@@ -13,12 +13,10 @@ import android.widget.RemoteViews;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.cmpts.events.FavoriteEvent;
 import com.carlisle.songtaste.cmpts.events.PauseEvent;
-import com.carlisle.songtaste.cmpts.events.PlayEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToNextEvent;
 import com.carlisle.songtaste.cmpts.events.UpdatePlaybackEvent;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.services.MusicService;
-import com.carlisle.songtaste.cmpts.services.Playback;
 import com.carlisle.songtaste.ui.main.MainActivity;
 import com.carlisle.songtaste.utils.Common;
 import com.carlisle.songtaste.utils.LocalSongHelper;
@@ -31,7 +29,6 @@ public class NotificationReceiver extends BroadcastReceiver {
     private Notification notification;
     private NotificationCompat.Builder builder;
     private Typeface typeFace;
-    private static int state = Playback.STATE_NONE;
 
     private SongDetailInfo songDetailInfo;
 
@@ -51,11 +48,11 @@ public class NotificationReceiver extends BroadcastReceiver {
                     EventBus.getDefault().post(new SkipToNextEvent());
                     break;
                 case Common.Notification.NOTIFICATION_PAUSE:
-                    if (state == Playback.STATE_PAUSED) {
-                        EventBus.getDefault().post(new PlayEvent());
-                    } else {
-                        EventBus.getDefault().post(new PauseEvent());
-                    }
+//                    if (state == Playback.STATE_PAUSED) {
+//                        EventBus.getDefault().post(new PlayEvent());
+//                    } else {
+//                        EventBus.getDefault().post(new PauseEvent());
+//                    }
                     break;
                 case Common.Notification.NOTIFICATION_FAVORITE:
                     boolean isCollection = songDetailInfo.getIscollection().equals("1") ? false : true;
@@ -108,18 +105,18 @@ public class NotificationReceiver extends BroadcastReceiver {
     }
 
     public void onEvent(UpdatePlaybackEvent event) {
-        state = event.state;
-        switch (event.state) {
-            case Playback.STATE_PAUSED:
-                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.bottom_btn_play);
-                break;
-            case Playback.STATE_STOPPED:
-                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.bottom_btn_play);
-                break;
-            default:
-                remoteViews.setImageViewResource(R.id.ib_pause_btn, android.R.color.transparent);
-                break;
-        }
+//        state = event.state;
+//        switch (event.state) {
+//            case Playback.STATE_PAUSED:
+//                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.bottom_btn_play);
+//                break;
+//            case Playback.STATE_STOPPED:
+//                remoteViews.setImageViewResource(R.id.ib_pause_btn, R.drawable.bottom_btn_play);
+//                break;
+//            default:
+//                remoteViews.setImageViewResource(R.id.ib_pause_btn, android.R.color.transparent);
+//                break;
+//        }
 
         if (event.songDetailInfo != null) {
             songDetailInfo = event.songDetailInfo;

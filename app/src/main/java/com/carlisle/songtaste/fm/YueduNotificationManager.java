@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
+import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.ui.main.MainActivity;
 
 
@@ -38,7 +39,7 @@ public enum YueduNotificationManager {
         PendingIntent pendingIntent = getPendingIntent(context);
 
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.yuedu_notification_layout);
-        remoteViews.setCharSequence(R.id.notification_tune_name, "setText", DataAccessor.SINGLE_INSTANCE.getPlayingTune().getSong_name());
+        remoteViews.setCharSequence(R.id.notification_tune_name, "setText", DataAccessor.SINGLE_INSTANCE.getPlayingSong().getSong_name());
 
         setRemoteActions(context, remoteViews);
 
@@ -49,7 +50,7 @@ public enum YueduNotificationManager {
         PendingIntent pendingIntent = getPendingIntent(service);
 
         RemoteViews remoteViews = new RemoteViews(service.getPackageName(), R.layout.yuedu_notification_layout);
-        remoteViews.setCharSequence(R.id.notification_tune_name, "setText", DataAccessor.SINGLE_INSTANCE.getPlayingTune().getSinger_name());
+        remoteViews.setCharSequence(R.id.notification_tune_name, "setText", DataAccessor.SINGLE_INSTANCE.getPlayingSong().getSinger_name());
 
         setRemoteActions(service, remoteViews);
 
@@ -58,10 +59,10 @@ public enum YueduNotificationManager {
     }
 
     private void setRemoteActions(Context context, RemoteViews remoteViews) {
-        Intent nextIntent = new Intent(YueduService.PLAYER_RECEIVING_BROADCAST_ACTION);
+        Intent nextIntent = new Intent(MusicService.PLAYER_RECEIVING_BROADCAST_ACTION);
         nextIntent.addCategory(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_PLAY_NEXT);
         PendingIntent nextPendingIntent = PendingIntent.getBroadcast(context, 0, nextIntent, 0);
-        Intent switchIntent = new Intent(YueduService.PLAYER_RECEIVING_BROADCAST_ACTION);
+        Intent switchIntent = new Intent(MusicService.PLAYER_RECEIVING_BROADCAST_ACTION);
         switchIntent.addCategory(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_SWITCH_PLAYSTATE);
         PendingIntent switchPendingIntent = PendingIntent.getBroadcast(context, 0, switchIntent, 0);
         remoteViews.setOnClickPendingIntent(R.id.notification_next, nextPendingIntent);

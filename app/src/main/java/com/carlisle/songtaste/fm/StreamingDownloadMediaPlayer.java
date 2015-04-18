@@ -10,8 +10,6 @@ import android.os.Looper;
 import com.carlisle.songtaste.utils.DiskLruCache;
 import com.carlisle.songtaste.utils.MD5Util;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -82,7 +80,6 @@ public class StreamingDownloadMediaPlayer {
     private OnCompletionListener mCompletionListener;
     private OnErrorListener mErrorListener;
 
-
     private static final int DISK_FILE_CACHE_INDEX = 0;
     private static final int DISK_FILE_CACHE_VERSION = 1;
 
@@ -93,6 +90,7 @@ public class StreamingDownloadMediaPlayer {
         ReentrantLock pauseLock = new ReentrantLock();
         Condition unpaused = pauseLock.newCondition();
         float playedTimeInMS;
+        float mLength;
 
         public void pause() {
             pauseLock.lock();
@@ -133,6 +131,10 @@ public class StreamingDownloadMediaPlayer {
 
         public float getPlayedTimeInMS() {
             return playedTimeInMS;
+        }
+
+        public float getLength() {
+            return mLength;
         }
     }
 
@@ -232,6 +234,8 @@ public class StreamingDownloadMediaPlayer {
                         }
                     });
                 }
+
+
             }
 
             @Override
@@ -254,7 +258,7 @@ public class StreamingDownloadMediaPlayer {
         private InputStream inputStream;
         private OutputStream outputStream;
 
-        private StreamingPipe(@NotNull InputStream inputStream, @NotNull OutputStream outputStream) {
+        private StreamingPipe(InputStream inputStream, OutputStream outputStream) {
             this.inputStream = inputStream;
             this.outputStream = outputStream;
         }
@@ -364,6 +368,7 @@ public class StreamingDownloadMediaPlayer {
                         mAudioTrack.write(copyBuffer, 0, copyBuffer.length);
                         totalBytes += oneshootBytes;
                         totalFrameSize += 1;
+                        mLength = header.total_ms((int) connection.getContentLength());
                         playedTimeInMS += header.ms_per_frame();
                         bitstream.closeFrame();
                     }
@@ -486,9 +491,8 @@ public class StreamingDownloadMediaPlayer {
         return Math.round(mStreamingTask.getPlayedTimeInMS());
     }
 
-    public long getDuration() {
-        //TODO
-        return 0;
+    public long getLength() {
+        return Math.round(mStreamingTask.getLength());
     }
 
     public boolean isPlaying() {

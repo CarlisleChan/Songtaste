@@ -7,14 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
-import android.util.Log;
 
 import com.carlisle.songtaste.cmpts.events.ScreenOnEvent;
 import com.carlisle.songtaste.cmpts.events.UpdatePlaybackEvent;
 import com.carlisle.songtaste.cmpts.services.MusicService;
-import com.carlisle.songtaste.cmpts.services.Playback;
 import com.carlisle.songtaste.utils.Common;
 
 import de.greenrobot.event.EventBus;
@@ -25,7 +22,6 @@ public class ScreenOnReceiver extends BroadcastReceiver {
     private AudioManager audioManager;
     private RemoteControlClient remoteControlClient;
 
-    private static int state = Playback.STATE_NONE;
     private static String singerName = "";
     private static String songName = "";
 
@@ -64,13 +60,12 @@ public class ScreenOnReceiver extends BroadcastReceiver {
 
     public void onEvent(UpdatePlaybackEvent event) {
         if (event.songDetailInfo != null) {
-            state = Playback.STATE_PLAYING;
+//            state = Playback.STATE_PLAYING;
             singerName = event.songDetailInfo.getSinger_name();
             songName = event.songDetailInfo.getSong_name();
         } else {
-            state = event.state;
+//            state = event.state;
         }
-        Log.d("showRemoteControl====","" + state);
         showRemoteControl();
     }
 
@@ -85,32 +80,32 @@ public class ScreenOnReceiver extends BroadcastReceiver {
         remoteControlClient = new RemoteControlClient(mediaPendingIntent);
         audioManager.registerRemoteControlClient(remoteControlClient);
 
-        switch (state) {
-            case Playback.STATE_PAUSED:
-                remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PAUSED);
-                break;
-            case Playback.STATE_STOPPED:
-                remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PAUSED);
-                break;
-            case Playback.STATE_NONE:
-                remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PAUSED);
-                break;
-            default:
-                remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
-                break;
+//        switch (state) {
+//            case Playback.STATE_PAUSED:
+//                remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PAUSED);
+//                break;
+//            case Playback.STATE_STOPPED:
+//                remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PAUSED);
+//                break;
+//            case Playback.STATE_NONE:
+//                remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PAUSED);
+//                break;
+//            default:
+//                remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
+//                break;
         }
 
-        remoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PAUSE
-                | RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS
-                | RemoteControlClient.FLAG_KEY_MEDIA_NEXT);
-
-        // update remote controls
-        remoteControlClient
-                .editMetadata(true)
-                .putString(MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST, singerName)
-                .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, songName)
+//        remoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PAUSE
+//                | RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS
+//                | RemoteControlClient.FLAG_KEY_MEDIA_NEXT);
+//
+//        update remote controls
+//        remoteControlClient
+//                .editMetadata(true)
+//                .putString(MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST, singerName)
+//                .putString(MediaMetadataRetriever.METADATA_KEY_TITLE, songName)
 //                .putBitmap(RemoteControlReceiver.METADATA_KEY_ARTWORK,song_bm_locked)
-                .apply();
-    }
+//                .apply();
+//    }
 
 }

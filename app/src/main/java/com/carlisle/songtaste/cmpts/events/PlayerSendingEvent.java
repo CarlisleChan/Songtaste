@@ -28,7 +28,7 @@ public class PlayerSendingEvent {
     public String serviceCanSend;
     public String errorKey;
     public long currentPosition = 0;
-    public long duration = 0;
+    public long length = 0;
     public boolean playStateKey = false;
 
     public PlayerSendingEvent(String serviceCanSend) {
@@ -40,10 +40,10 @@ public class PlayerSendingEvent {
         this.currentPosition = currentPosition;
     }
 
-    public PlayerSendingEvent(String serviceCanSend, long currentPosition, long duration) {
+    public PlayerSendingEvent(String serviceCanSend, long currentPosition, long length) {
         this.serviceCanSend = serviceCanSend;
         this.currentPosition = currentPosition;
-        this.duration = duration;
+        this.length = length;
     }
 
     public PlayerSendingEvent(String serviceCanSend, String errorKey) {

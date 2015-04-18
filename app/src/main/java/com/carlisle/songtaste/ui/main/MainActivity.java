@@ -20,7 +20,6 @@ import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
 import com.carlisle.songtaste.cmpts.services.MusicService;
-import com.carlisle.songtaste.fm.YueduService;
 import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.develop.DeveloperOptionsActivity;
 import com.carlisle.songtaste.ui.discover.DiscoverFragment;
@@ -339,7 +338,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void quit() {
-        this.stopService(new Intent(this.getApplicationContext(), YueduService.class));
+        this.stopService(new Intent(this.getApplicationContext(), MusicService.class));
         this.finish();
         android.os.Process.killProcess(android.os.Process.myPid());
     }

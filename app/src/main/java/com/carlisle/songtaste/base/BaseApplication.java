@@ -5,7 +5,6 @@ import android.app.Application;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
 import com.carlisle.songtaste.cmpts.crash.CrashHandler;
-import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.facebook.stetho.Stetho;
 
 /**
@@ -13,11 +12,6 @@ import com.facebook.stetho.Stetho;
  */
 public class BaseApplication extends Application {
     private static BaseApplication instance;
-
-    //Service reference and flags.
-    private MusicService mService;
-    private boolean mIsServiceRunning = false;
-
     public static BaseApplication getInstance() {
         return instance;
     }
@@ -45,21 +39,5 @@ public class BaseApplication extends Application {
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
 
-    }
-
-    public boolean isServiceRunning() {
-        return mIsServiceRunning;
-    }
-
-    public void setIsServiceRunning(boolean mIsServiceRunning) {
-        this.mIsServiceRunning = mIsServiceRunning;
-    }
-
-    public MusicService getService() {
-        return mService;
-    }
-
-    public void setService(MusicService mService) {
-        this.mService = mService;
     }
 }

@@ -36,12 +36,9 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".cmpts.services.MusicService"
-            android:enabled="true" />
         <service android:name=".ui.setting.StopPlaybackService" />
         <service android:name="com.avos.avoscloud.PushService" />
-        <service android:name=".fm.YueduService"/>
+        <service android:name=".cmpts.services.MusicService"/>
 
         <receiver
             android:name="com.carlisle.songtaste.cmpts.reveiver.RemoteControlReceiver"

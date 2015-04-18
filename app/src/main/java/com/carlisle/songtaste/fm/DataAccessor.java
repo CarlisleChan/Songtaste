@@ -32,7 +32,7 @@ public enum DataAccessor {
         return mDataList;
     }
 
-    public SongDetailInfo getPlayingTune() {
+    public SongDetailInfo getPlayingSong() {
         return mDataList.get(mPlayingTuneIndex);
     }
 
@@ -40,7 +40,7 @@ public enum DataAccessor {
         return mPlayingTuneIndex;
     }
 
-    public synchronized void playTuneAtIndex(int index) {
+    public synchronized void playSongAtIndex(int index) {
         if (index >= 0 && index < mDataList.size()) {
             mPlayingTuneIndex = index;
         } else {
@@ -48,12 +48,20 @@ public enum DataAccessor {
         }
     }
 
-    public synchronized SongDetailInfo playNextTune() {
+    public synchronized SongDetailInfo playNextSong() {
         if (mDataList == null || mPlayingTuneIndex + 1 >= mDataList.size()) {
             return null;
         }
         mPlayingTuneIndex += 1;
-        return getPlayingTune();
+        return getPlayingSong();
+    }
+
+    public synchronized SongDetailInfo playPrevSong() {
+        if (mDataList == null || mPlayingTuneIndex - 1 < 0) {
+            return null;
+        }
+        mPlayingTuneIndex -= 1;
+        return getPlayingSong();
     }
 
     public int indexOfTune(CharSequence tuneName) {
@@ -74,7 +82,7 @@ public enum DataAccessor {
     }
 
     private DataAccessor() {
-        mDataList = new ArrayList<SongDetailInfo>(200);
+        mDataList = new ArrayList<SongDetailInfo>();
     }
 
     public static interface DataAccessorHandler {

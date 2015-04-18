@@ -8,14 +8,11 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.view.KeyEvent;
 
-import com.carlisle.songtaste.cmpts.events.PauseEvent;
-import com.carlisle.songtaste.cmpts.events.PlayEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToNextEvent;
 import com.carlisle.songtaste.cmpts.events.SkipToPrevEvent;
 import com.carlisle.songtaste.cmpts.events.StopEvent;
 import com.carlisle.songtaste.cmpts.events.UpdatePlaybackEvent;
 import com.carlisle.songtaste.cmpts.services.MusicService;
-import com.carlisle.songtaste.cmpts.services.Playback;
 import com.carlisle.songtaste.utils.Common;
 
 import de.greenrobot.event.EventBus;
@@ -24,7 +21,6 @@ public class RemoteControlReceiver extends BroadcastReceiver {
     private MusicService musicService;
     private AudioManager audioManager;
     private ComponentName componentName;
-    private static int state = Playback.STATE_NONE;
 
     public RemoteControlReceiver() {
 
@@ -46,13 +42,13 @@ public class RemoteControlReceiver extends BroadcastReceiver {
                 break;
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                 if (keyAction == KeyEvent.ACTION_UP) {
-                    if (state == Playback.STATE_PAUSED) {
-                        EventBus.getDefault().post(new PlayEvent());
-                    } else if (state == Playback.STATE_NONE) {
-
-                    } else {
-                        EventBus.getDefault().post(new PauseEvent());
-                    }
+//                    if (state == Playback.STATE_PAUSED) {
+//                        EventBus.getDefault().post(new PlayEvent());
+//                    } else if (state == Playback.STATE_NONE) {
+//
+//                    } else {
+//                        EventBus.getDefault().post(new PauseEvent());
+//                    }
                 }
                 break;
             case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
@@ -65,13 +61,13 @@ public class RemoteControlReceiver extends BroadcastReceiver {
                 break;
             case KeyEvent.KEYCODE_HEADSETHOOK:
                 if (keyAction == KeyEvent.ACTION_UP) {
-                    if (state == Playback.STATE_PAUSED) {
-                        EventBus.getDefault().post(new PlayEvent());
-                    } else if (state == Playback.STATE_NONE) {
-
-                    } else {
-                        EventBus.getDefault().post(new PauseEvent());
-                    }
+//                    if (state == Playback.STATE_PAUSED) {
+//                        EventBus.getDefault().post(new PlayEvent());
+//                    } else if (state == Playback.STATE_NONE) {
+//
+//                    } else {
+//                        EventBus.getDefault().post(new PauseEvent());
+//                    }
                 }
                 break;
         }
@@ -96,9 +92,9 @@ public class RemoteControlReceiver extends BroadcastReceiver {
 
     public void onEvent(UpdatePlaybackEvent event) {
         if (event.songDetailInfo != null) {
-            this.state = Playback.STATE_BUFFERING;
-        } else {
-            this.state = event.state;
+//            this.state = Playback.STATE_BUFFERING;
+//        } else {
+//            this.state = event.state;
         }
     }
 }

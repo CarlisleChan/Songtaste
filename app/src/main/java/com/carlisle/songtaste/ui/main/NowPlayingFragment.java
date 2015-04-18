@@ -33,16 +33,12 @@ import com.carlisle.songtaste.cmpts.events.FavoriteEvent;
 import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
 import com.carlisle.songtaste.cmpts.events.PlayerSendingEvent;
 import com.carlisle.songtaste.cmpts.events.ProgressEvent;
-import com.carlisle.songtaste.cmpts.events.SkipToNextEvent;
-import com.carlisle.songtaste.cmpts.events.SkipToPrevEvent;
-import com.carlisle.songtaste.cmpts.events.UpdatePlaybackEvent;
 import com.carlisle.songtaste.cmpts.modle.Result;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
-import com.carlisle.songtaste.cmpts.services.Playback;
+import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.fm.DataAccessor;
-import com.carlisle.songtaste.fm.YueduService;
 import com.carlisle.songtaste.utils.LocalSongHelper;
 import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.squareup.picasso.Picasso;
@@ -60,7 +56,7 @@ import rx.android.observables.AndroidObservable;
 /**
  * Created by carlisle on 4/3/15.
  */
-public class NowPlayingFragment extends BaseFragment implements DataAccessor.DataAccessorHandler{
+public class NowPlayingFragment extends BaseFragment implements DataAccessor.DataAccessorHandler {
     private static final String TAG = NowPlayingFragment.class.getSimpleName();
 
     @InjectView(R.id.im_bottom_album_art)
@@ -111,7 +107,8 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
         if (DataAccessor.SINGLE_INSTANCE.getmDataHandler() != this) {
             DataAccessor.SINGLE_INSTANCE.setmDataHandler(this);
         }
-        Intent intent = new Intent(getActivity().getApplicationContext(), YueduService.class);
+
+        Intent intent = new Intent(getActivity().getApplicationContext(), MusicService.class);
         getActivity().startService(intent);
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         getActivity().registerReceiver(mNetworkStateReceiver, filter);
@@ -161,16 +158,10 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
     public void onControllerClick(View view) {
         switch (view.getId()) {
             case R.id.im_prev:
-                EventBus.getDefault().post(new SkipToPrevEvent());
+                playPrevTune();
                 break;
             case R.id.cb_bottom_play_pause:
             case R.id.cb_play_pause:
-//                if (!((CheckBox) view).isChecked()) {
-//                    EventBus.getDefault().post(new PlayEvent());
-//                } else {
-//                    EventBus.getDefault().post(new PauseEvent());
-//                }
-
                 if (playButtonIsPlayingState()) {
                     setPlayButtonPlaying(false);
                     pausePlay();
@@ -181,7 +172,7 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
                 break;
             case R.id.im_bottom_next:
             case R.id.im_next:
-                EventBus.getDefault().post(new SkipToNextEvent());
+                playNextTune();
                 break;
         }
     }
@@ -193,86 +184,6 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
         sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
-    }
-
-    public void onEvent(UpdatePlaybackEvent event) {
-        switch (event.state) {
-            case Playback.STATE_PAUSED:
-                playOrPause.setChecked(true);
-                bottomPlayOrPause.setChecked(true);
-                break;
-            case Playback.STATE_STOPPED:
-                playOrPause.setChecked(false);
-                bottomPlayOrPause.setChecked(false);
-                break;
-            default:
-                if (event.songDetailInfo != null) {
-                    songDetailInfo = event.songDetailInfo;
-                    songName.setText(songDetailInfo.getSong_name());
-                    singerName.setText(songDetailInfo.getSinger_name());
-                    playOrPause.setChecked(false);
-                    bottomSongName.setText(songDetailInfo.getSong_name());
-                    bottomSingerName.setText(songDetailInfo.getSinger_name());
-                    bottomPlayOrPause.setChecked(false);
-                    setAlbumArt(songDetailInfo);
-
-                    if (songDetailInfo.getIscollection().equals("1")) {
-                        favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
-                        bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
-                    } else {
-                        favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love_white));
-                        bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love));
-                    }
-
-                    if (songDetailInfo.getSongType() == SongDetailInfo.SongType.LOCAL_SONG) {
-                        favorite.setVisibility(View.GONE);
-                        bottomFavorite.setVisibility(View.GONE);
-                    } else {
-                        favorite.setVisibility(View.VISIBLE);
-                        bottomFavorite.setVisibility(View.VISIBLE);
-                    }
-                }
-                break;
-        }
-    }
-
-    public void onEvent(FavoriteEvent event) {
-        if (!isFavoriteRequest) {
-            onFavoriteClick();
-        } else {
-            isFavoriteRequest = false;
-        }
-    }
-
-    public void setAlbumArt(SongDetailInfo songDetailInfo) {
-        if (songDetailInfo.songType == SongDetailInfo.SongType.LOCAL_SONG) {
-            bottomAlbumArt.setImageBitmap(LocalSongHelper.getArtwork(getActivity(), Long.parseLong(songDetailInfo.mediaId),
-                    Long.parseLong(songDetailInfo.albumid), true));
-        } else {
-            Picasso.with(getActivity())
-                    .load(songDetailInfo.getAlbumArt())
-                    .placeholder(R.drawable.default_artist)
-                    .into(bottomAlbumArt);
-        }
-    }
-
-    public int position = 0;
-
-    public void onEvent(ProgressEvent progressEvent) {
-        if (progressEvent.trackTouch) return;
-        if (progressEvent.currentPosition == position) {
-            // loading, show progress
-            Log.d("loading=====>", "=====");
-        } else {
-            position = progressEvent.currentPosition;
-        }
-
-        seekBar.setProgress(progressEvent.currentPosition);
-        seekBar.setMax(progressEvent.maxPosition);
-
-        bottomSeekBar.setProgress(progressEvent.currentPosition);
-        bottomSeekBar.setMax(progressEvent.maxPosition);
-
     }
 
     @OnClick({R.id.im_favorite, R.id.im_bottom_favorite})
@@ -309,53 +220,25 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
                 });
     }
 
-    public void hideBottomControl(float v) {
-        bottomContainer.setAlpha(1 - v);
-        toolbarContainer.setAlpha(v);
-
-        if (v == 1) {
-            bottomContainer.setVisibility(View.GONE);
+    public void onEvent(FavoriteEvent event) {
+        if (!isFavoriteRequest) {
+            onFavoriteClick();
         } else {
-            bottomContainer.setVisibility(View.VISIBLE);
+            isFavoriteRequest = false;
         }
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_local, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Toast.makeText(getActivity(), "index is" + " && menu text is " + item.getTitle(), Toast.LENGTH_SHORT).show();
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    /**
-     *
-     *
-     *
-     *
-     *
-     *
-     */
 
     public void onEvent(PlayerSendingEvent playerSendingEvent) {
         switch (playerSendingEvent.serviceCanSend) {
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_CURRENT_POSITION:
                 long currentPosition = playerSendingEvent.currentPosition;
-                setCurrentPosition((int) currentPosition);
+                long length = playerSendingEvent.length;
+                setCurrentPosition((int) currentPosition, (int) length);
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_WILL_PREPARE:
                 Log.d("yuedu", "media player will prepare!!!!");
-                setPlayButtonPlaying(true);
+                playOrPause.setChecked(false);
+                bottomPlayOrPause.setChecked(false);
                 updateCover();
                 updateListViewSelection();
                 showLoading();
@@ -368,25 +251,29 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
                 Log.d("yuedu", "media player will play!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_PLAYING:
-                setPlayButtonPlaying(true);
+                playOrPause.setChecked(false);
+                bottomPlayOrPause.setChecked(false);
                 Log.d("yuedu", "media player is playing!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_WILL_PAUSE:
                 Log.d("yuedu", "media player will pause!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_PAUSED:
-                setPlayButtonPlaying(false);
+                playOrPause.setChecked(true);
+                bottomPlayOrPause.setChecked(true);
                 Log.d("yuedu", "media player is paused!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_WILL_STOP:
                 Log.d("yuedu", "media player will stop!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_STOPPED:
-                setPlayButtonPlaying(false);
+                playOrPause.setChecked(true);
+                bottomPlayOrPause.setChecked(true);
                 Log.d("yuedu", "media player is stopped!!!!");
                 break;
             case PlayerSendingEvent.PLAYER_SENDING_BROADCAST_CATEGORY_PLAYER_ERROR_OCCURRED:
-                setPlayButtonPlaying(false);
+                playOrPause.setChecked(true);
+                bottomPlayOrPause.setChecked(true);
                 hideLoading();
                 Toast.makeText(getActivity().getApplicationContext(), playerSendingEvent.errorKey, Toast.LENGTH_LONG).show();
                 Log.d("yuedu", "media player error occurred!!!!");
@@ -423,24 +310,16 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
         //do not show progressbar progress animation 2013/09/23
     }
 
-    private void setCurrentPosition(final int currentPosition) {
-        assert currentPosition >= 0;
-        final int positionInSecond = currentPosition / 1000;
-        final int minFirstBit = positionInSecond / 600;
-        final int minSecondBit = positionInSecond % 600 / 60;
-        final int secFirstBit = positionInSecond % 600 % 60 / 10;
-        final int secSecondBit = positionInSecond % 600 % 60 % 10;
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                seekBar.setProgress(currentPosition);
-//                mPlayedTimeTextView.setText(minFirstBit + "" + minSecondBit + ":" + secFirstBit + "" + secSecondBit);
-            }
-        });
+    private void setCurrentPosition(final int currentPosition, final int length) {
+        Log.d("88888",currentPosition + "//" + length);
+        seekBar.setProgress(currentPosition);
+        seekBar.setMax(length);
+        bottomSeekBar.setProgress(currentPosition);
+        bottomSeekBar.setMax(length);
     }
 
     private int getCurrentPlayingTuneDuration() {
-        SongDetailInfo tune = DataAccessor.SINGLE_INSTANCE.getPlayingTune();
+        SongDetailInfo tune = DataAccessor.SINGLE_INSTANCE.getPlayingSong();
 //        int min = tune.min;
 //        int sec = tune.sec;
 //        return (min * 60 + sec) * 1000;
@@ -448,23 +327,42 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
     }
 
     private void updateCover() {
-        SongDetailInfo tune = DataAccessor.SINGLE_INSTANCE.getPlayingTune();
-//        String url = tune.bgURL;
-//        String title = tune.title;
-//        String author = tune.author;
-//        String player = tune.player;
-//        String info = getString(R.string.author) + author + " " + getString(R.string.player) + player;
-//        mTitleView.setText(title);
-//        mInfoView.setText(info);
-//        mProgressBar.setIndeterminate(false);
-//        mProgressBar.setMax(getCurrentPlayingTuneDuration());
-//        mProgressBar.setProgress(0);
-//        mPlayedTimeTextView.setText("00:00");
+        songDetailInfo = DataAccessor.SINGLE_INSTANCE.getPlayingSong();
+        songName.setText(songDetailInfo.getSong_name());
+        singerName.setText(songDetailInfo.getSinger_name());
+        playOrPause.setChecked(false);
+        bottomSongName.setText(songDetailInfo.getSong_name());
+        bottomSingerName.setText(songDetailInfo.getSinger_name());
+        bottomPlayOrPause.setChecked(false);
+        setAlbumArt(songDetailInfo);
+
+        if (songDetailInfo.getIscollection().equals("1")) {
+            favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
+            bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
+        } else {
+            favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love_white));
+            bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love));
+        }
+
+        if (songDetailInfo.getSongType() == SongDetailInfo.SongType.LOCAL_SONG) {
+            favorite.setVisibility(View.GONE);
+            bottomFavorite.setVisibility(View.GONE);
+        } else {
+            favorite.setVisibility(View.VISIBLE);
+            bottomFavorite.setVisibility(View.VISIBLE);
+        }
     }
 
-    private void updateListView() {
-//        mListView.setAdapter(getAdapter());
-//        updateListViewSelection();
+    public void setAlbumArt(SongDetailInfo songDetailInfo) {
+        if (songDetailInfo.songType == SongDetailInfo.SongType.LOCAL_SONG) {
+            bottomAlbumArt.setImageBitmap(LocalSongHelper.getArtwork(getActivity(), Long.parseLong(songDetailInfo.mediaId),
+                    Long.parseLong(songDetailInfo.albumid), true));
+        } else {
+            Picasso.with(getActivity())
+                    .load(songDetailInfo.getAlbumArt())
+                    .placeholder(R.drawable.default_artist)
+                    .into(bottomAlbumArt);
+        }
     }
 
     private void updateListViewSelection() {
@@ -475,7 +373,6 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
 
     private void updateUI() {
         updateCover();
-        updateListView();
     }
 
     @Override
@@ -506,12 +403,17 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
     }
 
     private void playNextTune() {
-        DataAccessor.SINGLE_INSTANCE.playNextTune();
+        DataAccessor.SINGLE_INSTANCE.playNextSong();
+        play();
+    }
+
+    private void playPrevTune() {
+        DataAccessor.SINGLE_INSTANCE.playPrevSong();
         play();
     }
 
     private void playTuneAtIndex(int index) {
-        DataAccessor.SINGLE_INSTANCE.playTuneAtIndex(index);
+        DataAccessor.SINGLE_INSTANCE.playSongAtIndex(index);
         play();
     }
 
@@ -554,4 +456,32 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
         }
     };
 
+    public void hideBottomControl(float v) {
+        bottomContainer.setAlpha(1 - v);
+        toolbarContainer.setAlpha(v);
+
+        if (v == 1) {
+            bottomContainer.setVisibility(View.GONE);
+        } else {
+            bottomContainer.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_local, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Toast.makeText(getActivity(), "index is" + " && menu text is " + item.getTitle(), Toast.LENGTH_SHORT).show();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }
