@@ -8,20 +8,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.carlisle.songtaste.cmpts.events.DownloadCompleteEvent;
+import com.carlisle.songtaste.cmpts.events.NetworkTypeChangedEvent;
 import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
 import com.carlisle.songtaste.cmpts.events.PlayerSendingEvent;
 import com.carlisle.songtaste.cmpts.events.ScreenOnEvent;
+import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.reveiver.HeadsetPlugReceiver;
+import com.carlisle.songtaste.cmpts.reveiver.NetworkStateReceiver;
 import com.carlisle.songtaste.cmpts.reveiver.NotificationReceiver;
 import com.carlisle.songtaste.cmpts.reveiver.RemoteControlReceiver;
 import com.carlisle.songtaste.cmpts.reveiver.ScreenOnReceiver;
+import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.carlisle.songtaste.utils.QueueHelper;
 
 import java.io.File;
@@ -92,6 +98,7 @@ public class MusicService extends IntentService {
     private NotificationReceiver notificationReceiver = new NotificationReceiver();
     private ScreenOnReceiver screenOnReceiver = new ScreenOnReceiver();
     private RemoteControlReceiver remoteControlReceiver = new RemoteControlReceiver();
+    private NetworkStateReceiver networkStateReceiver = new NetworkStateReceiver();
 
     private AudioManager mAudioManager;
     private TelephonyManager mTelephonyManager;
@@ -103,6 +110,30 @@ public class MusicService extends IntentService {
 
     public void onEvent(DownloadCompleteEvent downloadCompleteEvent) {
 //        YueduNotificationManager.SINGLE_INSTANCE.showForegroundNotification(MusicService.this);
+    }
+
+    public void onEvent(NetworkTypeChangedEvent networkType) {
+        switch (networkType.type) {
+            case ConnectivityManager.TYPE_MOBILE:
+                if (PreferencesHelper.getInstance(this).isPlayOnlyWifi()) {
+                    pause();
+                } else {
+                    playCache();
+                }
+                break;
+            case NetworkStateReceiver.DISCONNECT:
+                playCache();
+                break;
+        }
+    }
+
+    private void playCache() {
+        if (!SongDetailInfo.getAll().isEmpty()) {
+            DataAccessor.SINGLE_INSTANCE.shot(this, QueueHelper.getInstance().getCacheQueue());
+            DataAccessor.SINGLE_INSTANCE.playSongAtIndex(0);
+            play();
+            Toast.makeText(this, "正在播放离线文件", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onEvent(ScreenOnEvent screenOnEvent) {
@@ -364,6 +395,7 @@ public class MusicService extends IntentService {
         screenOnReceiver.register(this);
         notificationReceiver.register(this);
         remoteControlReceiver.register(this);
+        networkStateReceiver.register(this);
 
         TelephonyManager telMgr = getmTelephonyManager();
         if (telMgr != null) {
@@ -476,6 +508,10 @@ public class MusicService extends IntentService {
 
         if (remoteControlReceiver != null) {
             remoteControlReceiver.unRegister();
+        }
+
+        if (networkStateReceiver != null) {
+            networkStateReceiver.unRegister();
         }
 
         if (mPlayer != null) {

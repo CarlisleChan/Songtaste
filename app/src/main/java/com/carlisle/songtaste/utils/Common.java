@@ -17,12 +17,12 @@ public class Common {
         public final static int NOTIFICATION_FAVORITE = 1005;
     }
 
-
-    public class MudiaButton{
+    public class RemoteControl{
         public final static int MEDIA_BUTTON_PAUSE = 1030;
         public final static int MEDIA_BUTTON_NEXT = 1031;
         public final static int MEDIA_BUTTON_PREV = 1032;
         public final static int MEDIA_BUTTON_STOP = 1033;
+        public final static String MEDIA_BUTTON_ACTION = "android.intent.action.SCREEN_ON";
     }
 
     public class Screen{

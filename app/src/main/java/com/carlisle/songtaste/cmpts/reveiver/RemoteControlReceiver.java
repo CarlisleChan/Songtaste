@@ -67,7 +67,7 @@ public class RemoteControlReceiver extends BroadcastReceiver {
         EventBus.getDefault().register(this);
 
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Common.Notification.NOTIFICATION_ACTION_BUTTON);
+        intentFilter.addAction(Common.RemoteControl.MEDIA_BUTTON_ACTION);
         musicService.registerReceiver(this, intentFilter);
     }
 
