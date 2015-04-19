@@ -1,1 +1,1 @@
-include ':app', ':taggrouplibrary', ':SuperRecyclerView', ':SwipeBackLayoutLibrary', ':DrawerLibrary'
+include ':app', ':taggrouplibrary', ':SuperRecyclerView', ':SwipeBackLayoutLibrary', ':DrawerLibrary', ':JniLib'
