@@ -14,6 +14,7 @@ import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 

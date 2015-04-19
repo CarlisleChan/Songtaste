@@ -67,7 +67,7 @@ public class StreamingDownloadMediaPlayer {
         }
     }
 
-    private URL mURL;
+    private String mURL;
 
     private PlayerState mState;
     private boolean mLooping;
@@ -197,8 +197,7 @@ public class StreamingDownloadMediaPlayer {
         return mDiskCache;
     }
 
-    public void setDataSource(String tunePath) throws MalformedURLException {
-        URL url = new URL(tunePath);
+    public void setDataSource(String url) throws MalformedURLException {
         if (url == null) {
             throw new IllegalArgumentException("input stream is null");
         }
@@ -209,7 +208,7 @@ public class StreamingDownloadMediaPlayer {
         this.mState = PlayerState.INITIALIZED;
     }
 
-    public URL getDataSource() {
+    public String getDataSource() {
         return mURL;
     }
 
@@ -312,6 +311,17 @@ public class StreamingDownloadMediaPlayer {
         @Override
         public int read() throws IOException {
             return inputStream.read();
+        }
+    }
+
+    private boolean isUrl(String url) {
+        URL url1;
+        try {
+            url1 = new URL(url);
+            InputStream in = url1.openStream();
+            return true;
+        } catch (Exception e1) {
+            return false;
         }
     }
 
@@ -447,7 +457,11 @@ public class StreamingDownloadMediaPlayer {
 
     public void prepareAsync() throws DecoderException, InterruptedException, BitstreamException, IOException {
         if (mState == PlayerState.INITIALIZED || mState == PlayerState.STOPPED) {
-            handleInput(mURL, new Decoder());
+            if(isUrl(mURL)) {
+                handleInput(new URL(mURL), new Decoder());
+            } else {
+
+            }
         } else {
             throw new IllegalStateException("cannot prepareAsync in [" + mState + "] state");
         }
