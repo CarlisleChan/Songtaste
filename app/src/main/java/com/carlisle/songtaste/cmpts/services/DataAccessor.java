@@ -78,6 +78,7 @@ public enum DataAccessor {
     }
 
     public void shot(final Context context, List<SongDetailInfo> dataList) {
+        mDataList.clear();
         mDataList = dataList;
     }
 

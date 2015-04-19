@@ -67,6 +67,7 @@ public class AlbumDetailAdapter extends SongtasteLoadMoreAdapter {
                 @Override
                 public void onClick(View v) {
                     QueueHelper.getInstance().setCurrentQueue(QueueHelper.QueueType.ALBUM_DETAIL_QUEUE);
+                    DataAccessor.SINGLE_INSTANCE.shot(context, QueueHelper.getInstance().getAlbumDetailQueue());
                     DataAccessor.SINGLE_INSTANCE.playSongAtIndex(position);
                     EventBus.getDefault().post(new PlayerReceivingEvent(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_PLAY));
                 }
