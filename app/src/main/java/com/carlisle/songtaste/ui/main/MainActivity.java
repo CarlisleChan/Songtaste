@@ -68,7 +68,6 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-
         startService(new Intent(this, MusicService.class));
         if (savedInstanceState == null) {
             createAddFragment();

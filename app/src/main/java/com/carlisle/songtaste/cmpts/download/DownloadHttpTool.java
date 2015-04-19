@@ -60,7 +60,7 @@ public class DownloadHttpTool {
 
 	// 在开始下载之前需要调用ready方法进行配置
 	public void ready() {
-		Log.w(TAG, "ready");
+		Log.d(TAG, "ready");
 		globalCompelete = 0;
 		downloadInfos = sqlTool.getInfos(urlstr);
 		if (downloadInfos.size() == 0) {
@@ -76,13 +76,13 @@ public class DownloadHttpTool {
 				for (DownloadInfo info : downloadInfos) {
 					globalCompelete += info.getCompeleteSize();
 				}
-				Log.w(TAG, "globalCompelete:::" + globalCompelete);
+				Log.d(TAG, "globalCompelete:::" + globalCompelete);
 			}
 		}
 	}
 
 	public void start() {
-		Log.w(TAG, "start");
+		Log.d(TAG, "start");
 		if (downloadInfos != null) {
 			if (state == Download_State.Downloading) {
 				return;
@@ -125,7 +125,7 @@ public class DownloadHttpTool {
 	 * 第一次下载初始化
 	 */
 	private void initFirst() {
-		Log.w(TAG, "initFirst");
+		Log.d(TAG, "initFirst");
 		try {
 			URL url = new URL(urlstr);
 			HttpURLConnection connection = (HttpURLConnection) url
@@ -133,7 +133,7 @@ public class DownloadHttpTool {
 			connection.setConnectTimeout(5000);
 			connection.setRequestMethod("GET");
 			fileSize = connection.getContentLength();
-			Log.w(TAG, "fileSize::" + fileSize);
+			Log.d(TAG, "fileSize::" + fileSize);
 			File fileParent = new File(localPath);
 			if (!fileParent.exists()) {
 				fileParent.mkdir();
@@ -214,7 +214,7 @@ public class DownloadHttpTool {
 					message.obj = urlstr;
 					message.arg1 = length;
 					mHandler.sendMessage(message);
-					Log.w(TAG, "Threadid::" + threadId + "    compelete::"
+					Log.d(TAG, "Threadid::" + threadId + "    compelete::"
 							+ compeleteSize + "    total::" + totalThreadSize);
 					// 当程序不再是下载状态的时候，纪录当前的下载进度
 					if ((state != Download_State.Downloading)

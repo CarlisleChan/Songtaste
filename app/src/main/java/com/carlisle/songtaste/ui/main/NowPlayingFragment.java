@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVAnalytics;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
+import com.carlisle.songtaste.cmpts.download.DownloadUtil;
 import com.carlisle.songtaste.cmpts.events.DownloadCompleteEvent;
 import com.carlisle.songtaste.cmpts.events.DownloadFailedEvent;
 import com.carlisle.songtaste.cmpts.events.FavoriteEvent;
@@ -30,8 +31,8 @@ import com.carlisle.songtaste.cmpts.modle.Result;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
-import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.cmpts.services.DataAccessor;
+import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.utils.LocalSongHelper;
 import com.carlisle.songtaste.utils.PreferencesHelper;
 import com.squareup.picasso.Picasso;
@@ -143,6 +144,30 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
                 playNextTune();
                 break;
         }
+    }
+
+    @OnClick(R.id.im_download)
+    public void onDownloadClick() {
+        DownloadUtil.getInstance(getActivity())
+                .add(DataAccessor.SINGLE_INSTANCE.getPlayingSong())
+                .start();
+
+        DownloadUtil.getInstance(getActivity()).setOnDownloadListener(new DownloadUtil.OnDownloadListener() {
+            @Override
+            public void downloadStart(int fileSize) {
+                Log.d("=====start", "==" + fileSize);
+            }
+
+            @Override
+            public void downloadProgress(int downloadedSize) {
+                Log.d("=====progress", "==" + downloadedSize);
+            }
+
+            @Override
+            public void downloadEnd() {
+                Log.d("=====end", "==");
+            }
+        });
     }
 
     @OnClick(R.id.im_share)

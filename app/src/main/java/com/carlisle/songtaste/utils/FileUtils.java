@@ -1,5 +1,6 @@
 package com.carlisle.songtaste.utils;
 
+import android.os.Environment;
 import android.text.TextUtils;
 
 import java.io.File;
@@ -11,24 +12,22 @@ import java.io.IOException;
 public class FileUtils {
     /**
      * 获取文件夹大小
+     *
      * @param file File实例
      * @return long 单位为M
      * @throws Exception
      */
-    public static long getFolderSize(java.io.File file)throws Exception{
+    public static long getFolderSize(java.io.File file) throws Exception {
         long size = 0;
         java.io.File[] fileList = file.listFiles();
-        for (int i = 0; i < fileList.length; i++)
-        {
-            if (fileList[i].isDirectory())
-            {
+        for (int i = 0; i < fileList.length; i++) {
+            if (fileList[i].isDirectory()) {
                 size = size + getFolderSize(fileList[i]);
-            } else
-            {
+            } else {
                 size = size + fileList[i].length();
             }
         }
-        return size/1048576;
+        return size / 1048576;
     }
 
     /**
@@ -59,5 +58,15 @@ public class FileUtils {
                 }
             }
         }
+    }
+
+    public static String getSDPath() {
+        File sdDir = null;
+        boolean sdCardExist = Environment.getExternalStorageState()
+                .equals(Environment.MEDIA_MOUNTED);
+        if (sdCardExist) {
+            sdDir = Environment.getExternalStorageDirectory();
+        }
+        return sdDir.toString();
     }
 }
