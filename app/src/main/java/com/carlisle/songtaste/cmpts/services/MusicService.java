@@ -33,7 +33,6 @@ import com.carlisle.songtaste.utils.QueueHelper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -410,7 +409,7 @@ public class MusicService extends IntentService {
     private void setTunePath(final String tunePath) throws IOException, JavaLayerException {
         StreamingDownloadMediaPlayer player = getmPlayer();
         player.reset();
-        player.setDataSource(new URL(tunePath));
+        player.setDataSource(tunePath);
     }
 
     private void play() {

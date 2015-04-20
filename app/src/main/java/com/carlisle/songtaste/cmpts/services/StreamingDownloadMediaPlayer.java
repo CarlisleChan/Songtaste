@@ -66,7 +66,7 @@ public class StreamingDownloadMediaPlayer {
         }
     }
 
-    private URL mURL;
+    private String mPath;
 
     private PlayerState mState;
     private boolean mLooping;
@@ -83,7 +83,7 @@ public class StreamingDownloadMediaPlayer {
     private static final int DISK_FILE_CACHE_INDEX = 0;
     private static final int DISK_FILE_CACHE_VERSION = 1;
 
-    private abstract class StreamingAsyncTask extends AsyncTask<URL, Void, Void> {
+    private abstract class StreamingAsyncTask extends AsyncTask<String, Void, Void> {
         boolean isPaused = false;
         boolean isStopped = false;
         boolean isPlaying = false;
@@ -196,23 +196,23 @@ public class StreamingDownloadMediaPlayer {
         return mDiskCache;
     }
 
-    public void setDataSource(URL url) {
-        if (url == null) {
+    public void setDataSource(String path) {
+        if (path == null) {
             throw new IllegalArgumentException("input stream is null");
         }
         if (mState != PlayerState.IDLE) {
             throw new IllegalStateException("cannot setDataSource in [" + mState + "] state");
         }
-        this.mURL = url;
+        this.mPath = path;
         this.mState = PlayerState.INITIALIZED;
     }
 
-    public URL getDataSource() {
-        return mURL;
+    public String getDataSource() {
+        return mPath;
     }
 
     public void reset() {
-        mURL = null;
+        mPath = null;
         mState = PlayerState.IDLE;
         mLooping = false;
         if (mAudioTrack != null) {
@@ -313,16 +313,26 @@ public class StreamingDownloadMediaPlayer {
         }
     }
 
-    protected void handleInput(final URL url, final Decoder decoder) throws IOException, BitstreamException, DecoderException, InterruptedException {
+    protected void handleInput(final String url, final Decoder decoder) throws IOException, BitstreamException, DecoderException, InterruptedException {
         mStreamingTask = new StreamingAsyncTask() {
             @Override
-            protected Void doInBackground(URL... params) {
-                URL url1 = params[0];
+            protected Void doInBackground(String... params) {
+                URL url1 = null;
+                try {
+                    url1 = new URL(params[0]);
+                    InputStream in = url1.openStream();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    url1 = null;
+                }
+
+                // TODO if url is true
+
                 HttpURLConnection connection = null;
                 InputStream inputStream = null;
                 Bitstream bitstream = null;
                 DiskLruCache diskCache = getDiskCache();
-                String key = MD5Util.md5(url.getPath());
+                String key = MD5Util.md5(url1.getPath());
                 DiskLruCache.Editor diskEditor = null;
                 try {
                     DiskLruCache.Snapshot mp3Snapshot = diskCache.get(key);
@@ -445,7 +455,7 @@ public class StreamingDownloadMediaPlayer {
 
     public void prepareAsync() throws DecoderException, InterruptedException, BitstreamException, IOException {
         if (mState == PlayerState.INITIALIZED || mState == PlayerState.STOPPED) {
-            handleInput(mURL, new Decoder());
+            handleInput(mPath, new Decoder());
         } else {
             throw new IllegalStateException("cannot prepareAsync in [" + mState + "] state");
         }
@@ -525,7 +535,7 @@ public class StreamingDownloadMediaPlayer {
         }
         mCacheDir = null;
         mHandler = null;
-        mURL = null;
+        mPath = null;
         mPreparedListener = null;
         if (mStreamingTask != null) {
             if (!mStreamingTask.isCancelled()) {
