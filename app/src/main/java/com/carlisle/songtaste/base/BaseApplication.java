@@ -42,5 +42,7 @@ public class BaseApplication extends Application {
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
 
+        registerActivityLifecycleCallbacks(new LifecycleHandler());
+
     }
 }
