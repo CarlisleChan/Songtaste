@@ -20,7 +20,7 @@ import com.carlisle.songtaste.cmpts.modle.TagInfo;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
 import com.carlisle.songtaste.ui.discover.adapter.TagAdapter;
-import com.carlisle.songtaste.ui.view.ProgressWheel;
+import com.carlisle.songtaste.ui.view.progress.ProgressWheel;
 
 import java.util.ArrayList;
 

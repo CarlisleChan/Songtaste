@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.ui.view;
+package com.carlisle.songtaste.ui.view.timePicker;
 
 import android.content.Context;
 import android.graphics.Canvas;

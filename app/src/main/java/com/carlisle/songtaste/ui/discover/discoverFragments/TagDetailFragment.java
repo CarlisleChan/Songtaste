@@ -25,7 +25,7 @@ import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
 import com.carlisle.songtaste.ui.discover.adapter.TagDetailAdapter;
 import com.carlisle.songtaste.ui.main.MainActivity;
-import com.carlisle.songtaste.ui.view.ProgressWheel;
+import com.carlisle.songtaste.ui.view.progress.ProgressWheel;
 import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;

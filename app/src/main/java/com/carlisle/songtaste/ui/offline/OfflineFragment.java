@@ -14,7 +14,7 @@ import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
 import com.carlisle.songtaste.cmpts.modle.SongInfo;
-import com.carlisle.songtaste.ui.view.ProgressWheel;
+import com.carlisle.songtaste.ui.view.progress.ProgressWheel;
 
 import java.util.ArrayList;
 

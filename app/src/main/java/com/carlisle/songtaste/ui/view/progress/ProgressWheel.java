@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.ui.view;
+package com.carlisle.songtaste.ui.view.progress;
 
 import android.content.Context;
 import android.content.res.TypedArray;

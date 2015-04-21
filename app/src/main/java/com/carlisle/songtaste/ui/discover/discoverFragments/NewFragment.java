@@ -25,7 +25,7 @@ import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.JsonConverter;
 import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.ui.discover.adapter.NewAdapter;
-import com.carlisle.songtaste.ui.view.ProgressWheel;
+import com.carlisle.songtaste.ui.view.progress.ProgressWheel;
 import com.carlisle.songtaste.utils.QueueHelper;
 import com.github.stephanenicolas.loglifecycle.LogLifeCycle;
 

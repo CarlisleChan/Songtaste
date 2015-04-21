@@ -11,7 +11,8 @@
     <string name="drawer_item_favorite">我的收藏</string>
     <string name="drawer_item_local">本地音乐</string>
     <string name="drawer_item_offline">我的离线</string>
-    <string name="drawer_section_name"> 其他选项</string>
+    <string name="drawer_section_name">其他选项</string>
+    <string name="drawer_item_sound_recognition">歌曲识别</string>
     <string name="drawer_item_settings">设置</string>
     <string name="drawer_item_about">关于</string>
 

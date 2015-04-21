@@ -14,7 +14,7 @@
         android:textColor="@android:color/darker_gray"
         android:textSize="18sp" />
 
-    <com.carlisle.songtaste.ui.view.PickerView
+    <com.carlisle.songtaste.ui.view.timePicker.PickerView
         android:id="@+id/picker"
         android:layout_width="wrap_content"
         android:layout_height="150dp" />
