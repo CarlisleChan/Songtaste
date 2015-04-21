@@ -133,8 +133,9 @@ public class MainActivity extends BaseActivity {
                         new PrimaryDrawerItem().withName(R.string.drawer_item_offline).withIcon(FontAwesome.Icon.faw_cloud_download).withIdentifier(2),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_local).withIcon(FontAwesome.Icon.faw_folder).withIdentifier(3),
                         new SectionDrawerItem().withName(R.string.drawer_section_name),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(4),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_about).withIcon(FontAwesome.Icon.faw_info_circle).withIdentifier(5)
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_sound_recognition).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(4),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(5),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_about).withIcon(FontAwesome.Icon.faw_info_circle).withIdentifier(6)
                 )
                 .withFullscreen(true)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -143,8 +144,10 @@ public class MainActivity extends BaseActivity {
 
                         if (drawerItem != null) {
                             if (drawerItem.getIdentifier() == 4) {
-                                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                                startActivity(new Intent(MainActivity.this, SoundRecognitionActivity.class));
                             } else if (drawerItem.getIdentifier() == 5) {
+                                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                            } else if (drawerItem.getIdentifier() == 6) {
                                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                             } else {
                                 switcher.switchToFragment(drawerItem.getIdentifier());
@@ -322,7 +325,6 @@ public class MainActivity extends BaseActivity {
                 quit();
                 return true;
             case R.id.action_scan_again:
-                MENU_TYPE = R.menu.menu_offline;
                 return true;
             case R.id.action_manager:
                 return true;

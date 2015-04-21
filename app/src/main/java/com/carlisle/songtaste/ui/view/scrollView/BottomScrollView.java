@@ -1,4 +1,4 @@
-package com.carlisle.songtaste.ui.view;
+package com.carlisle.songtaste.ui.view.scrollView;
 
 /**
  * Created by carlisle on 3/17/15.

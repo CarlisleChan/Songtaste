@@ -5,7 +5,6 @@ import android.app.Application;
 import com.activeandroid.ActiveAndroid;
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
-import com.carlisle.songtaste.cmpts.crash.CrashHandler;
 import com.facebook.stetho.Stetho;
 
 /**
@@ -39,8 +38,10 @@ public class BaseApplication extends Application {
         AVAnalytics.enableCrashReport(this, true);
 
         // collect crash
-        CrashHandler crashHandler = CrashHandler.getInstance();
-        crashHandler.init(getApplicationContext());
+//        CrashHandler crashHandler = CrashHandler.getInstance();
+//        crashHandler.init(getApplicationContext());
+
+        registerActivityLifecycleCallbacks(new LifecycleHandler());
 
     }
 }

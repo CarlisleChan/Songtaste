@@ -23,7 +23,7 @@ import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
 import com.carlisle.songtaste.ui.develop.DeveloperOptionsActivity;
-import com.carlisle.songtaste.ui.view.PickerView;
+import com.carlisle.songtaste.ui.view.timePicker.PickerView;
 import com.carlisle.songtaste.utils.FileUtils;
 import com.carlisle.songtaste.utils.LeancloudEventIDS;
 import com.carlisle.songtaste.utils.PreferencesHelper;
