@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
-    <com.carlisle.songtaste.ui.view.wave.WaveformView
-        android:layout_weight="1"
-        android:id="@+id/waveform_view"
+    <include layout="@layout/toolbar" />
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:textColor="#7F222222"
-        android:textSize="20sp"
-        android:text="Use Canvas" />
+        <com.carlisle.songtaste.ui.view.wave.WaveformView
+            android:layout_weight="1"
+            android:id="@+id/waveform_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-</FrameLayout>
 
+
+    </FrameLayout>
+
+
+</LinearLayout>

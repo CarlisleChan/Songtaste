@@ -8,7 +8,7 @@ android {
     buildToolsVersion "21.1.2"
     defaultConfig {
         applicationId 'com.carlisle.songtaste'
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
@@ -63,6 +63,7 @@ dependencies {
     compile project(':taggrouplibrary')
     compile project(':SuperRecyclerView')
     compile project(':SwipeBackLayoutLibrary')
+    compile project(':BlurringView')
     compile files('libs/avoscloud-sns-v3.1.2.jar')
     compile files('libs/avoscloud-statistics-v3.1.2.jar')
     compile files('libs/avoscloud-push-v3.1.2.jar')
