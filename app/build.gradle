@@ -63,7 +63,7 @@ dependencies {
     compile project(':taggrouplibrary')
     compile project(':SuperRecyclerView')
     compile project(':SwipeBackLayoutLibrary')
-    compile project(':BlurringView')
+    compile project(':SoundRecognition')
     compile files('libs/avoscloud-sns-v3.1.2.jar')
     compile files('libs/avoscloud-statistics-v3.1.2.jar')
     compile files('libs/avoscloud-push-v3.1.2.jar')

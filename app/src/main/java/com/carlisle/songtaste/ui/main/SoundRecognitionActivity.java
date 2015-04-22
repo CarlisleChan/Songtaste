@@ -4,14 +4,28 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.ui.view.wave.WaveformView;
+import com.carlisle.soundrecognition.DoresoRecord;
+import com.carlisle.soundrecognition.DoresoRecordListener;
+import com.doreso.sdk.DoresoConfig;
+import com.doreso.sdk.DoresoListener;
+import com.doreso.sdk.DoresoManager;
+import com.doreso.sdk.utils.DoresoMusicTrack;
+import com.doreso.sdk.utils.DoresoUtils;
+import com.doreso.sdk.utils.Logger;
+
+import java.io.InputStream;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -22,8 +36,11 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
 /**
  * Created by chengxin on 4/21/15.
  */
-public class SoundRecognitionActivity extends BaseActivity implements SwipeBackActivityBase {
+public class SoundRecognitionActivity extends BaseActivity implements SwipeBackActivityBase, DoresoRecordListener, DoresoListener {
+    private static final String TAG = SoundRecognitionActivity.class.getSimpleName();
     private static final int MSG_GET_VOLUME = 0x1001;
+    private static final String APPKEY = "UHQEQKeZmMqcjVFIm49pEqIBGU03wzfnZybidhnIDe8";
+    private static final String APPSECRET = "55a519d61a06a1c56bec750cf377fef3";
 
     @InjectView(R.id.waveform_view)
     WaveformView waveformView;
@@ -33,6 +50,15 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
     private Handler handler;
     private RecordThread recordThread;
     private SwipeBackActivityHelper mHelper;
+
+    private TextView mVolume;
+    private TextView mResult, tv_time;
+    private DoresoManager doresoManager;
+    private DoresoRecord doresoRecord;
+    private boolean processing;
+
+
+    private DoresoConfig doresoConfig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +80,17 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
                 return true;
             }
         });
+
+    }
+
+    private void initDoresoRecord() {
+        doresoConfig = new DoresoConfig();
+        doresoConfig.appkey = APPKEY;
+        doresoConfig.appSecret = APPSECRET;
+        doresoConfig.listener = this;
+        doresoConfig.context = this;
+        doresoManager = new DoresoManager(doresoConfig);
+        doresoRecord = new DoresoRecord(this, 16 * 1000);
     }
 
     @Override
@@ -70,6 +107,8 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
             recordThread = null;
         }
         super.onPause();
+        doresoRecord.reqCancel();
+        doresoManager.cancel();
     }
 
     private void update(final float volume) {
@@ -79,6 +118,45 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
                 waveformView.updateAmplitude(volume * 0.1f / 2000);
             }
         });
+    }
+
+
+    public void start() {
+        tv_time.setText("");
+        if (!processing) {
+            processing = true;
+            mResult.setText(getResources().getString(R.string.recording));
+            if (doresoRecord !=null) {
+                doresoRecord.reqCancel();
+                doresoRecord = null;
+            }
+            doresoRecord = new DoresoRecord(this, 15*1024);
+            doresoRecord.start();
+            if (!doresoManager.startRecognize()) {
+                Toast.makeText(this, "无网络,无法识别", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    protected void stop() {
+        if (processing) {
+            doresoRecord.reqStop();
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    getResources().getString(R.string.clickrecord),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    protected void cancel() {
+        if (processing) {
+            doresoManager.cancel();
+            processing = false;
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    getResources().getString(R.string.clickrecord),
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     static class RecordThread extends Thread {
@@ -133,6 +211,107 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
         }
     }
 
+
+    /**
+     * 识别本地MP3 demo
+     *
+     * @author jzx
+     */
+    class Mp3Recognizer extends Thread {
+
+        @Override
+        public void run() {
+            super.run();
+            String mp3path = Environment.getExternalStorageDirectory()
+                    .getAbsolutePath().toString()
+                    + "/test.mp3";
+            doresoManager.recognize_mp3(mp3path);
+        }
+    }
+
+    /**
+     * 识别本地PCM demo线程
+     *
+     * @author jzx
+     *
+     */
+    class PCMRecognizer extends Thread {
+
+        @Override
+        public void run() {
+            super.run();
+            byte[] buffer = getFromAssets("paomo.pcm");
+            byte[] res = DoresoUtils.resample(buffer, buffer.length, 44100, 2,
+                    true);
+            // 提取指纹
+            byte[] data = DoresoUtils.genNiceMatrix(res, res.length);
+            if (data == null) {
+                Logger.e(TAG, "data is null");
+            } else {
+                Logger.e(TAG, "data is not null:" + data.length);
+            }
+            doresoManager.recognize_pcm(data, data.length, true);
+        }
+
+    }
+
+    private byte[] getFromAssets(String fileName) {
+        byte[] buffer = new byte[] {};
+        try {
+            InputStream iStream = getResources().getAssets().open(fileName);
+            int length = iStream.available();
+            buffer = new byte[length];
+            iStream.read(buffer, 0, length);
+            iStream.close();
+            return buffer;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return buffer;
+    }
+
+    @Override
+    public void onRecognizeSuccess(DoresoMusicTrack[] tracks, String result) {
+        // TODO Auto-generated method stub
+        doresoManager.stopRecognize();
+
+        mResult.setText(tracks.length + "\n"
+                + getResources().getString(R.string.artist)
+                + tracks[0].getArtist()
+                + getResources().getString(R.string.title)
+                + tracks[0].getName() + "\n" + result);
+        processing = false;
+    }
+
+    @Override
+    public void onRecognizeFail(int errorcode, String msg) {
+        doresoManager.cancel();
+
+        mResult.setText(errorcode + ":" + msg);
+        processing = false;
+    }
+
+    @Override
+    public void onRecognizeEnd() {
+        Log.e(TAG, "onRecognizeEnd");
+        processing = false;
+        doresoRecord.reqCancel();
+    }
+
+    @Override
+    public void onRecording(byte[] buffer) {
+
+    }
+
+    @Override
+    public void onRecordError(int errorcode, String msg) {
+        Log.e(TAG, "onRecordError:" + msg + "//" + errorcode);
+    }
+
+    @Override
+    public void onRecordEnd() {
+
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
