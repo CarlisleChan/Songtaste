@@ -83,7 +83,7 @@ public class NewAdapter extends SongtasteLoadMoreAdapter {
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    QueueHelper.getInstance().setCurrentQueue(QueueHelper.QueueType.NEW_QUEUE);
+                    DataAccessor.SINGLE_INSTANCE.shot(context, QueueHelper.getInstance().getNewQueue());
                     DataAccessor.SINGLE_INSTANCE.playSongAtIndex(position);
                     EventBus.getDefault().post(new PlayerReceivingEvent(PlayerReceivingEvent.PLAYER_RECEIVING_BROADCAST_CATEGORY_PLAY));
                 }

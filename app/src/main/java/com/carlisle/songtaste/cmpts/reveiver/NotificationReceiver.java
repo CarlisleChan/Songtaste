@@ -123,16 +123,12 @@ public class NotificationReceiver extends BroadcastReceiver {
         remoteViews.setTextViewText(R.id.ib_song_name, songDetailInfo.getSong_name());
         remoteViews.setTextViewText(R.id.ib_singer_name, songDetailInfo.getSinger_name());
 
-        if (songDetailInfo.getIscollection().equals("1")) {
-            remoteViews.setImageViewResource(R.id.ib_favorite, R.drawable.ic_btn_loved);
-        } else {
-            remoteViews.setImageViewResource(R.id.ib_favorite, R.drawable.ic_btn_love_white);
-        }
-
-        if (songDetailInfo.getSongType() == SongDetailInfo.SongType.LOCAL_SONG) {
-
-        } else {
-
+        if (songDetailInfo.getSongType() == SongDetailInfo.SongType.SONGTASTE_SONG && songDetailInfo.getIscollection() != null) {
+            if (songDetailInfo.getIscollection().equals("1")) {
+                remoteViews.setImageViewResource(R.id.ib_favorite, R.drawable.ic_btn_loved);
+            } else {
+                remoteViews.setImageViewResource(R.id.ib_favorite, R.drawable.ic_btn_love_white);
+            }
         }
 
         showNotification();

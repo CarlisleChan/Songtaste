@@ -212,7 +212,7 @@ public class FavoriteFragment extends BaseFragment implements OnMoreListener {
         SongDetailInfo songDetailInfo1 = songDetailInfo;
         songDetailInfo1.setAlbumArt(((SongInfo) adapter.getData().get(currentIndex)).getUpUIcon());
         songDetailInfo1.setMediaId(((SongInfo) adapter.getData().get(currentIndex)).getID());
-        QueueHelper.getInstance().getNewQueue().add(songDetailInfo);
+        QueueHelper.getInstance().getFavoriteQueue().add(songDetailInfo);
     }
 
     @Override

@@ -315,18 +315,17 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
         bottomSingerName.setText(songDetailInfo.getSinger_name());
         setAlbumArt(songDetailInfo);
 
-        if (songDetailInfo.getIscollection().equals("1")) {
-            favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
-            bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
-        } else {
-            favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love_white));
-            bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love));
-        }
-
         if (songDetailInfo.getSongType() == SongDetailInfo.SongType.LOCAL_SONG) {
             favorite.setVisibility(View.GONE);
             bottomFavorite.setVisibility(View.GONE);
         } else {
+            if (songDetailInfo.getIscollection().equals("1")) {
+                favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
+                bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
+            } else {
+                favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love_white));
+                bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love));
+            }
             favorite.setVisibility(View.VISIBLE);
             bottomFavorite.setVisibility(View.VISIBLE);
         }

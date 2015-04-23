@@ -160,7 +160,7 @@ public class TagDetailFragment extends BaseFragment implements OnMoreListener {
     @Override
     public void onAnalysisCompleted() {
         if (++currentIndex < adapter.getData().size()) {
-            setSongtasteQueue(((SongInfo) adapter.getData().get(currentIndex)).getID());
+            setSongtasteQueue(((SongInfo) adapter.getData().get(currentIndex)).getSongid());
         } else if (currentIndex == adapter.getData().size()) {
             getQueueDone = true;
             getActivity().runOnUiThread(new Runnable() {
@@ -175,7 +175,7 @@ public class TagDetailFragment extends BaseFragment implements OnMoreListener {
 
     @Override
     public void onAnalysisNext(SongDetailInfo songDetailInfo) {
-        QueueHelper.getInstance().getAlbumDetailQueue().add(songDetailInfo);
+        QueueHelper.getInstance().getTagDetailQueue().add(songDetailInfo);
     }
 
     @Override
@@ -197,7 +197,7 @@ public class TagDetailFragment extends BaseFragment implements OnMoreListener {
                     @Override
                     public void onCompleted() {
                         SongInfo songInfo = (SongInfo) adapter.getData().get(currentIndex);
-                        setSongtasteQueue(songInfo.getID());
+                        setSongtasteQueue(songInfo.getSongid());
                     }
 
                     @Override
