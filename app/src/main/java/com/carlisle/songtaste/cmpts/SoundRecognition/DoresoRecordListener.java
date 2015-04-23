@@ -1,4 +1,4 @@
-package com.carlisle.soundrecognition;
+package com.carlisle.songtaste.cmpts.SoundRecognition;
 
 public interface DoresoRecordListener {
 	

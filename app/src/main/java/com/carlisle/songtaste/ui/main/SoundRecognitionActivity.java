@@ -16,9 +16,9 @@ import android.widget.Toast;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
+import com.carlisle.songtaste.cmpts.SoundRecognition.DoresoRecord;
+import com.carlisle.songtaste.cmpts.SoundRecognition.DoresoRecordListener;
 import com.carlisle.songtaste.ui.view.wave.WaveformView;
-import com.carlisle.soundrecognition.DoresoRecord;
-import com.carlisle.soundrecognition.DoresoRecordListener;
 import com.doreso.sdk.DoresoConfig;
 import com.doreso.sdk.DoresoListener;
 import com.doreso.sdk.DoresoManager;

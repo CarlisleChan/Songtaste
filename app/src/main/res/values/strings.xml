@@ -16,4 +16,18 @@
     <string name="drawer_item_settings">设置</string>
     <string name="drawer_item_about">关于</string>
 
+    <string name="recording">Recording...</string>
+    <string name="clickrecord">Press the Start button to start </string>
+    <string name="recognize">Identifying...</string>
+    <string name="volume">Volume:</string>
+    <string name="recordend">Recording completed</string>
+    <string name="artist">Artist:</string>
+    <string name="title">Title:</string>
+
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="cancel">Cancel</string>
+    <string name="onlyrecord">Only recording</string>
+    <string name="onlyrecognize">Only recognizing</string>
+
 </resources>
