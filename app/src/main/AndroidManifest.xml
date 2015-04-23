@@ -45,7 +45,6 @@
         <activity android:name=".ui.login.LoginActicity" />
         <activity android:name=".ui.develop.DeveloperOptionsActivity" />
         <activity android:name=".ui.main.SoundRecognitionActivity"/>
-        <activity android:name=".ui.main.TestActivity" />
 
         <meta-data android:name="AA_DB_NAME" android:value="Songtaste.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="1" />
