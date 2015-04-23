@@ -3,7 +3,7 @@
     package="com.carlisle.songtaste">
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="15"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -44,8 +44,7 @@
         <activity android:name=".ui.about.AboutActivity" />
         <activity android:name=".ui.login.LoginActicity" />
         <activity android:name=".ui.develop.DeveloperOptionsActivity" />
-        <activity android:name=".ui.main.SoundRecognitionActivity"
-            android:theme="@android:style/Theme.Translucent" />
+        <activity android:name=".ui.main.SoundRecognitionActivity"/>
 
         <meta-data android:name="AA_DB_NAME" android:value="Songtaste.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="1" />

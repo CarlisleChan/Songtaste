@@ -19,7 +19,7 @@ public class WaveformView extends View {
     private float mPrimaryWidth = 1.0f;
     private float mSecondaryWidth = 0.5f;
     private float mAmplitude = MIN_AMPLITUDE;
-    private int mWaveColor = Color.DKGRAY;
+    private int mWaveColor = Color.BLACK;
     private int mDensity = 2;
     private int mWaveCount = 5;
     private float mFrequency = 0.1875f;

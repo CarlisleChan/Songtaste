@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -70,6 +71,10 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
 
     @InjectView(R.id.toolbar_container)
     View toolbarContainer;
+    @InjectView(R.id.background)
+    View background;
+    @InjectView(R.id.controllers)
+    LinearLayout controllers;
     @InjectView(R.id.tv_song_name)
     TextView songName;
     @InjectView(R.id.tv_singer_name)
@@ -310,18 +315,17 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
         bottomSingerName.setText(songDetailInfo.getSinger_name());
         setAlbumArt(songDetailInfo);
 
-        if (songDetailInfo.getIscollection().equals("1")) {
-            favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
-            bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
-        } else {
-            favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love_white));
-            bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love));
-        }
-
         if (songDetailInfo.getSongType() == SongDetailInfo.SongType.LOCAL_SONG) {
             favorite.setVisibility(View.GONE);
             bottomFavorite.setVisibility(View.GONE);
         } else {
+            if (songDetailInfo.getIscollection().equals("1")) {
+                favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
+                bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
+            } else {
+                favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love_white));
+                bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love));
+            }
             favorite.setVisibility(View.VISIBLE);
             bottomFavorite.setVisibility(View.VISIBLE);
         }

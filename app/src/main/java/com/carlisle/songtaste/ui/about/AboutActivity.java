@@ -2,7 +2,6 @@ package com.carlisle.songtaste.ui.about;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -46,15 +45,6 @@ public class AboutActivity extends BaseActivity implements SwipeBackActivityBase
         appVersion.setText("Version " + BuildConfig.VERSION_NAME);
         about.setText("Developed by CarlisleChan");
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {

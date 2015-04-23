@@ -10,7 +10,9 @@ import android.os.Looper;
 import com.carlisle.songtaste.utils.DiskLruCache;
 import com.carlisle.songtaste.utils.MD5Util;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -313,38 +315,50 @@ public class StreamingDownloadMediaPlayer {
         }
     }
 
-    protected void handleInput(final String url, final Decoder decoder) throws IOException, BitstreamException, DecoderException, InterruptedException {
+    protected void handleInput(final String path, final Decoder decoder) throws IOException, BitstreamException, DecoderException, InterruptedException {
         mStreamingTask = new StreamingAsyncTask() {
             @Override
             protected Void doInBackground(String... params) {
+                boolean fromInternet = false;
                 URL url1 = null;
                 try {
                     url1 = new URL(params[0]);
                     InputStream in = url1.openStream();
+                    fromInternet = true;
                 } catch (IOException e) {
                     e.printStackTrace();
                     url1 = null;
+                    fromInternet = false;
                 }
 
-                // TODO if url is true
-
                 HttpURLConnection connection = null;
+                DiskLruCache diskCache = getDiskCache();
+                String key = null;
+                if (fromInternet) {
+                    key = MD5Util.md5(url1.getPath());
+                }
+                DiskLruCache.Editor diskEditor = null;
                 InputStream inputStream = null;
                 Bitstream bitstream = null;
-                DiskLruCache diskCache = getDiskCache();
-                String key = MD5Util.md5(url1.getPath());
-                DiskLruCache.Editor diskEditor = null;
+
                 try {
-                    DiskLruCache.Snapshot mp3Snapshot = diskCache.get(key);
-                    if (mp3Snapshot != null) {
-                        inputStream = mp3Snapshot.getInputStream(DISK_FILE_CACHE_INDEX);
-                        diskCache.flush();
+
+                    if (!fromInternet) {
+                        File file = new File(path);
+                        inputStream = new BufferedInputStream(new FileInputStream(file), 8 * 1024);
                     } else {
-                        connection = (HttpURLConnection) url1.openConnection();
-                        connection.connect();
-                        diskEditor = diskCache.edit(key);
-                        inputStream = new StreamingPipe(connection.getInputStream(), diskEditor.newOutputStream(DISK_FILE_CACHE_INDEX));
+                        DiskLruCache.Snapshot mp3Snapshot = diskCache.get(key);
+                        if (mp3Snapshot != null) {
+                            inputStream = mp3Snapshot.getInputStream(DISK_FILE_CACHE_INDEX);
+                            diskCache.flush();
+                        } else {
+                            connection = (HttpURLConnection) url1.openConnection();
+                            connection.connect();
+                            diskEditor = diskCache.edit(key);
+                            inputStream = new StreamingPipe(connection.getInputStream(), diskEditor.newOutputStream(DISK_FILE_CACHE_INDEX));
+                        }
                     }
+
                     bitstream = new Bitstream(inputStream);
                     Header header;
                     boolean firstPrepared = false;
@@ -378,7 +392,13 @@ public class StreamingDownloadMediaPlayer {
                         mAudioTrack.write(copyBuffer, 0, copyBuffer.length);
                         totalBytes += oneshootBytes;
                         totalFrameSize += 1;
-                        mLength = header.total_ms((int) connection.getContentLength());
+
+                        if (fromInternet) {
+                            mLength = header.total_ms((int) connection.getContentLength());
+                        } else {
+                            mLength = 100;
+                        }
+
                         playedTimeInMS += header.ms_per_frame();
                         bitstream.closeFrame();
                     }
@@ -387,24 +407,30 @@ public class StreamingDownloadMediaPlayer {
                         mAudioTrack.setNotificationMarkerPosition(totalFrameSize);
                     }
 
-                    if (diskEditor != null) {
-                        if (isStopped) {
-                            diskEditor.abort();
-                        } else {
-                            diskEditor.commit();
+                    if (fromInternet) {
+                        if (diskEditor != null) {
+                            if (isStopped) {
+                                diskEditor.abort();
+                            } else {
+                                diskEditor.commit();
+                            }
+                            diskCache.flush();
                         }
-                        diskCache.flush();
                     }
+
                 } catch (final Exception e) {
                     e.printStackTrace();
-                    if (diskEditor != null) {
-                        try {
-                            //任何情况下播放异常中断，都撤销磁盘存储
-                            diskEditor.abort();
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
+                    if (fromInternet) {
+                        if (diskEditor != null) {
+                            try {
+                                //任何情况下播放异常中断，都撤销磁盘存储
+                                diskEditor.abort();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
                         }
                     }
+
                     mState = PlayerState.ERROR;
                     reset();
                     if (mErrorListener != null) {
@@ -416,9 +442,12 @@ public class StreamingDownloadMediaPlayer {
                         });
                     }
                 } finally {
-                    if (inputStream != null) {
-                        DiskLruCache.closeQuietly(inputStream);
+                    if (fromInternet) {
+                        if (inputStream != null) {
+                            DiskLruCache.closeQuietly(inputStream);
+                        }
                     }
+
                     if (bitstream != null) {
                         try {
                             bitstream.close();
@@ -426,6 +455,7 @@ public class StreamingDownloadMediaPlayer {
                             e.printStackTrace();
                         }
                     }
+
                     if (connection != null) {
                         connection.disconnect();
                     }
@@ -438,7 +468,7 @@ public class StreamingDownloadMediaPlayer {
             }
         };
         mState = PlayerState.PREPARING;
-        mStreamingTask.execute(url);
+        mStreamingTask.execute(path);
     }
 
     private void notifyPrepared() {

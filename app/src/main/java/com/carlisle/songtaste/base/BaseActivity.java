@@ -101,6 +101,7 @@ public class BaseActivity extends ActionBarActivity {
             }
         }
     }
+
     public int setStatusBarColor() {
         return getResources().getColor(android.R.color.transparent);
     }
