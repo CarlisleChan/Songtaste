@@ -36,7 +36,6 @@ import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.utils.LocalSongHelper;
 import com.carlisle.songtaste.utils.PreferencesHelper;
-import com.fivehundredpx.android.blur.BlurringView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -94,8 +93,6 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
     CheckBox playOrPause;
     @InjectView(R.id.im_next)
     ImageView nextButton;
-    @InjectView(R.id.blurring_view)
-    BlurringView blurringView;
 
     private SongDetailInfo songDetailInfo;
     private Subscription subscription;
@@ -118,9 +115,6 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_full_player, container, false);
         ButterKnife.inject(this, view);
-
-//        blurringView.setBlurredView(background);
-//        blurringView.invalidate();
         return view;
     }
 

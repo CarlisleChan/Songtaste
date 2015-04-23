@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import java.io.InputStream;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivityBase;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
@@ -46,6 +48,12 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
     WaveformView waveformView;
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
+    @InjectView(R.id.tv_singer_name)
+    TextView singerName;
+    @InjectView(R.id.tv_song_name)
+    TextView songName;
+    @InjectView(R.id.btn_start)
+    Button startButton;
 
     private Handler handler;
     private RecordThread recordThread;
@@ -75,7 +83,7 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
             @Override
             public boolean handleMessage(Message msg) {
                 if (msg.what == MSG_GET_VOLUME) {
-                    update((Float) msg.obj);
+                    updateWaveView((Float) msg.obj);
                 }
                 return true;
             }
@@ -96,22 +104,45 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
     @Override
     protected void onResume() {
         super.onResume();
-        recordThread = new RecordThread(handler);
-        recordThread.start();
+        startRecord();
+        startRecognize();
     }
 
-    @Override
-    protected void onPause() {
+    private void startRecord() {
+        recordThread = new RecordThread(handler);
+        recordThread.start();
+        startButton.setText("暂停识别");
+    }
+
+    private void pauseRecord() {
         if (recordThread != null) {
             recordThread.pause();
             recordThread = null;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        pauseRecord();
+        cancelRecognize();
+        startButton.setText("开始识别");
         super.onPause();
         doresoRecord.reqCancel();
         doresoManager.cancel();
     }
 
-    private void update(final float volume) {
+    @OnClick(R.id.btn_start)
+    public void onStartClick() {
+        if (recordThread.isRunning) {
+            pauseRecord();
+            cancelRecognize();
+        } else {
+            startRecord();
+            startRecognize();
+        }
+    }
+
+    private void updateWaveView(final float volume) {
         waveformView.post(new Runnable() {
             @Override
             public void run() {
@@ -121,24 +152,25 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
     }
 
 
-    public void start() {
+    public void startRecognize() {
         tv_time.setText("");
         if (!processing) {
             processing = true;
             mResult.setText(getResources().getString(R.string.recording));
-            if (doresoRecord !=null) {
+            if (doresoRecord != null) {
                 doresoRecord.reqCancel();
                 doresoRecord = null;
             }
-            doresoRecord = new DoresoRecord(this, 15*1024);
+            doresoRecord = new DoresoRecord(this, 15 * 1024);
             doresoRecord.start();
             if (!doresoManager.startRecognize()) {
                 Toast.makeText(this, "无网络,无法识别", Toast.LENGTH_SHORT).show();
+                pauseRecord();
             }
         }
     }
 
-    protected void stop() {
+    protected void stopRecognize() {
         if (processing) {
             doresoRecord.reqStop();
         } else {
@@ -148,7 +180,7 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
         }
     }
 
-    protected void cancel() {
+    protected void cancelRecognize() {
         if (processing) {
             doresoManager.cancel();
             processing = false;
@@ -233,7 +265,6 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
      * 识别本地PCM demo线程
      *
      * @author jzx
-     *
      */
     class PCMRecognizer extends Thread {
 
@@ -256,7 +287,7 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
     }
 
     private byte[] getFromAssets(String fileName) {
-        byte[] buffer = new byte[] {};
+        byte[] buffer = new byte[]{};
         try {
             InputStream iStream = getResources().getAssets().open(fileName);
             int length = iStream.available();
@@ -281,6 +312,7 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
                 + getResources().getString(R.string.title)
                 + tracks[0].getName() + "\n" + result);
         processing = false;
+        pauseRecord();
     }
 
     @Override
@@ -289,6 +321,7 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
 
         mResult.setText(errorcode + ":" + msg);
         processing = false;
+        pauseRecord();
     }
 
     @Override
@@ -296,6 +329,7 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
         Log.e(TAG, "onRecognizeEnd");
         processing = false;
         doresoRecord.reqCancel();
+        pauseRecord();
     }
 
     @Override
@@ -310,7 +344,7 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
 
     @Override
     public void onRecordEnd() {
-
+        pauseRecord();
     }
 
     @Override
