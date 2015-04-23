@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fcfcfc"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/start"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="开始" />
+
+            <Button
+                android:id="@+id/stop"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="停止" />
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="取消" />
+
+
+            <Button
+                android:id="@+id/recognize_mp3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="recognizer mp3" />
+            <Button
+                android:id="@+id/recognize_pcm"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="recognizer pcm 8k" />
+
+
+            <TextView
+                android:id="@+id/volume"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/result"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -48,6 +48,8 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
     WaveformView waveformView;
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
+    @InjectView(R.id.tv_result)
+    TextView result;
     @InjectView(R.id.tv_singer_name)
     TextView singerName;
     @InjectView(R.id.tv_song_name)
@@ -59,8 +61,6 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
     private RecordThread recordThread;
     private SwipeBackActivityHelper mHelper;
 
-    private TextView mVolume;
-    private TextView mResult, tv_time;
     private DoresoManager doresoManager;
     private DoresoRecord doresoRecord;
     private boolean processing;
@@ -79,6 +79,9 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("歌曲识别");
 
+        mHelper = new SwipeBackActivityHelper(this);
+        mHelper.onActivityCreate();
+
         handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
@@ -88,6 +91,8 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
                 return true;
             }
         });
+
+        initDoresoRecord();
 
     }
 
@@ -153,10 +158,9 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
 
 
     public void startRecognize() {
-        tv_time.setText("");
         if (!processing) {
             processing = true;
-            mResult.setText(getResources().getString(R.string.recording));
+            result.setText(getResources().getString(R.string.recording));
             if (doresoRecord != null) {
                 doresoRecord.reqCancel();
                 doresoRecord = null;
@@ -306,7 +310,7 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
         // TODO Auto-generated method stub
         doresoManager.stopRecognize();
 
-        mResult.setText(tracks.length + "\n"
+        this.result.setText(tracks.length + "\n"
                 + getResources().getString(R.string.artist)
                 + tracks[0].getArtist()
                 + getResources().getString(R.string.title)
@@ -319,7 +323,7 @@ public class SoundRecognitionActivity extends BaseActivity implements SwipeBackA
     public void onRecognizeFail(int errorcode, String msg) {
         doresoManager.cancel();
 
-        mResult.setText(errorcode + ":" + msg);
+        result.setText(errorcode + ":" + msg);
         processing = false;
         pauseRecord();
     }

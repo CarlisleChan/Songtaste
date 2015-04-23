@@ -144,7 +144,7 @@ public class MainActivity extends BaseActivity {
 
                         if (drawerItem != null) {
                             if (drawerItem.getIdentifier() == 4) {
-                                startActivity(new Intent(MainActivity.this, SoundRecognitionActivity.class));
+                                startActivity(new Intent(MainActivity.this, TestActivity.class));
                             } else if (drawerItem.getIdentifier() == 5) {
                                 startActivity(new Intent(MainActivity.this, SettingActivity.class));
                             } else if (drawerItem.getIdentifier() == 6) {
