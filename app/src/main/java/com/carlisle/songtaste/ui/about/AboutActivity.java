@@ -2,6 +2,8 @@ package com.carlisle.songtaste.ui.about;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -50,6 +52,19 @@ public class AboutActivity extends BaseActivity implements SwipeBackActivityBase
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mHelper.onPostCreate();
+    }
+
+    @Override
+    public MenuInflater getMenuInflater() {
+        return super.getMenuInflater();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
