@@ -1,19 +1,19 @@
 package com.carlisle.songtaste.cmpts.reveiver;
 
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
-import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.utils.Common;
 
 import de.greenrobot.event.EventBus;
 
 public class HeadsetPlugReceiver extends BroadcastReceiver {
     private boolean HEADPLUGSTATUS = false;
-    private MusicService musicService;
+    private Service musicService;
 
     public HeadsetPlugReceiver() {
     }
@@ -32,7 +32,7 @@ public class HeadsetPlugReceiver extends BroadcastReceiver {
         }
     }
 
-    public void register(MusicService musicService) {
+    public void register(Service musicService) {
         this.musicService = musicService;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Common.HeadPlug.HEADSET_PLUG);

@@ -43,7 +43,7 @@ public class QueueHelper {
         this.queueType = queueType;
     }
 
-    public List<SongDetailInfo> getCurrentQueue(QueueType queueType) {
+    public List<SongDetailInfo> getCurrentQueue() {
         switch (queueType) {
             case NEW_QUEUE:
                 return getNewQueue();
@@ -103,4 +103,7 @@ public class QueueHelper {
         return cacheQueue;
     }
 
+    public boolean isIndexPlayable(int index) {
+        return (getCurrentQueue() != null && index >= 0 && index < getCurrentQueue().size());
+    }
 }

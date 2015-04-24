@@ -1,6 +1,7 @@
 package com.carlisle.songtaste.cmpts.reveiver;
 
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,14 +15,13 @@ import android.util.Log;
 import com.carlisle.songtaste.cmpts.events.PlayerSendingEvent;
 import com.carlisle.songtaste.cmpts.events.ScreenOnEvent;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
-import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.utils.Common;
 
 import de.greenrobot.event.EventBus;
 
 public class ScreenOnReceiver extends BroadcastReceiver {
-    private MusicService musicService;
+    private Service musicService;
     private ComponentName componentName;
     private AudioManager audioManager;
     private RemoteControlClient remoteControlClient;
@@ -48,7 +48,7 @@ public class ScreenOnReceiver extends BroadcastReceiver {
         }
     }
 
-    public void register(MusicService musicService) {
+    public void register(Service musicService) {
         this.audioManager = (AudioManager) musicService.getSystemService(Context.AUDIO_SERVICE);
         this.musicService = musicService;
         this.componentName = new ComponentName(musicService.getPackageName(), ScreenOnReceiver.class.getName());

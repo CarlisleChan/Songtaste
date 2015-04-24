@@ -1,5 +1,6 @@
 package com.carlisle.songtaste.cmpts.reveiver;
 
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,14 +11,13 @@ import android.view.KeyEvent;
 
 import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
 import com.carlisle.songtaste.cmpts.events.PlayerSendingEvent;
-import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.utils.Common;
 
 import de.greenrobot.event.EventBus;
 
 public class RemoteControlReceiver extends BroadcastReceiver {
-    private MusicService musicService;
+    private Service musicService;
     private AudioManager audioManager;
     private ComponentName componentName;
 
@@ -59,7 +59,7 @@ public class RemoteControlReceiver extends BroadcastReceiver {
         }
     }
 
-    public void register(MusicService musicService) {
+    public void register(Service musicService) {
         this.musicService = musicService;
         this.audioManager = (AudioManager) musicService.getSystemService(Context.AUDIO_SERVICE);
         this.componentName = new ComponentName(musicService.getPackageName(), RemoteControlReceiver.class.getName());

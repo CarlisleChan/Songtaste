@@ -19,6 +19,7 @@ import com.carlisle.songtaste.BuildConfig;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.cmpts.events.RefreshDataEvent;
+import com.carlisle.songtaste.cmpts.oldServices.OldMusicService;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.develop.DeveloperOptionsActivity;
@@ -82,6 +83,8 @@ public class MainActivity extends BaseActivity {
         initMenu();
         initNavigationDrawer(savedInstanceState);
         initLeanCloudPush();
+
+        startService(new Intent(this, OldMusicService.class));
     }
 
     @Override

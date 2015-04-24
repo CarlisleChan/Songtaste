@@ -19,7 +19,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".base.BaseApplication"
@@ -44,15 +44,20 @@
         <activity android:name=".ui.about.AboutActivity" />
         <activity android:name=".ui.login.LoginActicity" />
         <activity android:name=".ui.develop.DeveloperOptionsActivity" />
-        <activity android:name=".ui.main.SoundRecognitionActivity"/>
+        <activity android:name=".ui.main.SoundRecognitionActivity" />
 
-        <meta-data android:name="AA_DB_NAME" android:value="Songtaste.db" />
-        <meta-data android:name="AA_DB_VERSION" android:value="1" />
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="Songtaste.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="1" />
 
         <service android:name=".ui.setting.StopPlaybackService" />
         <service android:name="com.avos.avoscloud.PushService" />
-        <service android:name=".cmpts.services.MusicService"/>
+        <service android:name=".cmpts.services.MusicService" />
         <service android:name=".cmpts.listener.SDCardListenSer" />
+        <service android:name=".cmpts.oldServices.OldMusicService" />
 
         <receiver
             android:name="com.carlisle.songtaste.cmpts.reveiver.RemoteControlReceiver"

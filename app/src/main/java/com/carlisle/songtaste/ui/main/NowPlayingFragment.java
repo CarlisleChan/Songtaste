@@ -35,6 +35,12 @@ import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
 import com.carlisle.songtaste.cmpts.events.PlayerSendingEvent;
 import com.carlisle.songtaste.cmpts.modle.Result;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
+import com.carlisle.songtaste.cmpts.oldEvents.PauseEvent;
+import com.carlisle.songtaste.cmpts.oldEvents.PlayEvent;
+import com.carlisle.songtaste.cmpts.oldEvents.SkipToNextEvent;
+import com.carlisle.songtaste.cmpts.oldEvents.SkipToPrevEvent;
+import com.carlisle.songtaste.cmpts.oldEvents.UpdatePlaybackEvent;
+import com.carlisle.songtaste.cmpts.oldServices.Playback;
 import com.carlisle.songtaste.cmpts.provider.ApiFactory;
 import com.carlisle.songtaste.cmpts.provider.converter.XmlConverter;
 import com.carlisle.songtaste.cmpts.services.DataAccessor;
@@ -149,8 +155,10 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
             case R.id.cb_play_pause:
                 if (((CheckBox) view).isChecked()) {
                     pausePlay();
+                    EventBus.getDefault().post(new PauseEvent());
                 } else {
                     play();
+                    EventBus.getDefault().post(new PlayEvent());
                 }
                 break;
             case R.id.im_bottom_next:
@@ -315,6 +323,47 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
         bottomSeekBar.setMax(length);
     }
 
+    public void onEvent(UpdatePlaybackEvent event) {
+        switch (event.state) {
+            case Playback.STATE_PAUSED:
+                playOrPause.setChecked(true);
+                bottomPlayOrPause.setChecked(true);
+                break;
+            case Playback.STATE_STOPPED:
+                playOrPause.setChecked(false);
+                bottomPlayOrPause.setChecked(false);
+                break;
+            default:
+                if (event.songDetailInfo != null) {
+                    songDetailInfo = event.songDetailInfo;
+                    songName.setText(songDetailInfo.getSong_name());
+                    singerName.setText(songDetailInfo.getSinger_name());
+                    playOrPause.setChecked(false);
+                    bottomSongName.setText(songDetailInfo.getSong_name());
+                    bottomSingerName.setText(songDetailInfo.getSinger_name());
+                    bottomPlayOrPause.setChecked(false);
+                    setAlbumArt(songDetailInfo);
+
+                    if (songDetailInfo.getIscollection().equals("1")) {
+                        favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
+                        bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_loved));
+                    } else {
+                        favorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love_white));
+                        bottomFavorite.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_btn_love));
+                    }
+
+                    if (songDetailInfo.getSongType() == SongDetailInfo.SongType.LOCAL_SONG) {
+                        favorite.setVisibility(View.GONE);
+                        bottomFavorite.setVisibility(View.GONE);
+                    } else {
+                        favorite.setVisibility(View.VISIBLE);
+                        bottomFavorite.setVisibility(View.VISIBLE);
+                    }
+                }
+                break;
+        }
+    }
+
     private void updateCover() {
         songDetailInfo = DataAccessor.SINGLE_INSTANCE.getPlayingSong();
         songName.setText(songDetailInfo.getSong_name());
@@ -383,11 +432,15 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
     private void playNextTune() {
         DataAccessor.SINGLE_INSTANCE.playNextSong();
         play();
+
+        EventBus.getDefault().post(new SkipToNextEvent());
     }
 
     private void playPrevTune() {
         DataAccessor.SINGLE_INSTANCE.playPrevSong();
         play();
+
+        EventBus.getDefault().post(new SkipToPrevEvent());
     }
 
     private void playTuneAtIndex(int index) {

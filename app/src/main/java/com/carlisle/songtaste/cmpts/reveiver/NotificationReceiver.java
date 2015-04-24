@@ -2,6 +2,7 @@ package com.carlisle.songtaste.cmpts.reveiver;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +15,6 @@ import com.carlisle.songtaste.cmpts.events.FavoriteEvent;
 import com.carlisle.songtaste.cmpts.events.PlayerReceivingEvent;
 import com.carlisle.songtaste.cmpts.events.PlayerSendingEvent;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
-import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.ui.main.MainActivity;
 import com.carlisle.songtaste.utils.Common;
@@ -23,7 +23,7 @@ import com.carlisle.songtaste.utils.LocalSongHelper;
 import de.greenrobot.event.EventBus;
 
 public class NotificationReceiver extends BroadcastReceiver {
-    private MusicService musicService;
+    private Service musicService;
     private RemoteViews remoteViews;
     private Notification notification;
     private NotificationCompat.Builder builder;
@@ -62,7 +62,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         }
     }
 
-    public void register(MusicService musicService) {
+    public void register(Service musicService) {
         this.musicService = musicService;
         this.builder = new NotificationCompat.Builder(musicService);
         this.remoteViews = new RemoteViews(musicService.getPackageName(), R.layout.notification);
