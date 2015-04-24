@@ -1,7 +1,13 @@
 package com.carlisle.songtaste.ui.main;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +28,6 @@ import android.widget.Toast;
 import com.avos.avoscloud.AVAnalytics;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.carlisle.songtaste.cmpts.download.DownloadUtil;
 import com.carlisle.songtaste.cmpts.events.DownloadCompleteEvent;
 import com.carlisle.songtaste.cmpts.events.DownloadFailedEvent;
 import com.carlisle.songtaste.cmpts.events.FavoriteEvent;
@@ -36,6 +41,7 @@ import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 import com.carlisle.songtaste.utils.LocalSongHelper;
 import com.carlisle.songtaste.utils.PreferencesHelper;
+import com.carlisle.songtaste.utils.QueueHelper;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -97,6 +103,7 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
     private SongDetailInfo songDetailInfo;
     private Subscription subscription;
     private boolean isFavoriteRequest = false;
+    private long downloadReference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +116,8 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
 
         Intent intent = new Intent(getActivity().getApplicationContext(), MusicService.class);
         getActivity().startService(intent);
+
+        getActivity().registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     @Override
@@ -153,27 +162,26 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
 
     @OnClick(R.id.im_download)
     public void onDownloadClick() {
-        DownloadUtil.getInstance(getActivity())
-                .add(DataAccessor.SINGLE_INSTANCE.getPlayingSong())
-                .start();
-
-        DownloadUtil.getInstance(getActivity()).setOnDownloadListener(new DownloadUtil.OnDownloadListener() {
-            @Override
-            public void downloadStart(int fileSize) {
-                Log.d("=====start", "==" + fileSize);
-            }
-
-            @Override
-            public void downloadProgress(int downloadedSize) {
-                Log.d("=====progress", "==" + downloadedSize);
-            }
-
-            @Override
-            public void downloadEnd() {
-                Log.d("=====end", "==");
-            }
-        });
+        DownloadManager dm = (DownloadManager) getActivity().getSystemService(getActivity().DOWNLOAD_SERVICE);
+        DownloadManager.Request down=new DownloadManager.Request (Uri.parse(DataAccessor.SINGLE_INSTANCE.getPlayingSong().getUrl()));
+        down.setVisibleInDownloadsUi(true);
+        down.setDestinationInExternalFilesDir(getActivity(), Environment.DIRECTORY_MUSIC, DataAccessor.SINGLE_INSTANCE.getPlayingSong().getSong_name());
+        down.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        downloadReference = dm.enqueue(down);
     }
+
+    private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+                long reference = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID,-1);
+                if (downloadReference == reference) {
+                    QueueHelper.getInstance().getOfflineQueue().add(DataAccessor.SINGLE_INSTANCE.getPlayingSong());
+                }
+            }
+        }
+    };
 
     @OnClick(R.id.im_share)
     public void onShareClick() {
@@ -414,5 +422,6 @@ public class NowPlayingFragment extends BaseFragment implements DataAccessor.Dat
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        getActivity().unregisterReceiver(downloadReceiver);
     }
 }

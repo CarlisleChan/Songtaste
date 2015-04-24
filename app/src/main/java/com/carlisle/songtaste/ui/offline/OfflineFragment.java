@@ -13,10 +13,9 @@ import com.avos.avoscloud.AVAnalytics;
 import com.baidao.superrecyclerview.SuperRecyclerView;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.carlisle.songtaste.cmpts.modle.SongInfo;
+import com.carlisle.songtaste.ui.local.LocalFragment;
 import com.carlisle.songtaste.ui.view.progress.ProgressWheel;
-
-import java.util.ArrayList;
+import com.carlisle.songtaste.utils.QueueHelper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -25,7 +24,7 @@ import butterknife.InjectView;
  * Created by chengxin on 2/25/15.
  */
 public class OfflineFragment extends BaseFragment {
-    private static final String TAG = OfflineFragment.class.getSimpleName();
+    private static final String TAG = LocalFragment.class.getSimpleName();
 
     @InjectView(R.id.recyclerView)
     SuperRecyclerView superRecyclerView;
@@ -34,20 +33,12 @@ public class OfflineFragment extends BaseFragment {
 
     private LinearLayoutManager layoutManager;
     public OfflineAdapter adapter;
-    public ArrayList<SongInfo> songsList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.recyclerview_with_swipe, container, false);
         ButterKnife.inject(this, view);
-
-        progressBar.setVisibility(View.GONE);
-        songsList = new ArrayList();
-        SongInfo songInfo = new SongInfo();
-        for (int i = 0; i < 7; i++) {
-            songsList.add(songInfo);
-        }
 
         initRecyclerView();
         return view;
@@ -57,6 +48,10 @@ public class OfflineFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         AVAnalytics.onFragmentEnd(TAG);
+        progressBar.setVisibility(View.GONE);
+        if (adapter.isEmpty()) {
+            refreshData();
+        }
     }
 
     @Override
@@ -67,9 +62,8 @@ public class OfflineFragment extends BaseFragment {
 
     private void initRecyclerView() {
 
-        layoutManager = new LinearLayoutManager(getActivity());
         adapter = new OfflineAdapter(getActivity());
-
+        layoutManager = new LinearLayoutManager(getActivity());
         superRecyclerView.setLayoutManager(layoutManager);
         superRecyclerView.setAdapter(adapter);
         superRecyclerView.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -78,7 +72,6 @@ public class OfflineFragment extends BaseFragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        superRecyclerView.getSwipeToRefresh().setRefreshing(false);
                         refreshData();
                     }
                 }, 3000);
@@ -88,6 +81,7 @@ public class OfflineFragment extends BaseFragment {
     }
 
     private void refreshData() {
-        adapter.refresh(songsList);
+        adapter.refresh(QueueHelper.getInstance().getOfflineQueue());
     }
+
 }

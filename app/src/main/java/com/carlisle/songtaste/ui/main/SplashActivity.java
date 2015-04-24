@@ -39,7 +39,7 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.inject(this);
-        init();
+//        init();
 
         anim = AnimationUtils.loadAnimation(this, R.anim.anim_fade_in);
         anim1 = AnimationUtils.loadAnimation(this, R.anim.anim_fade_in);
@@ -58,7 +58,7 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
 
     static {
         Log.d("onEvent", "load jni lib");
-        System.loadLibrary("songtaste-jni");
+//        System.loadLibrary("songtaste-jni");
     }
 
     @Override
