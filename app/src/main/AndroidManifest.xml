@@ -56,8 +56,6 @@
         <service android:name=".ui.setting.StopPlaybackService" />
         <service android:name="com.avos.avoscloud.PushService" />
         <service android:name=".cmpts.services.MusicService" />
-        <service android:name=".cmpts.listener.SDCardListenSer" />
-        <service android:name=".cmpts.oldServices.OldMusicService" />
 
         <receiver
             android:name="com.carlisle.songtaste.cmpts.reveiver.RemoteControlReceiver"

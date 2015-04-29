@@ -1,14 +1,10 @@
 package com.carlisle.songtaste.cmpts.provider;
 
-import com.carlisle.songtaste.cmpts.modle.AlbumDetailInfo;
 import com.carlisle.songtaste.cmpts.modle.CollectionResult;
-import com.carlisle.songtaste.cmpts.modle.FMAlbumResult;
 import com.carlisle.songtaste.cmpts.modle.FMHotResult;
 import com.carlisle.songtaste.cmpts.modle.FMNewResult;
-import com.carlisle.songtaste.cmpts.modle.FMTagResult;
 import com.carlisle.songtaste.cmpts.modle.Result;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
-import com.carlisle.songtaste.cmpts.modle.TagDetailResult;
 import com.carlisle.songtaste.cmpts.modle.User;
 
 import retrofit.http.GET;
@@ -27,20 +23,6 @@ public interface SongtasteApi {
     @GET("/hot_song.php")
     public Observable<FMHotResult> hotSong(@Query("p") String page, @Query("n") String number,
                                            @Query("tmp") String tmp, @Query("callback") String callback);
-
-    @GET("/tag_list.php")
-    public Observable<FMTagResult> tagList(@Query("tmp") String tmp, @Query("callback") String callback);
-
-    @GET("/tag.php")
-    public Observable<TagDetailResult> tag(@Query("key") String key, @Query("t") String t, @Query("p") String p, @Query("n") String n,
-                                     @Query("tmp") String tmp, @Query("callback") String callback, @Query("code") String code);
-
-    @GET("/hot_albums.php")
-    public Observable<FMAlbumResult> hotAlbums(@Query("tmp") String tmp, @Query("callback") String callback);
-
-    @GET("/album_song.php")
-    public Observable<AlbumDetailInfo> albumSong(@Query("aid") String aid, @Query("p") String p, @Query("n") String n,
-                                                 @Query("tmp") String tmp, @Query("callback") String callback, @Query("code") String code);
 
     @GET("/collection_song.php")
     public Observable<CollectionResult> collectionSong(@Query("uid") String uid, @Query("p") String page, @Query("n") String number,

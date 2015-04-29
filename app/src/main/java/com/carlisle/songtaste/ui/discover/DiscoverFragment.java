@@ -11,10 +11,9 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.avos.avoscloud.AVAnalytics;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseFragment;
-import com.carlisle.songtaste.ui.discover.discoverFragments.AlbumFragment;
 import com.carlisle.songtaste.ui.discover.discoverFragments.HotFragment;
 import com.carlisle.songtaste.ui.discover.discoverFragments.NewFragment;
-import com.carlisle.songtaste.ui.discover.discoverFragments.TagFragment;
+import com.carlisle.songtaste.ui.favorite.FavoriteFragment;
 import com.carlisle.songtaste.utils.ViewPagerHelper;
 
 import butterknife.ButterKnife;
@@ -41,8 +40,7 @@ public class DiscoverFragment extends BaseFragment {
         viewPagerHelper = new ViewPagerHelper(viewPager, tabs, getActivity(), getChildFragmentManager());
         viewPagerHelper.addFragment(new NewFragment());
         viewPagerHelper.addFragment(new HotFragment());
-        viewPagerHelper.addFragment(new AlbumFragment());
-        viewPagerHelper.addFragment(new TagFragment());
+        viewPagerHelper.addFragment(new FavoriteFragment());
         viewPagerHelper.init();
 
         return view;

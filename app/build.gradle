@@ -4,7 +4,7 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'loglifecycle'
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion "21.1.2"
     defaultConfig {
         applicationId 'com.carlisle.songtaste'
@@ -34,35 +34,9 @@ repositories {
 }
 
 dependencies {
-    compile 'com.facebook.stetho:stetho:1.0.1'
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    // android
-    compile 'com.github.frankiesardo:icepick:2.3.6'
-    provided 'com.github.frankiesardo:icepick-processor:2.3.6'
-    compile 'com.jakewharton:butterknife:6.1.0'
-    compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
-    apt 'com.hannesdorfmann.parcelableplease:processor:1.0.1'
-    compile 'com.neenbedankt.bundles:common:1.0.4'
-    // Tools
-    compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'joda-time:joda-time:2.7'
-    compile 'com.squareup.picasso:picasso:2.4.0'
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.squareup.okio:okio:1.1.0'
-    compile 'com.squareup.okhttp:okhttp:2.2.0'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
-    compile 'io.reactivex:rxandroid:0.22.0'
-    compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
-    compile 'javazoom:jlayer:1.0.1'
-    // UI
-    compile 'com.actionbarsherlock:viewpagerindicator:2.4.1'
-    compile 'com.sothree.slidinguppanel:library:3.0.0'
-    compile 'com.jpardogo.materialtabstrip:library:1.0.9'
-    compile project(':DrawerLibrary')
     compile project(':UninstalledObserver')
-    compile project(':taggrouplibrary')
     compile project(':SuperRecyclerView')
-    compile project(':SwipeBackLayoutLibrary')
     compile files('libs/avoscloud-sns-v3.1.2.jar')
     compile files('libs/avoscloud-statistics-v3.1.2.jar')
     compile files('libs/avoscloud-push-v3.1.2.jar')
@@ -77,4 +51,27 @@ dependencies {
     compile files('libs/android-async-http-1.4.6.jar')
     compile files('libs/litecommon1.0.0.jar')
     compile files('libs/DoresoSdkV3.2.0.jar')
+
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.github.frankiesardo:icepick:2.3.6'
+    provided 'com.github.frankiesardo:icepick-processor:2.3.6'
+    compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.1'
+    apt 'com.hannesdorfmann.parcelableplease:processor:1.0.1'
+    compile 'com.neenbedankt.bundles:common:1.0.4'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'joda-time:joda-time:2.7'
+    compile 'com.squareup.picasso:picasso:2.4.0'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.squareup.okio:okio:1.1.0'
+    compile 'com.squareup.okhttp:okhttp:2.2.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.2.0'
+    compile 'io.reactivex:rxandroid:0.22.0'
+    compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
+    compile 'javazoom:jlayer:1.0.1'
+    compile 'com.actionbarsherlock:viewpagerindicator:2.4.1'
+    compile 'com.sothree.slidinguppanel:library:3.0.0'
+    compile 'com.jpardogo.materialtabstrip:library:1.0.9'
+    compile 'com.makeramen:roundedimageview:2.0.1'
+
 }

@@ -112,7 +112,7 @@ public class ViewPagerHelper {
 
     public class DiscoverAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = {"最新", "热门", "专辑", "标签"};
+        private final String[] TITLES = {"最新", "热门", "收藏"};
 
         public DiscoverAdapter(FragmentManager fm) {
             super(fm);

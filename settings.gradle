@@ -1,1 +1,1 @@
-include ':app', ':taggrouplibrary', ':SuperRecyclerView', ':SwipeBackLayoutLibrary', ':DrawerLibrary', ':BlurringView', ':UninstalledObserver'
+include ':app', ':SuperRecyclerView', ':BlurringView', ':UninstalledObserver'

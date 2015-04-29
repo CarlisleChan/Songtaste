@@ -22,6 +22,7 @@ import com.avos.avoscloud.AVAnalytics;
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
 import com.carlisle.songtaste.cmpts.modle.SongDetailInfo;
+import com.carlisle.songtaste.ui.about.AboutActivity;
 import com.carlisle.songtaste.ui.develop.DeveloperOptionsActivity;
 import com.carlisle.songtaste.ui.view.timePicker.PickerView;
 import com.carlisle.songtaste.utils.FileUtils;
@@ -38,15 +39,14 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import me.imid.swipebacklayout.lib.SwipeBackLayout;
-import me.imid.swipebacklayout.lib.app.SwipeBackActivityBase;
-import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper;
 
 /**
  * Created by carlisle on 3/7/15.
  */
-public class SettingActivity extends BaseActivity implements SwipeBackActivityBase {
+public class SettingActivity extends BaseActivity{
 
+    @InjectView(R.id.tv_login)
+    TextView login;
     @InjectView(R.id.cb_use_gprs)
     CheckBox useGprsCheckBox;
     @InjectView(R.id.tv_cache_values)
@@ -58,7 +58,6 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
 
     private ProgressDialog progressDialog;
     private Double time;
-    private SwipeBackActivityHelper mHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +70,6 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("设置");
 
-        mHelper = new SwipeBackActivityHelper(this);
-        mHelper.onActivityCreate();
         try {
             cacheValues.setText(String.valueOf(FileUtils.getFolderSize(new File(getExternalCacheDir(), "audio"))) + "MB");
         } catch (Exception e) {
@@ -99,6 +96,11 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.tv_login)
+    public void onLoginClick() {
+
     }
 
     @OnClick(R.id.rl_use_gprs)
@@ -150,14 +152,6 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
                 })
                 .setView(view)
                 .create();
-
-//        Window window = dialog.getWindow();
-//        // 设置显示动画
-//        window.setWindowAnimations(R.style.main_menu_animstyle);
-//        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        window.setGravity(Gravity.CENTER);
-//        // 设置点击外围解散
-//        dialog.setCanceledOnTouchOutside(true);
         dialog.show();
     }
 
@@ -197,7 +191,11 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
                 dialog.dismiss();
             }
         });
+    }
 
+    @OnClick(R.id.rl_about)
+    public void onAboutClick() {
+        startActivity(new Intent(this, AboutActivity.class));
     }
 
     @OnClick(R.id.rl_developer_options)
@@ -224,34 +222,4 @@ public class SettingActivity extends BaseActivity implements SwipeBackActivityBa
             }
         });
     }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mHelper.onPostCreate();
-    }
-
-    @Override
-    public View findViewById(int id) {
-        View v = super.findViewById(id);
-        if (v != null)
-            return v;
-        return mHelper.findViewById(id);
-    }
-
-    @Override
-    public SwipeBackLayout getSwipeBackLayout() {
-        return mHelper.getSwipeBackLayout();
-    }
-
-    @Override
-    public void setSwipeBackEnable(boolean enable) {
-        getSwipeBackLayout().setEnableGesture(enable);
-    }
-
-    @Override
-    public void scrollToFinishActivity() {
-        getSwipeBackLayout().scrollToFinishActivity();
-    }
-
 }

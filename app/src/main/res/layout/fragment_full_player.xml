@@ -150,10 +150,6 @@
 
     </LinearLayout>
 
-    <include
-        android:id="@+id/toolbar_container"
-        layout="@layout/custom_toolbar" />
-
     <include layout="@layout/bottom_control" />
 
 </FrameLayout>

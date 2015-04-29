@@ -2,8 +2,7 @@
     android:id="@+id/toolbar_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="?attr/colorPrimaryDark"
-    android:paddingTop="@dimen/tool_bar_top_padding">
+    android:background="?attr/colorPrimaryDark">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

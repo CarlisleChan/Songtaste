@@ -27,6 +27,16 @@
             android:background="@android:color/darker_gray" />
 
         <TextView
+            android:id="@+id/tv_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:padding="16dp"
+            android:text="登录"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/tv_timer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,6 +110,23 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="关于"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/rl_developer_options"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -114,7 +141,6 @@
                 android:text="开发者选项"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
-
 
         </RelativeLayout>
 

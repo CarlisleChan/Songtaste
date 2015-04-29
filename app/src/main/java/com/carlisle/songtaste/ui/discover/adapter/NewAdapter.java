@@ -14,7 +14,7 @@ import com.carlisle.songtaste.cmpts.modle.SongInfo;
 import com.carlisle.songtaste.cmpts.services.DataAccessor;
 import com.carlisle.songtaste.utils.Common;
 import com.carlisle.songtaste.utils.QueueHelper;
-import com.makeramen.RoundedImageView;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
