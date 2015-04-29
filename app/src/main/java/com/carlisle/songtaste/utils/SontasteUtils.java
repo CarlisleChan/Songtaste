@@ -10,7 +10,7 @@ import android.widget.Toast;
  * Created by chengxin on 4/29/15.
  */
 public class SontasteUtils {
-    
+
     public static  void getUserIdFromSontaste(Context context) {
         String fromFile = " data/data/duomi.app.activity/shared_prefs";
         String toFile = " data/data/com.carlisle.songtaste/";

@@ -1,4 +1,4 @@
-package com.example.hellondkworldlib;
+package com.getui.uninstalledobserver;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

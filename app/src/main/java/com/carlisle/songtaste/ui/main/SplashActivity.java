@@ -3,7 +3,6 @@ package com.carlisle.songtaste.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -12,6 +11,7 @@ import android.widget.ImageView;
 
 import com.carlisle.songtaste.R;
 import com.carlisle.songtaste.base.BaseActivity;
+import com.carlisle.songtaste.base.UninstalledObserver;
 import com.carlisle.songtaste.cmpts.services.MusicService;
 
 import butterknife.ButterKnife;
@@ -39,7 +39,8 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.inject(this);
-//        init();
+
+        UninstalledObserver.getInstance(this).setup();
 
         anim = AnimationUtils.loadAnimation(this, R.anim.anim_fade_in);
         anim1 = AnimationUtils.loadAnimation(this, R.anim.anim_fade_in);
@@ -52,13 +53,6 @@ public class SplashActivity extends BaseActivity implements Animation.AnimationL
         Intent intent = new Intent(this, MusicService.class);
         startService(intent);
 
-    }
-
-    private native void init();
-
-    static {
-        Log.d("onEvent", "load jni lib");
-//        System.loadLibrary("songtaste-jni");
     }
 
     @Override
