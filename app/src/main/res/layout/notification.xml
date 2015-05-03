@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageButton
+        android:id="@+id/ib_album_art"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/album_art_default"
+        android:scaleType="center" />
+
+    <ImageButton
+        android:id="@+id/ib_pause_btn"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentLeft="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_btn_play_white" />
+
+    <ImageButton
+        android:id="@+id/ib_close_btn"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_btn_close" />
+
+    <ImageButton
+        android:id="@+id/ib_next_btn"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/ib_close_btn"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_btn_next_white"
+        android:tint="@android:color/white" />
+
+    <ImageButton
+        android:id="@+id/ib_favorite"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/ib_next_btn"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_btn_love_white"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="7dip"
+        android:layout_toLeftOf="@id/ib_favorite"
+        android:layout_toRightOf="@id/ib_album_art">
+
+        <TextView
+            android:id="@+id/ib_song_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="name"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/ib_singer_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/ib_song_name"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="artist"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

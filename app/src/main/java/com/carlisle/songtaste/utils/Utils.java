@@ -1,14 +1,13 @@
 package com.carlisle.songtaste.utils;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.Settings;
-import android.util.Log;
-import android.view.Gravity;
-import android.widget.Toast;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +15,61 @@ import java.util.regex.Pattern;
  * Created by chengxin on 2/14/15.
  */
 public class Utils {
+
+    public static int getSystemVersion() {
+		/* 获取当前系统的android版本号 */
+        int version = android.os.Build.VERSION.SDK_INT;
+        return version;
+    }
+
+    /**
+     * 用来判断activity是否运行.
+     * @param context
+     * @param className 判断的activity名字：包名+类名
+     * @return true 在运行, false 不在运行
+     */
+    public static boolean isActivityRunning(Context context, String className){
+
+        boolean isRunning = false;
+        ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Activity.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> activityList = mActivityManager.getRunningTasks(Integer.MAX_VALUE);
+
+        if (!(activityList.size() > 0)) {
+            return false;
+        }
+        for (int i = 0; i < activityList.size(); i++) {
+            if (activityList.get(i).baseActivity.getClassName().equals(className) == true) {
+                isRunning = true;
+                break;
+            }
+        }
+
+        return isRunning;
+    }
+
+    /**
+     * 用来判断服务是否运行.
+     * @param context
+     * @param className 判断的服务名字：包名+类名
+     * @return true 在运行, false 不在运行
+     */
+    public static boolean isServiceRunning(Context context, String className) {
+
+        boolean isRunning = false;
+        ActivityManager activityManager =(ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> serviceList = activityManager.getRunningServices(Integer.MAX_VALUE);
+
+        if (!(serviceList.size() > 0)) {
+            return false;
+        }
+        for (int i = 0; i < serviceList.size(); i++) {
+            if (serviceList.get(i).service.getClassName().equals(className) == true) {
+                isRunning = true;
+                break;
+            }
+        }
+        return isRunning;
+    }
 
     /**
      * 判别手机是否为正确手机号码；
@@ -42,12 +96,6 @@ public class Utils {
         Pattern p = Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");//复杂匹配
         Matcher m = p.matcher(email);
         return m.matches();
-    }
-
-    public static void simpleToast(Context context, String text) {
-        Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, -50);
-        toast.show();
     }
 
     /**
@@ -80,22 +128,6 @@ public class Utils {
 
         return null;
     }
-
-
-    /**
-     * 获取版本号
-     */
-    private static String getVerCode(Context context) {
-        int verCode = -1;
-        try {
-            verCode = context.getPackageManager().getPackageInfo(
-                    "com.example.receivesms", 0).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e("==========>", e.getMessage());
-        }
-        return String.valueOf(verCode);
-    }
-
 
     /**
      * 获取 GSF ID KEY

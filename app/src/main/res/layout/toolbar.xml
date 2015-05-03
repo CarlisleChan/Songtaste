@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-    android:id="@+id/action_bar"
-    android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar_container"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:minHeight="@dimen/abc_action_bar_default_height_material" />
+    android:background="?attr/colorPrimaryDark"
+    android:paddingTop="@dimen/tool_bar_top_padding">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:transitionName="actionBar" />
+</RelativeLayout>

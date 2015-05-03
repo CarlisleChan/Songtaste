@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:text="定时停止播放"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="18sp" />
+
+    <com.carlisle.songtaste.ui.view.timePicker.PickerView
+        android:id="@+id/picker"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp" />
+
+</LinearLayout>

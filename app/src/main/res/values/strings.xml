@@ -6,4 +6,28 @@
     <string name="drawer_open">Menu opened</string>
     <string name="drawer_close">Menu closed</string>
     <string name="action_settings">Settings</string>
+
+    <string name="drawer_item_discover">发现音乐</string>
+    <string name="drawer_item_favorite">我的收藏</string>
+    <string name="drawer_item_local">本地音乐</string>
+    <string name="drawer_item_offline">我的离线</string>
+    <string name="drawer_section_name">其他选项</string>
+    <string name="drawer_item_sound_recognition">歌曲识别</string>
+    <string name="drawer_item_settings">设置</string>
+    <string name="drawer_item_about">关于</string>
+
+    <string name="recording">Recording...</string>
+    <string name="clickrecord">Press the Start button to start </string>
+    <string name="recognize">Identifying...</string>
+    <string name="volume">Volume:</string>
+    <string name="recordend">Recording completed</string>
+    <string name="artist">Artist:</string>
+    <string name="title">Title:</string>
+
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="cancel">Cancel</string>
+    <string name="onlyrecord">Only recording</string>
+    <string name="onlyrecognize">Only recognizing</string>
+
 </resources>

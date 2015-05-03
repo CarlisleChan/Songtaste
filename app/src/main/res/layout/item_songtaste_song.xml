@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingTop="16dp">
+
+    <ImageView
+        android:id="@+id/dot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4dp"
+        android:src="@drawable/dot"
+        android:visibility="invisible" />
+
+    <com.makeramen.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/iv_up_user_avatar"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="16dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_artist"
+        app:riv_corner_radius="30dip"
+        app:riv_mutate_background="true"
+        app:riv_oval="true" />
+
+    <LinearLayout
+        android:id="@+id/ll_song_info"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_marginLeft="16dp"
+        android:layout_toLeftOf="@+id/tv_rate_date_time"
+        android:layout_toRightOf="@+id/iv_up_user_avatar"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_up_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/tv_song_name"
+            android:layout_toRightOf="@+id/ll_up_user"
+            android:singleLine="true"
+            android:text="singer name"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_song_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:alpha="0.7"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="song name"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_rate_date_time"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="right"
+        android:paddingRight="16dp"
+        android:text="60分钟前" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignLeft="@+id/ll_song_info"
+        android:layout_alignParentBottom="true"
+        android:alpha="0.5"
+        android:background="@android:color/darker_gray"
+        android:paddingLeft="72dp" />
+
+</RelativeLayout>
