@@ -13,7 +13,7 @@ public class UninstalledObserver {
 	private static UninstalledObserver instance;
 	private Context context;
 	private static final String TAG = "UninstalledObserver";
-	private static final String WEBSITE = "http://carlislechan.github.io";
+	private static final String WEBSITE = "http://www.diaochapai.com/survey1447356";
 	private int mObserverProcessPid = -1;
 	
 	public native int init(String userSerial, String webSite);
